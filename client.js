@@ -23,10 +23,14 @@ const interactionCommands = [];
 
   
 client.settings = {
-  token: "YOUR CLIENT TOKEN HERE"
+   "prefix": "PREFIX HERE",
+   "owner": "OWNER DISCORD ID HERE",
+   "color": "YOUR EMBED COLOR (like eb1c5a)"
 };
 
 async function startUp() {
+   
+   client.config = require("./config.json");
   
   //Events
   let eventFiles = fs.readdirSync('./events/').filter(file => file.endsWith('.js'));
@@ -50,6 +54,6 @@ async function startUp() {
     });
   });
 
-  await client.login(client.settings.token);
+  await client.login(client.config.token);
   
 }; startUp();
