@@ -1,0 +1,19 @@
+{
+  "name": "nraphy",
+  "description": "Nraphy",
+  "main": "client.js",
+  "dependencies": {
+    "discord.js": "^13.9.1",
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node shard.js"
+  },
+  "keywords": [
+    "package.json",
+    "npm",
+    "init"
+  ],
+  "author": "RFKaya",
+  "license": "MIT"
+}
