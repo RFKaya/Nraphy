@@ -1,6 +1,7 @@
-const Discord = require("discord.js");
+const Discord = require("discord.js"),
+  permissions = require("../utils/Permissions.json");
 
-const cmdCooldown = {};
+const lastCmds = {};
 
 module.exports = async (client, interaction) => {
 
@@ -14,9 +15,7 @@ module.exports = async (client, interaction) => {
 
       let guildData = await client.database.fetchGuild(interaction.guild.id);
 
-      let prefix = guildData.prefix || client.settings.prefix;
-
-      const cmd = client.commands.get(interaction.commandName);
+      let cmd = client.commands.get(interaction.commandName);
 
       if (cmd) {
 
@@ -24,9 +23,10 @@ module.exports = async (client, interaction) => {
         data.guild = guildData;
         //data.user = userData;
         data.cmd = cmd;
-        data.prefix = prefix;
+        data.prefix = guildData.prefix || client.settings.prefix;
         //data.premium = (userData.NraphyPremium && userData.NraphyPremium > Date.now());
 
+        //---------------NSFW---------------//
         if (cmd.nsfw && !interaction.channel.nsfw) {
           return interaction.reply({
             embeds: [
@@ -42,6 +42,7 @@ module.exports = async (client, interaction) => {
           });
         }
 
+        //---------------Vote---------------//
         if (cmd.voteRequired) {
           let topgg = require(`@top-gg/sdk`);
           let topggapi = new topgg.Api(client.config.topggToken);
@@ -68,18 +69,15 @@ module.exports = async (client, interaction) => {
           }
         }
 
-        const permissions = require("../utils/Permissions.json");
-
-        let userPerms = [];
+        //---------------Permissions---------------//
+        let userPerms = [],
+          clientPerms = [];
 
         cmd.memberPermissions.forEach((perm) => {
           if (!interaction.channel.permissionsFor(interaction.member).has(perm)) {
             userPerms.push(permissions[perm]);
           }
         });
-
-        let clientPerms = [];
-
         cmd.botPermissions.forEach((perm) => {
           if (!interaction.channel.permissionsFor(interaction.guild.me).has(perm)) {
             clientPerms.push(permissions[perm]);
@@ -143,34 +141,33 @@ module.exports = async (client, interaction) => {
           }
         }
 
-        let userCooldown = cmdCooldown[interaction.user.id];
-
-        if (!userCooldown) {
-          cmdCooldown[interaction.user.id] = {};
-          uCooldown = cmdCooldown[interaction.user.id];
+        //---------------Cooldown---------------//
+        if (!lastCmds[interaction.user.id]) {
+          lastCmds[interaction.user.id] = {};
         }
 
-        let time = uCooldown[cmd.interaction.name] || 0;
-        //Check if user has a command cooldown
-        if (time && (time > Date.now())) {
-          let timeLeft = Math.ceil((time - Date.now()) / 1000);
+        let cmdCooldown = cmd.cooldown || 5000;
+
+        let cmdLastUsage = lastCmds[interaction.user.id][cmd.interaction.name] || 0;
+        if (cmdLastUsage && ((cmdLastUsage + cmdCooldown) > Date.now())) {
           return interaction.reply({
             embeds: [{
               color: "RED",
-              description: `**»** Bu komutu tekrar kullanabilmen için **${timeLeft} saniye** beklemelisin.`
+              description: `**»** Bu komutu tekrar kullanabilmen için **${Math.ceil(((cmdLastUsage + cmdCooldown) - Date.now()) / 1000)} saniye** beklemelisin.`
             }],
             ephemeral: true
           });
         }
 
-        let cmdCooldownDuration = cmd.cooldown || 800;
+        lastCmds[interaction.user.id][cmd.interaction.name] = Date.now();
 
-        cmdCooldown[interaction.user.id][cmd.interaction.name] = Date.now() + cmdCooldownDuration;
-
+        //---------------Console Logging---------------//
         client.logger.interactionCmd(`${interaction.user.tag} (${interaction.user.id}) => ${client.capitalizeFirstLetter(cmd.interaction.name, "tr")} => ${interaction.guild.name} (${interaction.guild.id})`);
 
-        cmd.execute(client, interaction, data);//, args, data)
+        //---------------CMD Execute---------------//
+        cmd.execute(client, interaction, data);
 
+        //---------------CMD Stats---------------//
         let userData = await client.database.fetchUser(interaction.user.id);
         userData.commandUses += 1;
         await userData.save();
