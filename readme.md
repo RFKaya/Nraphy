@@ -2,7 +2,7 @@
   <img width="150" height="150" src="https://cdn.discordapp.com/attachments/801418986809589771/1007426236894691378/Narpitti.png">
 </p>
 
-<img align="left" src="https://media.discordapp.net/attachments/801418986809589771/975048501912272997/Narpitti.png" height="150" width="150">
+<img align="center" src="https://cdn.discordapp.com/attachments/801418986809589771/1007426236894691378/Narpitti.png" height="150" width="150">
 
 # Nraphy • Açık Kaynaklı Discord Botu
 Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte. slash desteklemektedir. botu kurmakla falan uğraşmak istemezseniz ve güncel halini kullanmak isterseniz [Davet bağlantısı](https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code) ile nraphyi davet edebilirsiniz.
