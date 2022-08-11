@@ -1,7 +1,10 @@
-<img align="left" src="https://media.discordapp.net/attachments/801418986809589771/975048501912272997/Narpitti.png" height="200" width="200">
+<img align="left" src="https://media.discordapp.net/attachments/801418986809589771/975048501912272997/Narpitti.png" height="150" width="150">
 
 # Nraphy • Açık Kaynaklı Discord Botu
-Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte
+Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte. botu kurmakla falan uğraşmak istemezseniz ve güncel halini kullanmak isterseniz [Davet bağlantısı](https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code) ile nraphyi davet edebilirsiniz.
+
+## Açık Kaynak Projesi
+bu açık kaynakta tüm kodlar paylaşılmamıştır. botun güncel hâli saklıdır. güncel hâli yavaşça paylaşmaya paylaşacağım, o yüzden takipte kalabilirsin. son güncelleme 11.08.2022
 
 ## ✨ Başlarken (Getting Started)
 Botu kullanıma hazırlamak için aşağıdaki adımları izle
@@ -20,6 +23,3 @@ konsol acıon `npm start` ceki10
 
 ## Sonraki Güncellemede Yayınlanacaklar
 açıkçası neyi yayınlarız ben de bilmiyorum. yukarıdan bir yerden destek sunucumuza gelip yapılacaklara ve yeniliklere bakabilirsin.
-
-## Açık Kaynakla İlgili
-bu açık kaynakta tüm kodlar paylaşılmamıştır. yavaşça paylaşmaya paylaşacağım. o yüzden takipte kalabilirsin. son güncelleme 11.08.2022
