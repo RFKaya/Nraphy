@@ -3,7 +3,7 @@
   "description": "Nraphy",
   "main": "client.js",
   "dependencies": {
-    "discord.js": "^13.9.1",
+    "discord.js": "^13.9.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
