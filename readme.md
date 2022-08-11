@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="150" height="150" src="https://media.discordapp.net/attachments/801418986809589771/975048501912272997/Narpitti.png">
+</p>
+
 <img align="left" src="https://media.discordapp.net/attachments/801418986809589771/975048501912272997/Narpitti.png" height="150" width="150">
 
 # Nraphy • Açık Kaynaklı Discord Botu
@@ -18,10 +22,10 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
 ## Yardıma İhtiyacın Olursa
 [Nraphy Zone Discord Sunucusu](https://discord.gg/JhasTMZr2A)'na katılabilir ve destek alabilirsin. Baştan uyarayım, daha hangi dili kullandığını bile bilmiyorsan lütfen projeyi terk et. He bir de issue mi ne cart curt varmış. Kullanmasını bilmiyorum, ama açabilirsin. Açan olursa öğreniriz.
 
-## Mevcut komutlar
+## Nraphy'den Paylaşılmamış Kodlar (11.08.2022 tarihinde güncellenmiştir)
 | İsim            | Açıklama                                              |
 |-----------------|-------------------------------------------------------|
-| Destek          | Destek sunucusunun linkini veriyo valla vasıfsız      |
+| ❌ Komutlar     | Destek sunucusunun linkini veriyo valla vasıfsız      |
 
 ## Sonraki Güncellemede Yayınlanacaklar
 açıkçası neyi yayınlarız ben de bilmiyorum. yukarıdan bir yerden destek sunucumuza gelip yapılacaklara ve yeniliklere bakabilirsin.
