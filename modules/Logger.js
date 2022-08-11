@@ -1,7 +1,6 @@
 const { WebhookClient } = require('discord.js');
 const chalk = require("chalk");
 const fs = require("fs");
-const db = require("quick.db")
 
 exports.log = (content, type = "log") => {
 
