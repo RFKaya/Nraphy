@@ -53,6 +53,18 @@ async function startUp() {
       };
     });
   });
+   
+  // Connect to Mongoose
+   const mongoose = require('mongoose');
+  client.database = require('./Mongoose/Mongoose.js');
+  mongoose.connect(client.config.mongooseToken, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }).then(() => {
+    client.logger.log('Connected to MongoDB');
+  }).catch((err) => {
+    console.log('Unable to connect to MongoDB Database.\nError: ' + err);
+  });
 
   await client.login(client.config.token);
   
