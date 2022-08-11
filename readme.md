@@ -5,7 +5,7 @@
 # Nraphy • Açık Kaynaklı Discord Botu
 Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte. slash desteklemektedir. botu kurmakla falan uğraşmak istemezseniz ve güncel halini kullanmak isterseniz [Davet bağlantısı](https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code) ile nraphyi davet edebilirsiniz.
 
-## Özellikler (11.08.2022 tarihinde güncellenmiştir)
+## Özellikler
 > ✅ Kendi komutlarınızı ekleyip kullanabilmeniz için optimize altyapı <br>
 > <br>
 > ❌ Komutlar <br>
@@ -27,4 +27,4 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
 açıkçası neyi yayınlarız ben de bilmiyorum. yukarıdan bir yerden destek sunucumuza gelip yapılacaklara ve yeniliklere bakabilirsin.
 
 ## Açık Kaynak Projesi
-bu açık kaynakta tüm kodlar paylaşılmamıştır. botun güncel hâli saklıdır. güncel hâli yavaşça paylaşmaya paylaşacağım, o yüzden takipte kalabilirsin. son güncelleme 11.08.2022
+bu açık kaynakta tüm kodlar paylaşılmamıştır. botun güncel hâli saklıdır. güncel hâli yavaşça paylaşmaya paylaşacağım, o yüzden takipte kalabilirsin. (11.08.2022 tarihinde güncellenmiştir)
