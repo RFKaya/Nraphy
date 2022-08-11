@@ -7,6 +7,7 @@ Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte
 
 ## Özellikler (11.08.2022 tarihinde güncellenmiştir)
 > ✅ Hiçbir şey!
+> 
 > ❌ Her şey!
 
 ## ✨ Başlarken (Getting Started)
