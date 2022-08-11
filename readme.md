@@ -8,7 +8,7 @@ Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte
 ## Özellikler (11.08.2022 tarihinde güncellenmiştir)
 ✅ Kendi komutlarınızı ekleyip kullanabilmeniz için optimize altyapı
 
-❌ Komutlar
+❌ x [] Komutlar
 ❌ Sistemler
 
 ## ✨ Başlarken (Getting Started)
