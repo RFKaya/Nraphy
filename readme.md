@@ -1,3 +1,4 @@
+<img align="left" src="https://media.discordapp.net/attachments/801418986809589771/975048501912272997/Narpitti.png" height="200" width="200">
 [![Nraphy Banner](https://cdn.discordapp.com/attachments/727501328519004200/855012984031412234/Nraphy-Server-Banner.png)](https://discord.gg/JhasTMZr2A 'Nraphy Zone Discord Server')
 
 # Nraphy • Açık Kaynaklı Discord Botu
