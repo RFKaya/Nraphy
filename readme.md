@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="150" height="150" src="https://media.discordapp.net/attachments/801418986809589771/975048501912272997/Narpitti.png">
+  <img width="150" height="150" src="https://cdn.discordapp.com/attachments/801418986809589771/1007426236894691378/Narpitti.png">
 </p>
 
 <img align="left" src="https://media.discordapp.net/attachments/801418986809589771/975048501912272997/Narpitti.png" height="150" width="150">
