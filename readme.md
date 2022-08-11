@@ -8,10 +8,12 @@ bu açık kaynakta tüm kodlar paylaşılmamıştır. botun güncel hâli saklı
 
 ## ✨ Başlarken (Getting Started)
 Botu kullanıma hazırlamak için aşağıdaki adımları izle
-client.js'deki client.settings objesinin verilerini doldur.
-config.json.example dosyasının ".example" kısmını sil, içini doldur.
-cart curt
-konsol acıon `npm start` ceki10
+1. client.js'deki client.settings objesinin verilerini doldur.
+2. config.json.example dosyasının ".example" kısmını sil, içini doldur.
+3. cart curt
+31. npm i cekion
+89. `Logs` adında klasör acı10
+4. konsol acıon `npm start` ceki10
 
 ## Yardıma İhtiyacın Olursa
 [Nraphy Zone Discord Sunucusu](https://discord.gg/JhasTMZr2A)'na katılabilir ve destek alabilirsin. Baştan uyarayım, daha hangi dili kullandığını bile bilmiyorsan lütfen projeyi terk et. He bir de issue mi ne cart curt varmış. Kullanmasını bilmiyorum, ama açabilirsin. Açan olursa öğreniriz.
