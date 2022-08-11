@@ -8,8 +8,19 @@ Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte
 ## Özellikler
 > ✅ Kendi komutlarınızı ekleyip kullanabilmeniz için optimize altyapı <br>
 > <br>
-> ❌ Komutlar <br>
-> ❌ Sistemler <br>
+> ❌ Nraphy'deki Komutlar <br>
+> ❌ Bağlantı-Engel <br>
+> ❌ Buton-Rol <br>
+> ❌ Davet Sistemi <br>
+> ❌ Çekiliş/Drop <br>
+> ❌ Galeri <br>
+> ❌ İsim-Temizleme <br>
+> ❌ Log <br>
+> ❌ Oto-Cevap <br>
+> ❌ Oto-Rol <br>
+> ❌ Sayaç <br>
+> ❌ Spam-Korması <br>
+> ❌ Uyarı <br>
 
 ## ✨ Başlarken (Getting Started)
 Botu kullanıma hazırlamak için aşağıdaki adımları izle
