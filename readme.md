@@ -6,7 +6,8 @@
 Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte. slash desteklemektedir. botu kurmakla falan uğraşmak istemezseniz ve güncel halini kullanmak isterseniz [Davet bağlantısı](https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code) ile nraphyi davet edebilirsiniz.
 
 ## Özellikler (11.08.2022 tarihinde güncellenmiştir)
-> ✅ Hiçbir şey!\n❌ Her şey!
+> ✅ Hiçbir şey!
+> ❌ Her şey!
 
 ## ✨ Başlarken (Getting Started)
 Botu kullanıma hazırlamak için aşağıdaki adımları izle
