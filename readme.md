@@ -2,10 +2,10 @@
   <img width="150" height="150" href="https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code" src="https://cdn.discordapp.com/attachments/801418986809589771/1007426236894691378/Narpitti.png">
 </p>
 
-# Nraphy • Açık Kaynaklı Discord Botu
+# Nraphy - Açık Kaynaklı Discord Botu
 Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte. slash desteklemektedir. botu kurmakla falan uğraşmak istemezseniz ve güncel halini kullanmak isterseniz [Davet bağlantısı](https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code) ile nraphyi davet edebilirsiniz.
 
-## Özellikler
+## ❤️‍🔥 Özellikler
 > ✅ Kendi slah komutlarınızı ekleyip kullanabilmeniz için hazır bir optimize altyapı <br>
 > ✅ Örnek slash komut <br>
 > <br>
