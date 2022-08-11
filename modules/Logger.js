@@ -1,7 +1,5 @@
-const { WebhookClient } = require('discord.js');
 const chalk = require("chalk");
 const fs = require("fs");
-const db = require("quick.db")
 
 exports.log = (content, type = "log") => {
 
@@ -11,18 +9,6 @@ exports.log = (content, type = "log") => {
 
   var date = require("./Date.js");
   var timestamp = date.timestamp()
-
-  var clientDataId = global.clientDataId
-
-  let webhookClient = new WebhookClient({ url: 'BOT LOG CHANNEL WEBHOOK URL' });
-
-  /*webhookClient.send({
-    embeds: [{
-      color: "eb064a",
-      title: "**»** Allaaah, bisiler oldu event mevent var herhalde!",
-      description: `\`\`\`${content}\`\`\``
-    }]
-  })*/
 
   switch (type) {
     case "client": {
@@ -62,21 +48,6 @@ exports.log = (content, type = "log") => {
         function (err) {
           if (err) return console.log(err)
         });
-      const clientDataSchema = require(".././Mongoose/Schema/clientData.js");
-      clientDataSchema.findOne({ dataId: clientDataId })
-        .then(clientData => {
-          clientData.error += 1;
-          clientData.markModified('error');
-          clientData.save()
-        })
-      webhookClient.send({
-        //content: "<@!700385307077509180>",
-        embeds: [{
-          color: "RED",
-          title: `**»** Hata Oluştu! (\`${dateNow}\`)`,
-          description: `\`\`\`${content}\`\`\``,
-        }]
-      })
       return;
     }
     case 'debug': {
@@ -93,13 +64,6 @@ exports.log = (content, type = "log") => {
         function (err) {
           if (err) return console.log(err)
         });
-      const clientDataSchema = require(".././Mongoose/Schema/clientData.js");
-      clientDataSchema.findOne({ dataId: clientDataId })
-        .then(clientData => {
-          clientData.cmd += 1;
-          clientData.markModified('cmd');
-          clientData.save()
-        })
       return;
     }
     case 'interaction': {
@@ -116,13 +80,6 @@ exports.log = (content, type = "log") => {
         function (err) {
           if (err) return console.log(err)
         });
-      const clientDataSchema = require(".././Mongoose/Schema/clientData.js");
-      clientDataSchema.findOne({ dataId: clientDataId })
-        .then(clientData => {
-          clientData.interactionCmd += 1;
-          clientData.markModified('interactionCmd');
-          clientData.save()
-        })
       return;
     }
     case 'ready': {

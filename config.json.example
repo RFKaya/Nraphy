@@ -1,3 +1,4 @@
 {
-  "token": "YOUR TOKEN HERE"
+  "token": "YOUR TOKEN HERE",
+  "mongooseToken": "YOUR MONGOOSE URL"
 }
