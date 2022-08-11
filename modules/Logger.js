@@ -13,16 +13,6 @@ exports.log = (content, type = "log") => {
 
   var clientDataId = global.clientDataId
 
-  let webhookClient = new WebhookClient({ url: 'BOT LOG CHANNEL WEBHOOK URL' });
-
-  /*webhookClient.send({
-    embeds: [{
-      color: "eb064a",
-      title: "**»** Allaaah, bisiler oldu event mevent var herhalde!",
-      description: `\`\`\`${content}\`\`\``
-    }]
-  })*/
-
   switch (type) {
     case "client": {
       console.log(`${timestamp} ${chalk.blue(type.toUpperCase())} ${content} `); //cyan
@@ -68,14 +58,6 @@ exports.log = (content, type = "log") => {
           clientData.markModified('error');
           clientData.save()
         })
-      webhookClient.send({
-        //content: "<@!700385307077509180>",
-        embeds: [{
-          color: "RED",
-          title: `**»** Hata Oluştu! (\`${dateNow}\`)`,
-          description: `\`\`\`${content}\`\`\``,
-        }]
-      })
       return;
     }
     case 'debug': {
