@@ -28,15 +28,15 @@ Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte
 Botu kullanıma hazırlamak için aşağıdaki adımları izle
 1. `client.js` dosyasındaki `client.settings` objesinin verilerini doldur.
 2. `config.json` dosyasının içindeki gerekli yerleri doldur.
-4. Konsola `npm i` çekerek node modülleri yükle.
-5. Dosyaların bulunduğu dizine `Logs` adında bir klasör oluştur.
-Tebrikler, kurulumu hazırladınız. Şimdi ise konsola `npm start` yazarak botu çalıştırabilirsiniz.
+3. Konsola `npm i` çekerek node modülleri yükle.
+4. Dosyaların bulunduğu dizine `Logs` adında bir klasör oluştur.
+> Tebrikler, kurulumu hazırladınız. Şimdi ise konsola `npm start` yazarak botu çalıştırabilirsiniz.
 
 ## Yardıma İhtiyacın Olursa
-[Nraphy Zone Discord Sunucusu](https://discord.gg/JhasTMZr2A)'na katılabilir ve destek alabilirsin. Baştan uyarayım, daha hangi dili kullandığını bile bilmiyorsan lütfen projeyi terk et. He bir de issue mi ne cart curt varmış. Kullanmasını bilmiyorum, ama açabilirsin. Açan olursa öğreniriz.
+[Nraphy Discord Sunucusu](https://discord.gg/JhasTMZr2A)'na katılabilir ve destek alabilirsin. Baştan uyarayım, daha hangi dili kullandığını bile bilmiyorsan lütfen projeyi terk et.
 
-## Sonraki Güncellemede Yayınlanacaklar
-açıkçası neyi yayınlarız ben de bilmiyorum. yukarıdan bir yerden destek sunucumuza gelip yapılacaklara ve yeniliklere bakabilirsin.
+## Güncelleme Desteği
+Çok kısa aralıklarla olmasa da ben projeyi bırakana kadar güncelleme desteğini veririm. Birkaç ayda bir yoklamakta fayda var. Bırakırsam da burada belirtirim.
 
 ## Açık Kaynak Projesi
-bu açık kaynakta tüm kodlar paylaşılmamıştır. botun güncel hâli saklıdır. güncel hâli yavaşça paylaşmaya paylaşacağım, o yüzden takipte kalabilirsin. (11.08.2022 tarihinde güncellenmiştir)
+Bu açık kaynakta tüm Nraphy kodları paylaşılmamıştır. Botun güncel hâli saklıdır, güncel hâlini yavaşça paylaşacağım. O yüzden takipte kalabilirsin.
