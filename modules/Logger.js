@@ -1,21 +1,91 @@
-const chalk = require("chalk");
-const fs = require("fs");
+//Tanımlar => Modüller
+const { WebhookClient } = require('discord.js'),
+  chalk = require("chalk"),
+  fs = require("fs"),
+  timestamp = require("./Date.js").timestamp();
 
+//Tanımlar => logFile
+var nowDate = new Date(),
+  logFile = `./logs/log-${nowDate.getFullYear()}.${(nowDate.getMonth() + 1)}.txt`;
+
+//Tanımlar => Webhook
+var webhookClient = new WebhookClient({ url: 'https://canary.discord.com/api/webhooks/...' }); //Enter webhook url here
+
+exports.cmdLog = async (user, guild, type, cmdName, content) => {
+
+  var capitalizeFirstLetter = ([first, ...rest], locale = navigator.language) => first.toLocaleUpperCase(locale) + rest.join('');
+
+  //Console Log
+  console.log(`${timestamp} ${chalk.white(`CMD (${type.toUpperCase()})`)} ${user.tag} (${user.id}) => ${capitalizeFirstLetter(cmdName, "tr")}`);
+
+  //Log TXT
+  fs.appendFile(logFile,
+    `${timestamp} (CMD) (${type.toUpperCase()})\n` +
+    ` => User: ${user.tag} (${user.id})\n` +
+    ` => Guild: ${guild.name} (${guild.id})\n` +
+    ` => CMD: ${capitalizeFirstLetter(cmdName, "tr")}\n` +
+    ` => Content: ${content || "No Data"}\n\n`,
+    function (err) {
+      if (err) return console.log(err);
+    });
+
+};
+
+exports.error = async (content) => {
+
+  var dateNow = Date.now();
+
+  //Console Log
+  console.log(`${timestamp} ${chalk.red("ERROR")} ${content}`);
+  console.error(content);
+
+  //Log TXT
+  fs.appendFile(logFile, 
+    `${timestamp} (ERROR) Error Log\n` + 
+    ` => ID: ${dateNow}\n` + 
+    ` => Content: ${content}\n\n`,
+    function (err) {
+      if (err) return console.log(err);
+    });
+
+  //Database Error Counter
+  /*const clientDataSchema = require(".././Mongoose/Schema/clientData.js");
+  clientDataSchema.findOne({ dataId: clientDataId })
+    .then(clientData => {
+      clientData.error += 1;
+      clientData.markModified('error');
+      clientData.save()
+    })*/
+
+  //Webhook Log
+  webhookClient.send({
+    //content: "<@!700385307077509180>",
+    embeds: [{
+      color: 0xE74C3C,
+      title: `**»** Hata Oluştu! (\`${dateNow}\`)`,
+      description: `\`\`\`${content}\`\`\``,
+    }]
+  });
+
+};
+
+//------------------------------⬇️ Eski ⬇️------------------------------//
 exports.log = (content, type = "log") => {
 
-  var nowDate = new Date();
-  var date = `${nowDate.getFullYear()}.${(nowDate.getMonth() + 1)}`;
-  var logFile = `./logs/log-${date}.txt`
-
-  var date = require("./Date.js");
-  var timestamp = date.timestamp()
+  /*webhookClient.send({
+    embeds: [{
+      color: "eb064a",
+      title: "**»** Allaaah, bisiler oldu event mevent var herhalde!",
+      description: `\`\`\`${content}\`\`\``
+    }]
+  })*/
 
   switch (type) {
     case "client": {
       console.log(`${timestamp} ${chalk.blue(type.toUpperCase())} ${content} `); //cyan
       fs.appendFile(logFile, `\n\n\n${timestamp} (${type.toUpperCase()}) ${content}\n\n`,
         function (err) {
-          if (err) return console.log(err)
+          if (err) return console.log(err);
         });
       return;
     }
@@ -23,7 +93,7 @@ exports.log = (content, type = "log") => {
       console.log(`${timestamp} ${chalk.yellow(type.toUpperCase())} ${content} `);
       fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) ${content}\n\n`,
         function (err) {
-          if (err) return console.log(err)
+          if (err) return console.log(err);
         });
       return;
     }
@@ -31,38 +101,18 @@ exports.log = (content, type = "log") => {
       console.log(`${timestamp} ${chalk.blue(type.toUpperCase())} ${content} `);
       fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) ${content}\n\n`,
         function (err) {
-          if (err) return console.log(err)
+          if (err) return console.log(err);
         });
       return;
     }
     case 'warn': {
       return console.log(`${timestamp} ${chalk.yellow(type.toUpperCase())} ${content} `);
     }
-    case 'error': {
-
-      let dateNow = Date.now();
-
-      console.log(`${timestamp} ${chalk.red(type.toUpperCase())} ${content} `);
-      //console.log(content);
-      fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) Error Log (ID: ${dateNow})\n • ${content}\n\n`,
-        function (err) {
-          if (err) return console.log(err)
-        });
-      return;
-    }
     case 'debug': {
       console.log(`${timestamp} ${chalk.gray(type.toUpperCase())}`, content);
       fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) ${content}\n\n`,
         function (err) {
-          if (err) return console.log(err)
-        });
-      return;
-    }
-    case 'cmd': {
-      console.log(`${timestamp} ${chalk.white(type.toUpperCase())} ${content}`);
-      fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) Command Usage Log\n • ${content}\n\n`,
-        function (err) {
-          if (err) return console.log(err)
+          if (err) return console.log(err);
         });
       return;
     }
@@ -70,15 +120,7 @@ exports.log = (content, type = "log") => {
       console.log(`${timestamp} ${chalk.white(type.toUpperCase())} ${content}`);
       fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) Interaction Log\n • ${content}\n\n`,
         function (err) {
-          if (err) return console.log(err)
-        });
-      return;
-    }
-    case 'interactionCmd': {
-      console.log(`${timestamp} ${chalk.white(type.toUpperCase())} ${content}`);
-      fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) Interaction Command Usage Log\n • ${content}\n\n`,
-        function (err) {
-          if (err) return console.log(err)
+          if (err) return console.log(err);
         });
       return;
     }
@@ -94,7 +136,7 @@ exports.log = (content, type = "log") => {
     case 'event': {
       return console.log(`${timestamp} ${chalk.cyan(type.toUpperCase())} ${content} `);
     }
-    default: throw new TypeError('Yanlış tür sectin usta');
+    default: throw new TypeError('Wrong type');
   }
 };
 
@@ -102,17 +144,11 @@ exports.client = (...args) => this.log(...args, 'client');
 
 exports.shard = (...args) => this.log(...args, 'shard');
 
-exports.error = (...args) => this.log(...args, 'error');
-
 exports.warn = (...args) => this.log(...args, 'warn');
 
 exports.debug = (...args) => this.log(...args, 'debug');
 
-exports.cmd = (...args) => this.log(...args, 'cmd');
-
 exports.interaction = (...args) => this.log(...args, 'interaction');
-
-exports.interactionCmd = (...args) => this.log(...args, 'interactionCmd');
 
 exports.ready = (...args) => this.log(...args, 'ready');
 
