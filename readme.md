@@ -3,34 +3,34 @@
 </p>
 
 # Nraphy - Açık Kaynaklı Discord Botu
-Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte. slash desteklemektedir. botu kurmakla falan uğraşmak istemezseniz ve güncel halini kullanmak isterseniz [Davet bağlantısı](https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code) ile nraphyi davet edebilirsiniz.
+Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte. Güncel Discord.js sürümünü (v14) kullanmaktadır ve slash komutları desteklemektedir. Botu kurmakla falan uğraşmak istemezseniz ve güncel halini kullanmak isterseniz [Davet bağlantısı](https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code) ile nraphyi davet edebilirsiniz.
 
 ## ❤️‍🔥 Özellikler
 > ✅ Kendi slah komutlarınızı ekleyip kullanabilmeniz için hazır bir optimize altyapı <br>
 > ✅ Örnek slash komut <br>
 > <br>
 > ❌ Nraphy'deki Komutlar <br>
-> ❌ Bağlantı-Engel <br>
-> ❌ Buton-Rol <br>
+> ❌ Bağlantı Engel <br>
+> ❌ Buton Rol <br>
+> ❌ Büyük Harf Engel
 > ❌ Davet Sistemi <br>
 > ❌ Çekiliş/Drop <br>
 > ❌ Galeri <br>
-> ❌ İsim-Temizleme <br>
+> ❌ İsim Temizleme <br>
 > ❌ Log <br>
-> ❌ Oto-Cevap <br>
-> ❌ Oto-Rol <br>
+> ❌ Oto Cevap <br>
+> ❌ Oto Rol <br>
 > ❌ Sayaç <br>
-> ❌ Spam-Korması <br>
+> ❌ Spam Koruması <br>
 > ❌ Uyarı <br>
 
 ## ✨ Başlarken (Getting Started)
 Botu kullanıma hazırlamak için aşağıdaki adımları izle
-1. client.js'deki client.settings objesinin verilerini doldur.
-2. config.json.example dosyasının ".example" kısmını sil, içini doldur.
-3. cart curt
-31. npm i cekion
-89. `Logs` adında klasör acı10
-4. konsol acıon `npm start` ceki10
+1. `client.js` dosyasındaki `client.settings` objesinin verilerini doldur.
+2. `config.json` dosyasının içindeki gerekli yerleri doldur.
+4. Konsola `npm i` çekerek node modülleri yükle.
+5. Dosyaların bulunduğu dizine `Logs` adında bir klasör oluştur.
+Tebrikler, kurulumu hazırladınız. Şimdi ise konsola `npm start` yazarak botu çalıştırabilirsiniz.
 
 ## Yardıma İhtiyacın Olursa
 [Nraphy Zone Discord Sunucusu](https://discord.gg/JhasTMZr2A)'na katılabilir ve destek alabilirsin. Baştan uyarayım, daha hangi dili kullandığını bile bilmiyorsan lütfen projeyi terk et. He bir de issue mi ne cart curt varmış. Kullanmasını bilmiyorum, ama açabilirsin. Açan olursa öğreniriz.
