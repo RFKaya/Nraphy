@@ -8,8 +8,8 @@ const { WebhookClient } = require('discord.js'),
 var nowDate = new Date(),
   logFile = `./logs/log-${nowDate.getFullYear()}.${(nowDate.getMonth() + 1)}.txt`;
 
-//Tanımlar => Webhook
-var webhookClient = new WebhookClient({ url: 'https://canary.discord.com/api/webhooks/...' }); //Enter webhook url here
+//Tanımlar => WebhookUrl
+var webhookUrl = ''; //Enter webhook url here
 
 exports.cmdLog = async (user, guild, type, cmdName, content) => {
 
@@ -40,9 +40,9 @@ exports.error = async (content) => {
   console.error(content);
 
   //Log TXT
-  fs.appendFile(logFile, 
-    `${timestamp} (ERROR) Error Log\n` + 
-    ` => ID: ${dateNow}\n` + 
+  fs.appendFile(logFile,
+    `${timestamp} (ERROR) Error Log\n` +
+    ` => ID: ${dateNow}\n` +
     ` => Content: ${content}\n\n`,
     function (err) {
       if (err) return console.log(err);
@@ -58,14 +58,17 @@ exports.error = async (content) => {
     })*/
 
   //Webhook Log
-  webhookClient.send({
-    //content: "<@!700385307077509180>",
-    embeds: [{
-      color: 0xE74C3C,
-      title: `**»** Hata Oluştu! (\`${dateNow}\`)`,
-      description: `\`\`\`${content}\`\`\``,
-    }]
-  });
+  if (webhookUrl) {
+    var webhookClient = new WebhookClient({ url: webhookUrl });
+    webhookClient.send({
+      //content: "<@!700385307077509180>",
+      embeds: [{
+        color: 0xE74C3C,
+        title: `**»** Hata Oluştu! (\`${dateNow}\`)`,
+        description: `\`\`\`${content}\`\`\``,
+      }]
+    });
+  }
 
 };
 
