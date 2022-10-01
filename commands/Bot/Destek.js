@@ -1,4 +1,4 @@
-const { MessageButton } = require('discord.js');
+const { ButtonBuilder } = require('discord.js');
 
 module.exports = {
   interaction: {
@@ -9,19 +9,20 @@ module.exports = {
   aliases: [],
   category: "Bot",
   memberPermissions: [],
-  botPermissions: ["SEND_MESSAGES", "EMBED_LINKS", "READ_MESSAGE_HISTORY"],
+  botPermissions: ["SendMessages", "EmbedLinks", "ReadMessageHistory"],
   nsfw: false,
   cooldown: false,
   ownerOnly: false,
 
   async execute(client, interaction, data) {
 
-    let destekSunucusuButon = new MessageButton().setLabel('Destek Sunucusu').setURL(`https://discord.gg/QvaDHvuYVm`).setStyle('LINK');
+    let destekSunucusuButon = new ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/QvaDHvuYVm`).setStyle('Link');
 
     interaction.reply({
+      content: `<https://discord.gg/QvaDHvuYVm>`,
       embeds: [
         {
-          color: client.settings.color,
+          color: client.settings.embedColors.default,
           title: '**»** Destek sunucumuza ulaşmak için buraya tıkla!',
           url: "https://discord.gg/QvaDHvuYVm",
           author: {
@@ -30,14 +31,14 @@ module.exports = {
           },
           timestamp: new Date(),
           footer: {
-            text: `${(interaction.type == "APPLICATION_COMMAND") ? interaction.user.username : interaction.author.username} tarafından istendi.`,
-            icon_url: (interaction.type == "APPLICATION_COMMAND") ? interaction.user.displayAvatarURL({ dynamic: true, size: 1024 }) : interaction.author.displayAvatarURL({ dynamic: true, size: 1024 }),
+            text: `${(interaction.type == 2) ? interaction.user.username : interaction.author.username} tarafından istendi.`,
+            icon_url: (interaction.type == 2) ? interaction.user.displayAvatarURL({ dynamic: true, size: 1024 }) : interaction.author.displayAvatarURL({ dynamic: true, size: 1024 }),
           },
         }
       ],
       components: [
-        {
-          type: 1, components: [
+         {
+              data: { type: 1 }, components: [
             destekSunucusuButon
           ]
         },

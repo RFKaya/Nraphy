@@ -10,7 +10,11 @@ module.exports.users = userSchema;
 module.exports.giveaways = giveawaySchema;
 module.exports.betaGiveaways = betaGiveawaySchema;
 
-module.exports.fetchClientData = async dataId => await clientDataSchema.findOne({ dataId });
+module.exports.fetchClientData = async function fetchClientData() { 
+  const nowDate = new Date();
+  const clientDataDate = `${nowDate.getDate()}.${(nowDate.getMonth() + 1)}.${nowDate.getFullYear()}`
+  return await clientDataSchema.findOne({ date: clientDataDate }) || await clientDataSchema.create({ date: clientDataDate }); 
+}
 module.exports.fetchGuild = async guildId => await guildSchema.findOne({ guildId }) || await guildSchema.create({ guildId });
 module.exports.fetchUser = async userId => await userSchema.findOne({ userId }) || await userSchema.create({ userId });
 module.exports.fetchBetaGiveaway = async messageId => await betaGiveawaySchema.findOne({ messageId });
