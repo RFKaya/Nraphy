@@ -38,7 +38,7 @@ const lastMessage = new Set();
 
 client.settings = {
   presence: "PRESENCE",
-  prefix: "YOUR PREFIX",
+  prefix: "PREFIX",
   owner: "OWNER ID",
   icon: "ICON LINK",
   embedColors: {
@@ -68,7 +68,6 @@ client.events = new Discord.Collection();
 client.commands = new Discord.Collection();
 client.logger = require("./modules/Logger.js");
 client.date = require("./modules/Date.js");
-client.userFetcher = require("./modules/userFetcher.js");
 client.config = require("./config.json");
 client.listGuilds = async function listGuilds() {
   var guilds = [];
@@ -166,20 +165,6 @@ process.on("unhandledRejection", (err) => {
 //require('events').EventEmitter.prototype._maxListeners = 100;
 
 //------------------------------Kurulum------------------------------//
-
-//------------------------------Log Sistemi------------------------------//
-
-//Starting all events
-const eventFiles = fs.readdirSync('./events/logger/').filter(file => file.endsWith('.js'));
-//client.logger.load(`Loading Events...`)
-for (const file of eventFiles) {
-  const event = require(`./events/logger/${file}`);
-  const eventName = file.split(".")[0];
-  //client.logger.event(`Loading Event: ${eventName}`);
-  client.on(eventName, event.bind(null, client));
-}
-
-//------------------------------Log Sistemi------------------------------//
 
 //------------------------------Presence Yenileme------------------------------//
 
