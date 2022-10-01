@@ -12,7 +12,7 @@ Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte
 > ❌ Nraphy'deki Komutlar <br>
 > ❌ Bağlantı Engel <br>
 > ❌ Buton Rol <br>
-> ❌ Büyük Harf Engel
+> ❌ Büyük Harf Engel <br>
 > ❌ Davet Sistemi <br>
 > ❌ Çekiliş/Drop <br>
 > ❌ Galeri <br>
