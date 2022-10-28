@@ -41,7 +41,7 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
 ## Açık Kaynak Projesi
 Bu açık kaynakta tüm Nraphy kodları paylaşılmamıştır. Botun güncel hâli saklıdır, güncel hâlini yavaşça paylaşacağım. O yüzden takipte kalabilirsin.
 
-## Teşekkürler
+## ❤️ Ayrıca Teşekkürler
 Aşağıdaki kişilere, projelere ve aklıma gelmeyen daha nice kaynağa, emeklerinden dolayı teşekkürlerimi sunuyorum. (Aklıma geldikçe dahasını da ekleyeceğim)
 * [Androz2091](https://github.com/Androz2091)
 * [Alita](https://github.com/KSJaay/Alita)
