@@ -5,7 +5,7 @@ module.exports = async (client, interaction) => {
   if (!interaction.guild) return interaction.reply({ content: ":x: | Etkileşim komutları maalesef DM'de kullanılamamaktadır." });
 
   if (interaction.type !== 2)
-    client.logger.interaction(`${interaction.type} - customId: ${interaction.customId}`);
+    client.logger.interaction(`user: ${interaction.user.tag} (${interaction.user.id}), type: ${interaction.type}, customId: ${interaction.customId}`);
 
   if (interaction.type == 2)
     try {
@@ -42,7 +42,7 @@ module.exports = async (client, interaction) => {
       if (cmd.voteRequired) {
         let topgg = require(`@top-gg/sdk`);
         let topggapi = new topgg.Api(client.config.topggToken);
-        let userData = await client.database.fetchUser(interaction.user.id);
+        let userData = await client.database.fetchUser(interaction.user.id, ["NraphyPremium"]);
         let premium = data.premium = (userData.NraphyPremium && userData.NraphyPremium > Date.now());
         if (!(await topggapi.hasVoted(interaction.user.id)) && !premium) {
           return interaction.reply({
@@ -70,19 +70,13 @@ module.exports = async (client, interaction) => {
       //---------------Permissions---------------//
       const permissions = require("../utils/Permissions.json");
 
-      let userPerms = [],
-        clientPerms = [];
-
-      cmd.memberPermissions.forEach((perm) => {
-        if (!interaction.channel.permissionsFor(interaction.member).has(perm)) {
-          userPerms.push(permissions[perm]);
-        }
-      });
-      cmd.botPermissions.forEach((perm) => {
-        if (!interaction.channel.permissionsFor(interaction.guild.members.me).has(perm)) {
-          clientPerms.push(permissions[perm]);
-        }
-      });
+      let
+        userPerms = cmd.memberPermissions
+          .filter(perm => !interaction.channel.permissionsFor(interaction.member).has(perm))
+          .map(perm => permissions[perm]),
+        clientPerms = cmd.botPermissions
+          .filter(perm => !interaction.channel.permissionsFor(interaction.guild.members.me).has(perm))
+          .map(perm => permissions[perm]);
 
       if (userPerms.length > 0) {
         if (clientPerms.includes("Bağlantı Yerleştir")) {

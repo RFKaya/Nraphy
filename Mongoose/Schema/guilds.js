@@ -12,56 +12,46 @@ module.exports = mongoose.model("guild", new mongoose.Schema({
   },
 
   //Moderasyon
-  autoReply: { type: Boolean, default: false },
+  autoReply: Boolean,
 
   autoRole: {
-    type: Object, default: {
-      role: null,
-      channel: null,
-      setupChannel: null
-    }
+    role: String,
+    channel: String,
+    setupChannel: String
+
   },
 
-  buttonRole: {
-    type: Object, default: {}
-  },
+  buttonRole: Object,
+
+  gallery: String,
 
   inviteManager: {
-    type: Object, default: {
-      channel: false,
-      setupChannel: null,
-      invites: []
-    }
+    channel: String,
+    setupChannel: String,
+    invites: [String]
   },
 
   linkBlock: {
-    type: Object, default: {
-      guild: false,
-      channels: [],
-      exempts: { channels: [], roles: [] }
-    }
+    guild: Boolean,
+    channels: [String],
+    exempts: { channels: [String], roles: [String] }
+
   },
 
   logger: {
-    type: Object, default: {
-      webhook: null
-    }
+    webhook: String
   },
 
   memberCounter: {
-    type: Object, default: {
-      target: null,
-      channel: null,
-      setupChannel: null
-    }
+    target: Number,
+    channel: String,
+    setupChannel: String
   },
 
   spamProtection: {
-    type: Object, default: {
-      guild: false,
-      channels: [],
-      exempts: { channels: [], roles: [] }
-    }
+    guild: Boolean,
+    channels: [String],
+    exempts: { channels: [String], roles: [String] }
   },
 
   /*starboard: {
@@ -70,36 +60,30 @@ module.exports = mongoose.model("guild", new mongoose.Schema({
         messages: {},
         exempts: { channels: [] }
     }
-},*/
+  },*/
 
   upperCaseBlock: {
-    type: Object, default: {
-      guild: false,
-      channels: [],
-      exempts: { channels: [], roles: [] },
-      rate: 70
-    }
+    guild: Boolean,
+    channels: [String],
+    exempts: { channels: [String], roles: [String] },
+    rate: { type: Number, default: 70 }
   },
 
-  warns: {
-    type: Object, default: {}
-  },
+  warns: Object,
 
   //Oyunlar
   countingGame: {
-    type: Object, default: {
-      channel: null,
-      number: 0,
-      setupChannel: null
-    }
+    channel: String,
+    number: { type: Number, default: 0},
+    setupChannel: String
   },
+
   wordGame: {
-    type: Object, default: {
-      channel: null,
-      lastWord: null,
-      setupChannel: null,
-      stats: {}
-    }
+    channel: String,
+    lastWord: String,
+    setupChannel: String,
+    stats: Object
+
   },
 
 }));

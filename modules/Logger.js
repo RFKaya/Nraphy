@@ -13,7 +13,7 @@ var webhookUrl = ''; //Enter webhook url here
 
 exports.cmdLog = async (user, guild, type, cmdName, content) => {
 
-  var capitalizeFirstLetter = ([first, ...rest], locale = navigator.language) => first.toLocaleUpperCase(locale) + rest.join('');
+  var capitalizeFirstLetter = ([first, ...rest], locale = "tr-TR") => first.toLocaleUpperCase(locale) + rest.join('');
 
   //Console Log
   console.log(`${timestamp} ${chalk.white(`CMD (${type.toUpperCase()})`)} ${user.tag} (${user.id}) => ${capitalizeFirstLetter(cmdName, "tr")}`);
@@ -28,6 +28,24 @@ exports.cmdLog = async (user, guild, type, cmdName, content) => {
     function (err) {
       if (err) return console.log(err);
     });
+
+  //Client commandUses
+  const Mongoose = require(".././Mongoose/Mongoose.js");
+  var clientData = await Mongoose.fetchClientData();
+  if (!clientData.commandUses[cmdName])
+    clientData.commandUses[cmdName] = 1; else
+    clientData.commandUses[cmdName] += 1;
+  clientData.markModified(`commandUses.${cmdName}`);
+  await clientData.save();
+
+  //User commandUses
+  var userData = await Mongoose.fetchUser(user.id, ["statistics", "commandUses"]);
+  userData.statistics.commandUses += 1;
+  if (userData.commandUses) {
+    userData.statistics.commandUses += userData.commandUses;
+    userData.commandUses = undefined;
+  }
+  await userData.save();
 
 };
 
@@ -49,13 +67,11 @@ exports.error = async (content) => {
     });
 
   //Database Error Counter
-  /*const clientDataSchema = require(".././Mongoose/Schema/clientData.js");
-  clientDataSchema.findOne({ dataId: clientDataId })
-    .then(clientData => {
-      clientData.error += 1;
-      clientData.markModified('error');
-      clientData.save()
-    })*/
+  const Mongoose = require(".././Mongoose/Mongoose.js");
+  var clientData = await Mongoose.fetchClientData();
+  clientData.error += 1;
+  clientData.markModified('error');
+  await clientData.save();
 
   //Webhook Log
   if (webhookUrl) {

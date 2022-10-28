@@ -1,6 +1,5 @@
 {
-  "token": "TOKEN HERE",
-  "totalShards": 1,
-  "topggToken": "TOPGG TOKEN HERE",
-  "mongooseToken": "MONGOOSE TOKEN HERE"
+  "token": "TOKEN",
+  "topggToken": "",
+  "mongooseToken": ""
 }

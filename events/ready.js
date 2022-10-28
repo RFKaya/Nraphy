@@ -1,5 +1,8 @@
 const db = require("quick.db"),
-  tcpPortUsed = require('tcp-port-used');
+  tcpPortUsed = require('tcp-port-used'),
+  { ButtonBuilder, WebhookClient } = require('discord.js'),
+  topgg = require(`@top-gg/sdk`),
+  random = require("random");
 
 module.exports = async (client) => {
 
@@ -16,6 +19,15 @@ module.exports = async (client) => {
     });//.catch(console.error);
 
     //------------------------------Oynuyor------------------------------//
+
+    //------------------------------Bot İstatistik------------------------------//
+
+    /*var clientData = await client.database.fetchClientData(global.clientDataId);
+    clientData.crash += 1;
+    clientData.markModified('crash');
+    await clientData.save();*/
+
+    //------------------------------Bot İstatistik------------------------------//
 
     //------------------------------Dashboard------------------------------//
 

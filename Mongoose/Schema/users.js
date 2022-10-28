@@ -2,37 +2,56 @@ const mongoose = require("mongoose");
 
 module.exports = mongoose.model("user", new mongoose.Schema({
 
-    userId: { type: String, unique: true },
-    registeredAt: { type: Number, default: Date.now() },
-    commandUses: { type: Number, default: 0 },
-    readDateOfChanges: { type: Number, default: 0 },
+  userId: { type: String, unique: true },
+  registeredAt: { type: Number, default: Date.now() },
+  readDateOfChanges: { type: Number, default: 0 },
 
-    about: { type: String, default: null },
-    comments: { type: Object, default: [] },
-
-    NraphyCoin: { type: Number, default: 0 },
-    NraphyPremium: { type: Number, default: null },
-    USD: { type: Number, default: 0 },
-
-    lastBonus: {
-        type: Object, default: {
-            lastStandardBonus: null,
-            lastPremiumBonus: null,
-        }
-    },
-
-    hunter: {
-        type: Object, default: {
-            level: 0
-        }
-    },
-
-    topggVotes: {
-        type: Object, default: {
-            voteAmount: 0,
-            lastVote: null,
-            lastRemind: null
-        }
+  about: { type: String, default: null },
+  comments: [
+    {
+      user: String,
+      date: Number,
+      comment: String,
+      id: Number,
     }
+  ],
+
+  NraphyCoin: { type: Number, default: 0, get: Math.floor },
+  NraphyPremium: { type: Number, default: null },
+  USD: { type: Number, default: 0 },
+
+  commandUses: Number, //{ type: Number, default: 0 },
+  statistics: {
+    commandUses: { type: Number, default: 0 },
+    bannedUsers: { type: Number, default: 0 },
+    kickedUsers: { type: Number, default: 0 },
+    jackpot: { //{ type: Number, default: 0 },
+      uses: { type: Number, default: 0 },
+      totalBetNC: { type: Number, default: 0 },
+      earnedNC: { type: Number, default: 0 },
+      lostNC: { type: Number, default: 0 }
+    }
+  },
+
+  AFK: {
+    reason: String,
+    time: Date
+  },
+
+  lastBonus: {
+    lastStandardBonus: Date,
+    lastPremiumBonus: Date,
+  },
+
+  hunter: {
+    level: { type: Number, default: 0 }
+
+  },
+
+  topggVotes: {
+    voteAmount: { type: Number, default: 0 },
+    lastVote: { type: Date, default: null },
+    lastRemind: { type: Date, default: null }
+  }
 
 }));

@@ -21,23 +21,24 @@ Bu projede tüm Nraphy kodları açık olarak paylaşılmamıştır. Botun günc
 > ❌ Sayaç <br>
 > ❌ Spam Koruması <br>
 > ❌ Uyarı <br>
-> ❌ Müzik Sistemi <br>
+> ✅ Müzik Sistemi <br>
 > ❌ Kelime Oyunu <br>
 > ❌ Sayı Saymaca <br>
 
 ### Komutlar
-> ❌ Yetkili Komutları <br>
-> ❌ Eğlence Komutları <br>
-> ❌ Genel Komutlar <br>
-> ❌ Oyunlar <br>
-> ❌ Müzik Komutları <br>
+> 🟠 Yetkili Komutları <br>
+> 🟠 Eğlence Komutları <br>
+> 🟠 Genel Komutlar <br>
+> 🟠 Oyunlar <br>
+> ✅ Müzik Komutları <br>
 > ❌ Çekiliş <br>
 > ❌ NraphyCoin <br>
-> ❌ Botla İlgili Komutlar <br>
+> ✅ Botla İlgili Komutlar <br>
 
 ### Diğer
 > ✅ Kendi slash komutlarınızı ekleyip kullanabilmeniz için optimize bir altyapı <br>
-> ✅ Örnek slash komut <br>
+> ✅ Client'a tanımlı, işlevli fonksiyonlar <br>
+> ✅ Burada bahsedilmeyen birçok özellik daha... <br>
 
 ## ✨ Başlarken (Getting Started)
 Botu kullanıma hazırlamak için aşağıdaki adımları izle

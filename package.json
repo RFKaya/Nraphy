@@ -13,17 +13,14 @@
     "common-tags": "^1.8.0",
     "discord-api-types": "^0.22.0",
     "discord-giveaways": "^6.0.1",
-    "discord-player": "^5.3.1",
-    "discord.js": "^14.3.0",
+    "discord-player": "^5.3.2",
+    "discord.js": "^14.6.0",
     "ejs": "^3.1.8",
     "express": "^4.17.1",
     "express-session": "^1.17.3",
     "ffmpeg-static": "^5.0.0",
-    "fs": "^0.0.2",
-    "generate-password": "^1.5.0",
     "gifencoder": "^2.0.1",
     "humanize-duration": "^3.24.0",
-    "math-expression-evaluator": "^1.2.22",
     "memorystore": "^1.6.7",
     "moment": "^2.29.1",
     "mongoose": "^6.3.1",
@@ -36,7 +33,8 @@
     "quick.db": "^7.1.3",
     "random": "^2.2.0",
     "request": "^2.88.2",
-    "songlyrics": "^2.2.4",
+    "songlyrics": "^2.4.4",
+    "spotify-url-info": "^3.1.9",
     "tcmb-doviz": "^1.1.2",
     "tcp-port-used": "^1.0.2",
     "topgg-autoposter": "^2.0.1",
@@ -44,7 +42,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node shard.js"
+    "start": "node --max-old-space-size=4096 shard.js"
   },
   "keywords": [
     "package.json",
@@ -52,5 +50,8 @@
     "init"
   ],
   "author": "RFKaya",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.25.0"
+  }
 }

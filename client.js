@@ -1,6 +1,7 @@
-const { Client, GatewayIntentBits, WebhookClient } = require('discord.js');
+const { Client, GatewayIntentBits, Options } = require('discord.js');
 const Discord = require('discord.js');
 const fs = require("fs");
+const db = require("quick.db");
 const util = require("util");
 const readdir = util.promisify(fs.readdir);
 
@@ -24,7 +25,19 @@ const client = new Client({
       GatewayIntentBits.DirectMessageTyping,
       GatewayIntentBits.MessageContent,
       GatewayIntentBits.GuildScheduledEvents
-    ]
+    ],
+  failIfNotExists: false,
+  /*sweepers: {
+    ...Options.DefaultSweeperSettings,
+    threads: {
+      interval: 3600,
+      lifetime: 10800
+    },
+    messages: {
+      interval: 3600, // Every hour...
+      lifetime: 7200,	// Remove messages older than 30 minutes.
+    },
+  },*/
 });
 
 const interactionCommands = [];
@@ -32,15 +45,18 @@ const interactionCommands = [];
 client.userDataCache = {};
 client.guildDataCache = {};
 
-const lastMessage = new Set();
+client.guildInvites = new Map();
+client.gamesPlaying = new Map();
+client.usersMap = new Map();
+client.warnsMap = new Map();
 
 //------------------------------Ayarlar------------------------------//
 
 client.settings = {
-  presence: "PRESENCE",
-  prefix: "PREFIX",
-  owner: "OWNER ID",
-  icon: "ICON LINK",
+  presence: "❤️ /komutlar • /aşk-ölçer",
+  prefix: "n!",
+  owner: "700385307077509180",
+  icon: "https://cdn.discordapp.com/attachments/801418986809589771/975048501912272997/Narpitti.png",
   embedColors: {
     default: 0xEB1C5A, //"eb1c5a" (Nraphy), "00ffb8" (Test),
     green: 0x2ECC71,
@@ -49,7 +65,7 @@ client.settings = {
     blue: 0x3498DB,
   },
   language: "tr",
-  invite: "INVITE URL",
+  invite: "https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code",
   webPanel: { //This is useless
     "clientSecret": "",
     "domain": "",
@@ -68,20 +84,39 @@ client.events = new Discord.Collection();
 client.commands = new Discord.Collection();
 client.logger = require("./modules/Logger.js");
 client.date = require("./modules/Date.js");
+//client.userFetcher = require("./modules/userFetcher.js");
 client.config = require("./config.json");
-client.listGuilds = async function listGuilds() {
-  var guilds = [];
-  await client.shard.broadcastEval(c => c.guilds.cache).then(async function (guildsArray) {
-    await guildsArray.forEach(async function (guildsInArray) {
-      await guildsInArray.forEach(async function (guild) {
-        await guilds.push(guild.id);
-      });
-    });
-  });
+client.databaseCache = process.argv[4];
+client.listGuilds = async function () {
+  const guilds = [];
+  const guildsArray = await client.shard.broadcastEval(c => c.guilds.cache);
+  for (const guild of guildsArray)
+    guild.forEach(g => guilds.push(g.id));
   return guilds;
 };
-client.capitalizeFirstLetter = ([first, ...rest], locale = navigator.language) => first.toLocaleUpperCase(locale) + rest.join('');
+client.capitalizeFirstLetter = ([first, ...rest], locale = "tr-TR") => first.toLocaleUpperCase(locale) + rest.join('');
 client.wait = ms => new Promise(res => setTimeout(res, ms));
+client.removeConsecutiveDuplicates = function removeConsecutiveDuplicates(input) {
+  if (input.length <= 1)
+    return input;
+  if (input[0] == input[1])
+    return removeConsecutiveDuplicates(input.substring(1));
+  else
+    return input[0] +
+      removeConsecutiveDuplicates(input.substring(1));
+};
+client.getRandom = function getRandom(arr, n) {
+  let len = arr.length;
+  if (n > len) n = len;
+  let result = new Array(n),
+    taken = new Array(len);
+  while (n--) {
+    let x = Math.floor(Math.random() * len);
+    result[n] = arr[x in taken ? taken[x] : x];
+    taken[x] = --len in taken ? taken[len] : len;
+  }
+  return result;
+};
 
 async function startUp() {
 
@@ -159,6 +194,10 @@ process.on("unhandledRejection", (err) => {
   console.error(err);
   client.logger.error(err);
 });
+process.on('uncaughtException', (err) => {
+  console.error(err);
+  client.logger.error(err);
+});
 
 //process.setMaxListeners(0);
 
@@ -166,9 +205,43 @@ process.on("unhandledRejection", (err) => {
 
 //------------------------------Kurulum------------------------------//
 
-//------------------------------Presence Yenileme------------------------------//
+//------------------------------Müzik------------------------------//
 
-const { slash } = require('./modules/Logger.js');
+const { Player, QueryType } = require("discord-player");
+const playdl = require("play-dl");
+const extractor = require("./utils/extractor.js");
+
+client.player = new Player(client,
+  {
+    searchEngine: QueryType.AUTO,
+    ytdlOptions: {
+      filter: 'audioonly',
+      //quality: 'highestaudio',
+      //highWaterMark: 1 << 25
+    }
+  }
+);
+client.player.use("dodong", extractor);
+/*client.filters = ['bassboost', '8D', 'vaporwave', 'nightcore', 'phaser', 'tremolo', 'vibrato', 'reverse', 'treble', 'normalizer', 'surrounding', 'pulsator', 'subboost',
+  'kakaoke', 'flanger', 'gate', 'haas', 'mcompand', 'mono', 'mstlr', 'mstrr', 'compressor', 'expander', 'softlimiter', 'chorus', 'chorus2d', 'chorus3d', 'fadein'];*/
+
+const playerFiles = fs.readdirSync('./events/player/').filter(file => file.endsWith('.js'));
+for (const eventFile of playerFiles) {
+  const event = require(`./events/player/${eventFile}`);
+  const eventName = eventFile.split(".")[0];
+  //client.logger.event(`Loading Event: ${eventName}`);
+  client.player.on(eventName, event.bind(null, client));
+}
+
+playdl.getFreeClientID().then((clientID) => {
+  playdl.setToken({
+    soundcloud: { client_id: clientID }
+  });
+});
+
+//------------------------------Müzik------------------------------//
+
+//------------------------------Presence Yenileme------------------------------//
 
 setInterval(() => {
 
@@ -185,47 +258,12 @@ setInterval(() => {
 
 //------------------------------Presence Yenileme------------------------------//
 
-//------------------------------Prefixim------------------------------//
-
-client.on("messageCreate", async message => {
-
-  if (!message.guild || message.author.bot) return;
-
-  if (lastMessage.has(message.author.id)) return;
-  lastMessage.add(message.author.id);
-  setTimeout(() => { lastMessage.delete(message.author.id); }, 1200);
-
-  let guildData = await client.database.fetchGuild(message.guild.id);
-  let prefix = guildData.prefix || client.settings.prefix;
-
-  try {
-
-    //Prefixim
-    if (message.content.toLowerCase() === `<@!${client.user.id}>` || message.content.toLowerCase() === `<@${client.user.id}>`) {
-
-      message.channel.send({
-        embeds: [{
-          color: client.settings.embedColors.default,
-          description: `**»** Prefixim \`${prefix}\` • \`${prefix}komutlar\` yazarak tüm komutlara ulaşabilirsin.`
-        }]
-      });
-    } else if (message.content.startsWith(`<@!${client.user.id}>`) || message.content.startsWith(`<@${client.user.id}>`)) {
-
-      //Komutları şimdilik açık kaynak olarak yayınlamadığım için bu kısım çalışmaz.
-      return;
-
-      const cmd = client.commands.get("soru-sor");
-
-      const data = {};
-      data.prefix = prefix;
-      const args = message.content.slice(message.content.startsWith(`<@!${client.user.id}>`) ? `<@!${client.user.id}>`.length : `<@${client.user.id}>`.length).trim().split(/ +/g);
-
-      cmd.execute(client, message, data, args);
-
-    }
-
-  } catch (err) { client.logger.error(err); };
-
-});
-
-//------------------------------Prefixim------------------------------//   
+String.prototype.toEN = function () {
+  return this//UPPERS:     // LOWERS:
+    .replaceAll("Ğ", "G").replaceAll("ğ", "g")
+    .replaceAll("Ü", "U").replaceAll("ü", "u")
+    .replaceAll("Ş", "S").replaceAll("ş", "s")
+    .replaceAll("İ", "I").replaceAll("ı", "i")
+    .replaceAll("Ö", "O").replaceAll("ö", "o")
+    .replaceAll("Ç", "C").replaceAll("ç", "c");
+};
