@@ -42,6 +42,8 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
 Bu açık kaynakta tüm Nraphy kodları paylaşılmamıştır. Botun güncel hâli saklıdır, güncel hâlini yavaşça paylaşacağım. O yüzden takipte kalabilirsin.
 
 ## Teşekkürler
-Aşağıdaki projelere ve aklıma gelmeyen daha nice kaynağa, emeklerinden dolayı teşekkürlerimi sunuyorum. Nraphy açık kaynak projesi üzerinde kendilerinin de katkıları bulunmaktadır. (Aklıma geldikçe dahasını da ekleyeceğim)
-> https://github.com/KSJaay/Alita
-> https://github.com/nizewn/Dodong
+Aşağıdaki kişilere, projelere ve aklıma gelmeyen daha nice kaynağa, emeklerinden dolayı teşekkürlerimi sunuyorum. (Aklıma geldikçe dahasını da ekleyeceğim)
+* [Androz2091](https://github.com/Androz2091)
+* [Alita](https://github.com/KSJaay/Alita)
+* [Dodong](https://github.com/nizewn/Dodong)
+* [Eyesense-Music-Bot](https://github.com/naseif/Eyesense-Music-Bot)
