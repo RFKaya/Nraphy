@@ -68,7 +68,7 @@ module.exports = {
       components: []
     });
 
-    let webhookClient = new WebhookClient({ url: 'https://canary.discord.com/api/webhooks/864583984569909298/hfU_d1H6RR6yTHJLZ2iwGN6dprmhNSep75JHHMPbwy8G3wimmMkViNpWjDgIfYsJ0lyq' });
+    let webhookClient = new WebhookClient({ url: 'https://canary.discord.com/api/webhooks/...' });
 
     const embed = {
       color: client.settings.embedColors.default,
