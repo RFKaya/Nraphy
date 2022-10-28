@@ -43,7 +43,10 @@ Bu açık kaynakta tüm Nraphy kodları paylaşılmamıştır. Botun güncel hâ
 
 ## ❤️ Ayrıca Teşekkürler
 Aşağıdaki kişilere, projelere ve aklıma gelmeyen daha nice kaynağa, emeklerinden dolayı teşekkürlerimi sunuyorum. (Aklıma geldikçe dahasını da ekleyeceğim)
+### Saygıdeğer Abilerim
 * [Androz2091](https://github.com/Androz2091)
+* [Akif9748](https://github.com/Akif9748)
+### Projeler
 * [Alita](https://github.com/KSJaay/Alita)
 * [Dodong](https://github.com/nizewn/Dodong)
 * [Eyesense-Music-Bot](https://github.com/naseif/Eyesense-Music-Bot)
