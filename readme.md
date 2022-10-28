@@ -6,9 +6,7 @@
 Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte. Güncel Discord.js sürümünü (v14) kullanmaktadır ve slash komutları desteklemektedir. Botu kurmakla falan uğraşmak istemezseniz ve güncel halini kullanmak isterseniz [Davet bağlantısı](https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code) ile nraphyi davet edebilirsiniz.
 
 ## ❤️‍🔥 Özellikler
-> ✅ Kendi slash komutlarınızı ekleyip kullanabilmeniz için optimize bir altyapı <br>
-> ✅ Örnek slash komut <br>
-> <br>
+> ### Sistemler
 > ❌ Bağlantı Engel <br>
 > ❌ Buton Rol <br>
 > ❌ Büyük Harf Engel <br>
@@ -31,6 +29,9 @@ Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte
 > ❌ Çekiliş <br>
 > ❌ NraphyCoin <br>
 > ❌ Botla İlgili Komutlar <br>
+> ### Diğer
+> ✅ Kendi slash komutlarınızı ekleyip kullanabilmeniz için optimize bir altyapı <br>
+> ✅ Örnek slash komut <br>
 
 ## ✨ Başlarken (Getting Started)
 Botu kullanıma hazırlamak için aşağıdaki adımları izle
