@@ -12,7 +12,9 @@ module.exports = mongoose.model("clientData", new mongoose.Schema({
         logins: { type: Number, default: 0 }
     },*/
 
-    //error: { type: Number, default: 0 },
+    error: { type: Number, default: 0 },
     //crash: { type: Number, default: 0 },
+
+    guildCount: Number
 
 }, { collection: 'clientData' }));
