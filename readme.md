@@ -20,6 +20,9 @@ Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte
 > ❌ Sayaç <br>
 > ❌ Spam Koruması <br>
 > ❌ Uyarı <br>
+> ❌ Müzik Sistemi <br>
+> ❌ Kelime Oyunu <br>
+> ❌ Sayı Saymaca <br>
 > ### Komutlar
 > ❌ Yetkili Komutları <br>
 > ❌ Eğlence Komutları <br>
