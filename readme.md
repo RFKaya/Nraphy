@@ -9,7 +9,6 @@ Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte
 > ✅ Kendi slash komutlarınızı ekleyip kullanabilmeniz için optimize bir altyapı <br>
 > ✅ Örnek slash komut <br>
 > <br>
-> ❌ Nraphy'deki Komutlar <br>
 > ❌ Bağlantı Engel <br>
 > ❌ Buton Rol <br>
 > ❌ Büyük Harf Engel <br>
@@ -23,6 +22,15 @@ Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte
 > ❌ Sayaç <br>
 > ❌ Spam Koruması <br>
 > ❌ Uyarı <br>
+> ### Komutlar
+> ❌ Yetkili Komutları <br>
+> ❌ Eğlence Komutları <br>
+> ❌ Genel Komutlar <br>
+> ❌ Oyunlar <br>
+> ❌ Müzik Komutları <br>
+> ❌ Çekiliş <br>
+> ❌ NraphyCoin <br>
+> ❌ Botla İlgili Komutlar <br>
 
 ## ✨ Başlarken (Getting Started)
 Botu kullanıma hazırlamak için aşağıdaki adımları izle
