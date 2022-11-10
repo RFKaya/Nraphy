@@ -47,7 +47,7 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
     > `mongooseToken` belirtmeniz gerekmektedir. [MongoDB.com](https://account.mongodb.com/account/login) üzerinden edinebilirsiniz.
 2. `client.js` dosyasındaki `client.settings` objesinin verilerini doldur.
 3. Konsola `npm i` çekerek node modülleri yükle.
-4. Dosyaların bulunduğu dizine `Logs` adında bir klasör oluştur.
+4. Dosyaların bulunduğu dizine `Logs` adında bir klasör oluştur. <br>
 Tebrikler, kurulumu hazırladınız. Şimdi ise konsola `npm start` yazarak botu çalıştırabilirsiniz.
 
 ## Güncelleme Desteği
