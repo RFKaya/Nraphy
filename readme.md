@@ -43,8 +43,8 @@ Bu projede tüm Nraphy kodları açık olarak paylaşılmamıştır. Botun günc
 ## ✨ Başlarken (Getting Started)
 Botu kullanıma hazırlamak için aşağıdaki adımları izle
 1. `config.json` dosyasının içindeki gerekli yerleri doldur.
-  > `topggToken` doldurulması zorunlu değildir.
-  > `mongooseToken` belirtmeniz gerekmektedir. [MongoDB.com](https://account.mongodb.com/account/login) üzerinden edinebilirsiniz.
+    > `topggToken` doldurulması zorunlu değildir. <br>
+    > `mongooseToken` belirtmeniz gerekmektedir. [MongoDB.com](https://account.mongodb.com/account/login) üzerinden edinebilirsiniz.
 2. `client.js` dosyasındaki `client.settings` objesinin verilerini doldur.
 3. Konsola `npm i` çekerek node modülleri yükle.
 4. Dosyaların bulunduğu dizine `Logs` adında bir klasör oluştur.
