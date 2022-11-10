@@ -48,7 +48,8 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
 2. `client.js` dosyasındaki `client.settings` objesinin verilerini doldur.
 3. Konsola `npm i` çekerek node modülleri yükle.
 4. Dosyaların bulunduğu dizine `Logs` adında bir klasör oluştur. <br>
-Tebrikler, kurulumu hazırladınız. Şimdi ise konsola `npm start` yazarak botu çalıştırabilirsiniz.
+
+> 🎉 Tebrikler, kurulumu hazırladınız. Şimdi ise konsola `npm start` yazarak botu çalıştırabilirsiniz.
 
 ## Güncelleme Desteği
 Çok kısa aralıklarla olmasa da ben projeyi bırakana kadar güncelleme desteğini veririm. Birkaç ayda bir yoklamakta fayda var. Bırakırsam da burada belirtirim.
