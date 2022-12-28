@@ -53,7 +53,7 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
 3. Konsola `npm i` çekerek node modülleri kur.
 4. Dosyaların bulunduğu dizine `Logs` adında boş bir klasör oluştur. <br>
 
-> 🎉 Tebrikler, kurulumu hazırladınız. Botu çalıştırmak için konsola `npm start` yazabilirsin!
+> 🎉 Tebrikler, kurulumu tamamladın! Botu çalıştırmak için konsola `npm start` yazabilirsin.
 
 ## 🔔 Güncelleme Desteği
 Çok kısa aralıklarla olmasa da ben projeyi bırakana kadar güncelleme desteğini veririm. Birkaç ayda bir yoklamakta fayda var. Bırakırsam da burada belirtirim.
