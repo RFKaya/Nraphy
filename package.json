@@ -3,8 +3,8 @@
   "description": "Nraphy",
   "main": "client.js",
   "dependencies": {
-    "@discordjs/opus": "^0.7.0",
-    "@discordjs/rest": "^0.1.0-canary.0",
+    "@discordjs/opus": "^0.9.0",
+    "@discordjs/rest": "^1.5.0",
     "@discordjs/voice": "^0.8.0",
     "@top-gg/sdk": "^3.1.1",
     "canvacord": "^5.2.3",
@@ -13,18 +13,17 @@
     "common-tags": "^1.8.0",
     "discord-api-types": "^0.22.0",
     "discord-giveaways": "^6.0.1",
-    "discord-player": "^5.3.2",
-    "discord.js": "^14.6.0",
+    "discord-player": "^5.4.1-dev.0",
+    "discord.js": "^14.7.1",
     "ejs": "^3.1.8",
     "express": "^4.17.1",
     "express-session": "^1.17.3",
-    "ffmpeg-static": "^5.0.0",
+    "ffmpeg-static": "^5.1.0",
     "gifencoder": "^2.0.1",
     "humanize-duration": "^3.24.0",
     "memorystore": "^1.6.7",
     "moment": "^2.29.1",
-    "mongoose": "^6.3.1",
-    "node-superfetch": "^0.1.10",
+    "mongoose": "^6.7.2",
     "parse-ms": "^2.1.0",
     "passport": "^0.6.0",
     "passport-discord": "^0.1.4",
@@ -42,7 +41,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --max-old-space-size=4096 shard.js"
+    "start": "node --max-old-space-size=2048 shard.js"
   },
   "keywords": [
     "package.json",

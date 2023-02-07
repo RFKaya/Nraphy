@@ -74,9 +74,9 @@ module.exports = {
       timestamp: new Date(),
       footer: {
         text: `${message.author.username} tarafından silindi.`,
-        icon_url: message.author.displayAvatarURL({ format: "png", size: 1024, }),
+        icon_url: message.author.displayAvatarURL(),
       },
-    }
+    };
 
     if (m < 101) {
       message.channel.bulkDelete(m)
@@ -88,12 +88,12 @@ module.exports = {
               description: `**•** 14 günden eski mesajları silemiyorum.`
             }
           ]
-        }))
+        }));
       message.channel.send({ embeds: [embed] }).then(msg => setTimeout(() => msg.delete(), 4000));
     }
 
     if (m > 100 && m < 200) {
-      message.channel.bulkDelete(100)
+      message.channel.bulkDelete(100);
       message.channel.bulkDelete(m - 100)
         .catch(err => message.channel.send({
           embeds: [
@@ -103,12 +103,12 @@ module.exports = {
               description: `**•** 14 günden eski mesajları silemiyorum.`
             }
           ]
-        }))
+        }));
       message.channel.send({ embeds: [embed] }).then(msg => setTimeout(() => msg.delete(), 4000));
     }
 
     if (mesaj == 200) {
-      message.channel.bulkDelete(100)
+      message.channel.bulkDelete(100);
       message.channel.bulkDelete(100)
         .catch(err => message.channel.send({
           embeds: [
@@ -118,7 +118,7 @@ module.exports = {
               description: `**•** 14 günden eski mesajları silemiyorum.`
             }
           ]
-        }))
+        }));
       message.channel.send({ embeds: [embed] }).then(msg => setTimeout(() => msg.delete(), 4000));
     };
 

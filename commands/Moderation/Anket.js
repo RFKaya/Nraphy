@@ -50,14 +50,14 @@ module.exports = {
         ]
       });
 
-      if (interaction.type == 2) await interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.green,
-          title: "**»** Başarılı!",
-          description: `**•** Anket mesajı gönderiliyor...`
-        }],
-        ephemeral: true
-      })
+    if (interaction.type == 2) await interaction.reply({
+      embeds: [{
+        color: client.settings.embedColors.green,
+        title: "**»** Başarılı!",
+        description: `**•** Anket mesajı gönderiliyor...`
+      }],
+      ephemeral: true
+    });
 
     interaction.channel.send({
       embeds: [{
@@ -70,7 +70,7 @@ module.exports = {
         timestamp: new Date().toISOString(),
         footer: {
           text: `${user.username} tarafından yapıldı.`,
-          icon_url: user.displayAvatarURL({ dynamic: true }),
+          icon_url: user.displayAvatarURL(),
         },
       }]
     }).then(async message => {

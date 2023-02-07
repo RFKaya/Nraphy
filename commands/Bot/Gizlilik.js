@@ -63,7 +63,7 @@ module.exports = {
           /*timestamp: new Date(),
           footer: {
             text: `${(interaction.type == 2) ? interaction.user.username : interaction.author.username} tarafından istendi.`,
-            icon_url: (interaction.type == 2) ? interaction.user.displayAvatarURL({ dynamic: true, size: 1024 }) : interaction.author.displayAvatarURL({ dynamic: true, size: 1024 }),
+            icon_url: (interaction.type == 2) ? interaction.user.displayAvatarURL({ size: 1024 }) : interaction.author.displayAvatarURL({ size: 1024 }),
           },*/
         }
       ],

@@ -11,6 +11,7 @@ module.exports = mongoose.model("betaGiveaway", new mongoose.Schema({
 
   startAt: Number,
   duration: Number,
+  isPaused: Boolean,
   isEnded: Boolean,
 
   winners: { type: [String], default: [] },

@@ -34,7 +34,7 @@ module.exports = {
           color: client.settings.embedColors.default,
           author: {
             name: `${message.author.username} bir para fırlattı!`,
-            icon_url: message.author.avatarURL({ dynamic: true }),
+            icon_url: message.author.avatarURL(),
           },
           image: {
             url: 'https://media.discordapp.net/attachments/595332283792359424/617504444979871847/tumblr_osncjxKz5o1tqx9n9o1_500_S.gif',
@@ -51,7 +51,7 @@ module.exports = {
                 title: `**»** ${yt} geldi!`,
                 author: {
                   name: `${message.author.username} bir para çevirdi!`,
-                  icon_url: message.author.avatarURL({ dynamic: true }),
+                  icon_url: message.author.avatarURL(),
                 },
                 description: "**•** " + cevap,
                 thumbnail: {
@@ -59,7 +59,7 @@ module.exports = {
                 },
               }
             ]
-          })
+          });
         } else if (yt === "Yazı") {
           mesaj.edit({
             embeds: [
@@ -68,7 +68,7 @@ module.exports = {
                 title: `**»** ${yt} geldi!`,
                 author: {
                   name: `${message.author.username} bir para çevirdi!`,
-                  icon_url: message.author.avatarURL({ dynamic: true }),
+                  icon_url: message.author.avatarURL(),
                 },
                 description: "**•** " + cevap,
                 thumbnail: {
@@ -76,9 +76,9 @@ module.exports = {
                 },
               }
             ]
-          })
+          });
         }
-      }, 4000)
+      }, 4000);
     });
 
   }

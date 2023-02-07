@@ -24,53 +24,55 @@ module.exports = {
 
     if (message.author.id == '700385307077509180') try {
 
-      var code = args.join(' ')
-      let evaled = eval(code)
+      var code = args.join(' ');
+      let hrTime = process.hrtime();
+      let evaled = await eval(`async () => {${code}}`)();
+      let hrDiff = process.hrtime(hrTime);
 
-      evaled = require('util').inspect(evaled)
+      evaled = require('util').inspect(evaled);
 
-      if (!code) return message.react("❌")
+      if (!code) return message.react("❌");
 
-      message.channel.send({ 
+      message.channel.send({
         embeds: [{
-            color: client.settings.embedColors.default,
-            fields: [
-              {
-                name: 'INPUT',
-                value:  `\`\`\`js\n${code}\`\`\``,
-              },
-              {
-                name: 'OUTPUT',
-                value: `\`\`\`js\n${evaled.length > 1000 ? `${evaled.slice(0, 1000)}...` : `${clean(evaled)}`}\`\`\``,
-              },
-            ],
-        }] 
-      })
+          color: client.settings.embedColors.default,
+          fields: [
+            {
+              name: 'INPUT',
+              value: `\`\`\`js\n${code.slice(0, 1000)}\`\`\``,
+            },
+            {
+              name: `OUTPUT (\`${hrDiff[1] / 1000000} ms\`)`,
+              value: `\`\`\`js\n${evaled.length > 1000 ? `${evaled.slice(0, 1000)}...` : `${clean(evaled)}`}\`\`\``,
+            },
+          ],
+        }]
+      });
 
     } catch (err) {
 
-        message.channel.send({ 
-          embeds: [{
-              color: client.settings.embedColors.red,
-              fields: [
-                {
-                  name: 'INPUT',
-                  value:  `\`\`\`js\n${code}\`\`\``,
-                },
-                {
-                  name: 'ERROR',
-                  value: `\`\`\`js\n${clean(err).length > 1000 ? `${clean(err).slice(0, 1000)}...` : `${clean(err)}`}\n\`\`\``,
-                },
-              ],
-          }] 
-        })
+      message.channel.send({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          fields: [
+            {
+              name: 'INPUT',
+              value: `\`\`\`js\n${code.slice(0, 1000)}\`\`\``,
+            },
+            {
+              name: 'ERROR',
+              value: `\`\`\`js\n${clean(err).length > 1000 ? `${clean(err).slice(0, 1000)}...` : `${clean(err)}`}\n\`\`\``,
+            },
+          ],
+        }]
+      });
     };
 
     function clean(text) {
 
-      if (typeof (text) == 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203))
+      if (typeof (text) == 'string') return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203));
       else
-        return text
+        return text;
     };
 
   }

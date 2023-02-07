@@ -26,7 +26,7 @@ module.exports = {
             description: `**•** Örnek kullanım: \`${data.prefix}yasağı-kaldır <ID>\``
           }
         ]
-      })
+      });
     }
 
     //Harfli ID
@@ -39,7 +39,7 @@ module.exports = {
             description: `**•** Örnek kullanım: \`${data.prefix}yasağı-kaldır 700959962452459550\``
           }
         ]
-      })
+      });
     }
 
     let user = args[0];
@@ -54,13 +54,13 @@ module.exports = {
           description: `**•** Belirttiğin üye zaten yasaklı değil ya da hatalı ID girdin.`
         }
       ]
-    })
+    });
 
     let member = await client.users.fetch(user);
     let banUser = await message.guild.bans.fetch(user);
 
-    let confirmButton = new ButtonBuilder().setLabel('Onayla').setCustomId("confirmButton").setStyle('Success')
-    let denyButton = new ButtonBuilder().setLabel('İptal Et').setCustomId("denyButton").setStyle('Danger')
+    let confirmButton = new ButtonBuilder().setLabel('Onayla').setCustomId("confirmButton").setStyle('Success');
+    let denyButton = new ButtonBuilder().setLabel('İptal Et').setCustomId("denyButton").setStyle('Danger');
 
     message.channel.send({
       embeds: [
@@ -68,13 +68,13 @@ module.exports = {
           color: client.settings.embedColors.default,
           author: {
             name: `${member.tag} kullanıcısının yasağını kaldırmak istiyor musun?`,
-            icon_url: member.displayAvatarURL({ dynamic: true, size: 1024 }),
+            icon_url: member.displayAvatarURL({ size: 1024 }),
           },
         }
       ],
       components: [
-         {
-              data: { type: 1 }, components: [
+        {
+          data: { type: 1 }, components: [
             confirmButton, denyButton
           ]
         }
@@ -97,7 +97,7 @@ module.exports = {
                   color: client.settings.embedColors.green,
                   author: {
                     name: `${member.tag} kullanıcısının yasağı kaldırıldı!`,
-                    icon_url: member.displayAvatarURL({ dynamic: true, size: 1024 }),
+                    icon_url: member.displayAvatarURL({ size: 1024 }),
                   },
                   //title: '**»** Rauqq#3916 kullanıcısının yasağı kaldırıldı!',
                   fields: [
@@ -109,12 +109,12 @@ module.exports = {
                   timestamp: new Date(),
                   footer: {
                     text: `${message.author.username} tarafından kaldırıldı.`,
-                    icon_url: message.author.displayAvatarURL({ format: "png", size: 1024, }),
+                    icon_url: message.author.displayAvatarURL(),
                   },
                 }
               ],
               components: []
-            })
+            });
 
           } else if (btn.customId === "denyButton") {
 
@@ -127,10 +127,10 @@ module.exports = {
                 }
               ],
               components: []
-            })
+            });
           }
         }).catch(err => {
-        
+
           return msg.edit({
             embeds: [
               {
@@ -140,10 +140,10 @@ module.exports = {
               }
             ],
             components: []
-          })
+          });
 
         });
-    })
+    });
 
   }
 };

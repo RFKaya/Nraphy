@@ -35,6 +35,8 @@ module.exports = {
       }]
     });
 
+    if (interaction.type == 2) await interaction.deferReply();
+
     /*const searches = await GeniusClient.songs.search(music);
 
     // Pick first one
@@ -47,19 +49,38 @@ module.exports = {
     let song = await songlyrics(music)
       //.then((lyrics) => console.log(lyrics))
       .catch(error => {
-        return interaction.reply({
+        let message = {
           embeds: [
             {
               color: client.settings.embedColors.red,
               title: '**»** Şarkı Sözleri Bulunamadı!',
-              description: `**•** Farklı bir şarkı girmeyi deneyebilir misin?`
+              description: `**•** Farklı bir başlık girmeyi deneyebilir misin?`
             }
           ]
-        });
-        //client.logger.error(error)
+        };
+
+        if (interaction.type == 2)
+          return interaction.editReply(message);
+        else return interaction.reply(message)
       });
 
-    interaction.reply({
+    if (!song) {
+      let message = {
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            title: '**»** Şarkı Sözleri Bulunamadı!',
+            description: `**•** Farklı bir başlık girmeyi deneyebilir misin?`
+          }
+        ]
+      }
+
+      if (interaction.type == 2)
+        return interaction.editReply(message);
+      else return interaction.reply(message)
+    }
+
+    let message = {
       embeds: [{
         color: client.settings.embedColors.default,
         //title: `**»** ${firstSong.title}`,
@@ -79,7 +100,11 @@ module.exports = {
           icon_url: firstSong.artist.thumbnail,
         },*/
       }]
-    });
+    }
+
+    if (interaction.type == 2)
+      return interaction.editReply(message);
+    else return interaction.reply(message)
 
   }
 };

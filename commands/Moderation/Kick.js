@@ -131,12 +131,12 @@ module.exports = {
                 **•** **Sebep:** ${sebep}
                 **•** **Yetkili:** ${message.author}`,
       thumbnail: {
-        url: toKick.displayAvatarURL({ dynamic: true, size: 1024 }),
+        url: toKick.displayAvatarURL({ size: 1024 }),
       },
       timestamp: new Date(),
       footer: {
         text: `${message.author.username} tarafından tekmelendi.`,
-        icon_url: message.author.displayAvatarURL({ dynamic: true }),
+        icon_url: message.author.displayAvatarURL(),
       },
     };
 
@@ -148,7 +148,7 @@ module.exports = {
         color: client.settings.embedColors.default,
         author: {
           name: `${toKick.user.username} kullanıcısını sunucudan atmak istiyor musun?`,
-          icon_url: toKick.displayAvatarURL({ dynamic: true }),
+          icon_url: toKick.displayAvatarURL(),
         },
       }],
       components: [
@@ -189,7 +189,7 @@ module.exports = {
                 });
               });
 
-            var userData = await client.database.fetchUser(message.author.id, ["statistics"]);
+            var userData = await client.database.fetchUser(message.author.id);
             userData.statistics.kickedUsers += 1;
             await userData.save();
 
@@ -201,7 +201,7 @@ module.exports = {
                   color: client.settings.embedColors.red,
                   author: {
                     name: `${toKick.user.username} kullanıcısının tekmeleme işlemi iptal edildi.`,
-                    icon_url: toKick.displayAvatarURL({ dynamic: true }),
+                    icon_url: toKick.displayAvatarURL(),
                   },
                 }
               ],
@@ -218,7 +218,7 @@ module.exports = {
                 color: client.settings.embedColors.red,
                 author: {
                   name: `${toKick.username} kullanıcısının tekmeleme işlemi iptal edildi.`,
-                  icon_url: toKick.displayAvatarURL({ dynamic: true }),
+                  icon_url: toKick.displayAvatarURL(),
                 },
               }
             ],

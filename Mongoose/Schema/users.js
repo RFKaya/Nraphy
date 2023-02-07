@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-module.exports = mongoose.model("user", new mongoose.Schema({
+const schema = new mongoose.Schema({
 
   userId: { type: String, unique: true },
   registeredAt: { type: Number, default: Date.now() },
@@ -54,4 +54,18 @@ module.exports = mongoose.model("user", new mongoose.Schema({
     lastRemind: { type: Date, default: null }
   }
 
-}));
+});
+
+schema.pre('save', async function () {
+  //console.log("user schema - save event");
+  //if (!this.userId) return;
+
+  //let thisDoc = { ...this._doc };
+  function funcName(client, { userId }) {
+    delete global.database.usersCache[userId];
+  }
+  global.client.shard.broadcastEval(funcName, { context: { userId: this.userId } });
+  //global.database.usersCache[this.userId] = this;//{ ...global.databaseCache[this.userId], ...thisDoc };
+});
+
+module.exports = mongoose.model('user', schema);

@@ -70,7 +70,7 @@ module.exports = {
         timestamp: new Date().toISOString(),
         footer: {
           text: `${user.username} tarafından duyuruldu.`,
-          icon_url: user.displayAvatarURL({ dynamic: true }),
+          icon_url: user.displayAvatarURL(),
         },
       }]
     });

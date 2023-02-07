@@ -42,9 +42,9 @@ module.exports = async (client, interaction) => {
       if (cmd.voteRequired) {
         let topgg = require(`@top-gg/sdk`);
         let topggapi = new topgg.Api(client.config.topggToken);
-        let userData = await client.database.fetchUser(interaction.user.id, ["NraphyPremium"]);
+        let userData = await client.database.fetchUser(interaction.user.id);
         let premium = data.premium = (userData.NraphyPremium && userData.NraphyPremium > Date.now());
-        if (!(await topggapi.hasVoted(interaction.user.id)) && !premium) {
+        if (!premium && !(await topggapi.hasVoted(interaction.user.id))) {
           return interaction.reply({
             embeds: [{
               color: client.settings.embedColors.red,
@@ -53,7 +53,6 @@ module.exports = async (client, interaction) => {
               description:
                 `**•** Oy vermek için aşağıdaki butonu kullanabilir ya da mesaj başlığına tıklayabilirsin.\n` +
                 `**•** Ya da en iyisi Nraphy Premium abonesi olabilirsin. \`/premium Bilgi\``,
-
             }],
             components: [
               {

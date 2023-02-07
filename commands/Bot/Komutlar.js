@@ -34,7 +34,7 @@ module.exports = {
     } else {
 
       var userData = await client.database.fetchUser(interaction.author.id);
-      var commandArgs = args.slice(0).join(" ");;
+      var commandArgs = args.slice(0).join(" ");
 
     }
 
@@ -111,7 +111,7 @@ module.exports = {
         } else {
           if (command.interaction.type && command.interaction.type == 3) {
             commandsModeration.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
-          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0]?.type == 2)) {
+          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2)) {
             let options = [];
             command.interaction.options.forEach(subCommand => {
               options.push(`**•** \`/${command.interaction.name + " " + subCommand.name}\``);
@@ -141,7 +141,7 @@ module.exports = {
         } else {
           if (command.interaction.type && command.interaction.type == 3) {
             commandsFun.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
-          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0]?.type == 2)) {
+          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2)) {
             command.interaction.options.forEach(subCommand => {
               commandsFun.push(`**•** \`/${command.interaction.name + " " + subCommand.name}\` - ${subCommand.description}\n`);
             });
@@ -161,7 +161,7 @@ module.exports = {
         } else {
           if (command.interaction.type && command.interaction.type == 3) {
             commandsGeneral.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
-          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0]?.type == 2)) {
+          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2)) {
             command.interaction.options.forEach(subCommand => {
               commandsGeneral.push(`**•** \`/${command.interaction.name + " " + subCommand.name}\` - ${subCommand.description}\n`);
             });
@@ -182,7 +182,7 @@ module.exports = {
         } else {
           if (command.interaction.type && command.interaction.type == 3) {
             commandsGames.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
-          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0]?.type == 2)) {
+          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2)) {
             let options = [];
             command.interaction.options.forEach(subCommand => {
               options.push(`**•** \`/${command.interaction.name + " " + subCommand.name}\``);
@@ -230,7 +230,7 @@ module.exports = {
         } else {
           if (command.interaction.type && command.interaction.type == 3) {
             commandsMusic.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
-          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0]?.type == 2)) {
+          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2)) {
             command.interaction.options.forEach(subCommand => {
               commandsMusic.push(`**•** \`/${command.interaction.name + " " + subCommand.name}\` - ${subCommand.description}\n`);
             });
@@ -242,7 +242,7 @@ module.exports = {
     });
 
     //Çekiliş Komutları - Back End
-    /*let commandsGiveaway = [];
+    let commandsGiveaway = [];
     client.commands.forEach(command => {
       if (command.category == 'Giveaway') {
         if (!command.interaction) {
@@ -259,10 +259,10 @@ module.exports = {
           }
         }
       }
-    });*/
+    });
 
     //NraphyCoin - Back End
-    /*let commandsNC = [];
+    let commandsNC = [];
     client.commands.forEach(command => {
       if (command.category == 'NC') {
         if (!command.interaction) {
@@ -276,7 +276,7 @@ module.exports = {
           }
         }
       }
-    });*/
+    });
 
     //Botla İlgili Komutlar - Back End
     let commandsBot = [];
@@ -287,7 +287,7 @@ module.exports = {
         } else {
           if (command.interaction.type && command.interaction.type == 3) {
             commandsBot.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
-          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0]?.type == 2)) {
+          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2)) {
             command.interaction.options.forEach(subCommand => {
               commandsBot.push(`**•** \`/${command.interaction.name + " " + subCommand.name}\` - ${subCommand.description}\n`);
             });
@@ -375,7 +375,7 @@ module.exports = {
     };
 
     //Çekiliş - Embed
-    /*let embedGiveaway = {
+    let embedGiveaway = {
       color: client.settings.embedColors.default,
       author: {
         name: `${client.user.username} • Çekiliş`,
@@ -384,10 +384,10 @@ module.exports = {
       title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
       description: commandsGiveaway.join(''),
       fields: [fieldsLinks],
-    };*/
+    };
 
     //NraphyCoin - Embed
-    /*let embedNC = {
+    let embedNC = {
       color: client.settings.embedColors.default,
       author: {
         name: `${client.user.username} • NraphyCoin`,
@@ -396,7 +396,7 @@ module.exports = {
       title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
       description: commandsNC.join(''),
       fields: [fieldsLinks],
-    };*/
+    };
 
     //Botla İlgili Komutlar - Embed
     let embedBot = {
@@ -433,16 +433,14 @@ module.exports = {
         `🤖 • Botla İlgili Komutlar (**${commandsBot.length}**)\n\n` +
 
         `Hata bildirimi veya öneriler için: \`/bildiri\`\n` +
-        `${(userData.readDateOfChanges < client.settings.updateDate) ?
-          `✉️ Okunmamış yenilikler mevcut! \`/yenilikler\` yazarak okuyabilirsin!` :
-          `Gelişmelerden haberdar olmak için destek sunucumuza katılabilirsiniz!`}`,
+        `**[YENİ!]** Kampanya Haber Sistemi: \`/kampanya-haber Bilgi\``,
       fields: [fieldsLinks],
     };
 
     //Row
     const row = new Discord.ActionRowBuilder()
       .addComponents(
-        new Discord.SelectMenuBuilder()
+        new Discord.StringSelectMenuBuilder()
           .setCustomId('select')
           .setPlaceholder('Buradan kategori seçebilirsin')
           .addOptions([

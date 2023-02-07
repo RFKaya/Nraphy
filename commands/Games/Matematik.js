@@ -24,8 +24,8 @@ module.exports = {
     const rakam1 = parseInt((Math.random() * (100 - 1)).toFixed());
     const rakam2 = parseInt((Math.random() * (100 - 1)).toFixed());
 
-    if ((islem = "-")) sonuç = rakam1 - rakam2;
-    if ((islem = "+")) sonuç = rakam1 + rakam2;
+    if (islem == "-") sonuç = rakam1 - rakam2;
+    if (islem == "+") sonuç = rakam1 + rakam2;
 
     const fixedlisonuç = sonuç;
 
@@ -85,29 +85,15 @@ module.exports = {
       if (choice == fixedlisonuç) uwu = true;
     }
 
-    if (uwu) {
-      await message.channel.send({
-        embeds: [
-          {
-            color: client.settings.embedColors.green,
-            title: '**»** Tebrikler!',
-            description: `**•** Doğru cevap! :tada:`
-          }
-        ]
-      });
+    await message.channel.send({
+      embeds: [
+        {
+          color: client.settings.embedColors.green,
+          title: '**»** Tebrikler!',
+          description: `**•** Doğru cevap! :tada:`
+        }
+      ]
+    });
 
-      try {
-      } catch (e) {
-        message.channel.send({
-          embeds: [
-            {
-              color: client.settings.embedColors.red,
-              title: '**»** Bir Hata Oluştu!',
-              description: `**•** Sebebini bilmiyorum.`
-            }
-          ]
-        });
-      }
-    } else return console.log("Bir hata oluştu");
   }
 };
