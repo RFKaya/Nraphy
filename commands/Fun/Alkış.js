@@ -27,7 +27,7 @@ module.exports = {
     const text = interaction.options.getString("yazı");
 
     const { messageChecker } = require("../../modules/Functions");
-    await messageChecker(interaction, text, "alkış Bravo!")
+    await messageChecker(interaction, text, "alkış Bravo!");
 
     interaction.reply({
       embeds: [
@@ -35,7 +35,7 @@ module.exports = {
           color: client.settings.embedColors.default,
           author: {
             name: `${interaction.user.username} alkışlıyor!`,
-            icon_url: interaction.user.displayAvatarURL({ dynamic: true, size: 1024 }),
+            icon_url: interaction.user.displayAvatarURL(),
           },
           description: `**»** ${text}`,
           image: {

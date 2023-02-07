@@ -30,7 +30,7 @@ module.exports = {
 
       let shardDatas = [];
 
-      for (i = 0; i < client.shard.count; i++) {
+      for (let i = 0; i < client.shard.count; i++) {
         shardDatas.push({
           shardId: i,
           serverCount: shardInfo.server_count[i],
@@ -49,11 +49,11 @@ module.exports = {
           },
           fields: shardDatas.map(shardData => ({
             name: `**»** Shard ${shardData.shardId + 1}`,
-            value: 
-            `**• Sunucular:** ${shardData.serverCount}\n` + 
-            `**• Kullanıcılar:** ${shardData.userCount}\n` + 
-            `**• Ping:** ${shardData.ping}ms\n` + 
-            `**• Uptime:** ${humanize(shardData.uptime, { language: "tr", round: true, largest: 2 })}`,
+            value:
+              `**• Sunucular:** ${shardData.serverCount}\n` +
+              `**• Kullanıcılar:** ${shardData.userCount}\n` +
+              `**• Ping:** ${shardData.ping}ms\n` +
+              `**• Uptime:** ${humanize(shardData.uptime, { language: "tr", round: true, largest: 2 })}`,
             inline: true,
           })),
           footer: {

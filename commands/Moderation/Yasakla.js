@@ -105,7 +105,7 @@ module.exports = {
             color: client.settings.embedColors.red,
             author: {
               name: `${toBan.tag} kullanıcısı zaten yasaklı!`,
-              icon_url: toBan.displayAvatarURL({ dynamic: true }),
+              icon_url: toBan.displayAvatarURL(),
             },
           }
         ]
@@ -152,12 +152,12 @@ module.exports = {
                 **•** **Sebep:** ${sebep}
                 **•** **Yetkili:** ${message.author}`,
       thumbnail: {
-        url: toBan.displayAvatarURL({ dynamic: true, size: 1024 }),
+        url: toBan.displayAvatarURL({ size: 1024 }),
       },
       timestamp: new Date(),
       footer: {
         text: `${message.author.username} tarafından yasaklandı.`,
-        icon_url: message.author.displayAvatarURL({ dynamic: true }),
+        icon_url: message.author.displayAvatarURL(),
       },
     };
 
@@ -169,7 +169,7 @@ module.exports = {
         color: client.settings.embedColors.default,
         author: {
           name: `${toBan.username} kullanıcısını sunucudan yasaklamak istiyor musun?`,
-          icon_url: toBan.displayAvatarURL({ dynamic: true }),
+          icon_url: toBan.displayAvatarURL(),
         },
       }],
       components: [
@@ -210,7 +210,7 @@ module.exports = {
                 });
               });
 
-            var userData = await client.database.fetchUser(message.author.id, ["statistics"]);
+            var userData = await client.database.fetchUser(message.author.id);
             userData.statistics.bannedUsers += 1;
             await userData.save();
 
@@ -222,7 +222,7 @@ module.exports = {
                   color: client.settings.embedColors.red,
                   author: {
                     name: `${toBan.username} kullanıcısının yasaklama işlemi iptal edildi.`,
-                    icon_url: toBan.displayAvatarURL({ dynamic: true }),
+                    icon_url: toBan.displayAvatarURL(),
                   },
                 }
               ],
@@ -238,7 +238,7 @@ module.exports = {
                 color: client.settings.embedColors.red,
                 author: {
                   name: `${toBan.username} kullanıcısının yasaklama işlemi iptal edildi.`,
-                  icon_url: toBan.displayAvatarURL({ dynamic: true }),
+                  icon_url: toBan.displayAvatarURL(),
                 },
               }
             ],

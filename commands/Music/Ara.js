@@ -1,4 +1,3 @@
-const { QueryType } = require('discord-player');
 const { ButtonBuilder } = require('discord.js');
 
 module.exports = {
@@ -60,26 +59,22 @@ module.exports = {
 
       await interaction.deferReply();
 
-      const playdl = require("play-dl");
-      const queue = client.player.createQueue(
-        interaction.guild,
-        {
-          metadata: {
-            channel: interaction.channel
-          },
-          bufferingTimeout: 1000,
-          disableVolume: false, // disabling volume controls can improve performance
-          leaveOnEnd: true,
-          leaveOnStop: true,
-          spotifyBridge: false,
-          //leaveOnEmpty: true, // not working for now, discord-player issue
-          //leaveOnEmptyCooldown: 300000,
-          async onBeforeCreateStream(track, source, _queue) {
-            if (source === "youtube" && track.url.includes("youtube")) {
-              return (await playdl.stream(track.url, { discordPlayerCompatibility: true })).stream;
-            }
+      //const playdl = require("play-dl");
+      const queue = await client.player.createQueue(interaction.guild, {
+        metadata: { channel: interaction.channel },
+        bufferingTimeout: 1000,
+        disableVolume: false, // disabling volume controls can improve performance
+        leaveOnEnd: true,
+        leaveOnStop: true,
+        spotifyBridge: false,
+        //leaveOnEmpty: true, // not working for now, discord-player issue
+        //leaveOnEmptyCooldown: 300000,
+        /*async onBeforeCreateStream(track, source, _queue) {
+          if (source === "youtube" && track.url.includes("youtube")) {
+            return (await playdl.stream(track.url, { discordPlayerCompatibility: true })).stream;
           }
-        });
+        }*/
+      });
 
       const res = await client.player.search(music, {
         requestedBy: interaction.member
@@ -235,26 +230,22 @@ module.exports = {
 
     } else {
 
-      const playdl = require("play-dl");
-      const queue = client.player.createQueue(
-        interaction.guild,
-        {
-          metadata: {
-            channel: interaction.channel
-          },
-          bufferingTimeout: 1000,
-          disableVolume: false, // disabling volume controls can improve performance
-          leaveOnEnd: true,
-          leaveOnStop: true,
-          spotifyBridge: false,
-          //leaveOnEmpty: true, // not working for now, discord-player issue
-          //leaveOnEmptyCooldown: 300000,
-          async onBeforeCreateStream(track, source, _queue) {
-            if (source === "youtube" && track.url.includes("youtube")) {
-              return (await playdl.stream(track.url, { discordPlayerCompatibility: true })).stream;
-            }
+      //const playdl = require("play-dl");
+      const queue = await client.player.createQueue(interaction.guild, {
+        metadata: { channel: interaction.channel },
+        bufferingTimeout: 1000,
+        disableVolume: false, // disabling volume controls can improve performance
+        leaveOnEnd: true,
+        leaveOnStop: true,
+        spotifyBridge: false,
+        //leaveOnEmpty: true, // not working for now, discord-player issue
+        //leaveOnEmptyCooldown: 300000,
+        /*async onBeforeCreateStream(track, source, _queue) {
+          if (source === "youtube" && track.url.includes("youtube")) {
+            return (await playdl.stream(track.url, { discordPlayerCompatibility: true })).stream;
           }
-        });
+        }*/
+      });
 
       const res = await client.player.search(music, {
         requestedBy: interaction.member

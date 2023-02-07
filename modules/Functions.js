@@ -7,7 +7,7 @@ module.exports = {
     let confirmButton = new ButtonBuilder().setLabel('Onayla').setCustomId("confirmButton").setStyle('Success');
     let denyButton = new ButtonBuilder().setLabel('İptal Et').setCustomId("denyButton").setStyle('Danger');
 
-    interaction.reply({
+    await interaction.reply({
       embeds: confirmationEmbeds,
       components: [
         {
@@ -59,7 +59,7 @@ module.exports = {
       let newDateString = `${newDate.getDate()}.${(newDate.getMonth() + 1)}.${newDate.getFullYear()}`;
       dates.push(newDateString);
 
-      newUpdateDate = new Date(dateObject.setDate(dateObject.getDate() - 1));
+      let newUpdateDate = new Date(dateObject.setDate(dateObject.getDate() - 1));
       dateNowString = `${newUpdateDate.getDate()}.${(newUpdateDate.getMonth() + 1)}.${newUpdateDate.getFullYear()}`;
 
     }
@@ -70,7 +70,7 @@ module.exports = {
 
   createLog: async function (guildId, guildData, embeds) {
 
-    if (!guildData) guildData = await client.database.fetchGuild(guildId);//const guildData = await client.database.fetchGuild(guildId);
+    if (!guildData) guildData = await global.client.database.fetchGuild(guildId);//const guildData = await client.database.fetchGuild(guildId);
 
     let logger = guildData.logger;
     if (!logger?.webhook) return;
@@ -80,7 +80,7 @@ module.exports = {
     webhookClient.send({ embeds: embeds })
       .catch(async error => {
         if (error.code == 10015) {
-          client.logger.log(`Log sisteminde Webhook silinmiş. Log sıfırlanıyor... • ${guildId} (${guildId})`);
+          global.client.logger.log(`Log sisteminde Webhook silinmiş. Log sıfırlanıyor... • ${guildId} (${guildId})`);
           guildData.logger.webhook = null;
           guildData.markModified('logger.webhook');
           await guildData.save();
@@ -224,7 +224,7 @@ module.exports = {
     return;
   },
 
-  channelChecker: async function (interaction, channel, permissions) {
+  channelChecker: async function (interaction, channel, permissions, supportsChannelTypeFive = true) {
 
     const permissionsMap = require("../utils/Permissions.json");
 
@@ -250,7 +250,7 @@ module.exports = {
         ]
       });
 
-    if (!channel.type == 0)
+    if (channel.type != 0 && (!supportsChannelTypeFive || channel.type != 5))
       return interaction.reply({
         embeds: [
           {
@@ -274,6 +274,8 @@ module.exports = {
         });
       }
     }
+
+    return false;
 
   },
 

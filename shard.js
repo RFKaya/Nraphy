@@ -9,22 +9,22 @@ if (!config.mongooseToken)
 
 const manager = new ShardingManager('./client.js', {
 
-  totalShards: 'auto',
+  totalShards: config.totalShards, //'auto',
 
   respawn: true,
 
   token: config.token,
 
-  execArgv: ["--trace-warnings", "client.js"],
+  execArgv: [/*"--inspect", */"--max-old-space-size=2048", "--trace-warnings", "client.js"/*, clientDataId*/],
 
 });
 
 manager.on('shardCreate', (shard) => {
   logger.shard(`Shard ${shard.id + 1} is starting...`);
 
-  shard.on('death', () => logger.error(`Shard ${shard.id + 1} death eventi yolladı!`));
+  shard.on('death', () => logger.warn(`Shard ${shard.id + 1} death eventi yolladı!`));
   shard.on("disconnect", (event) => logger.error(event));
-  shard.on('ready', () => logger.ready(`Shard ${shard.id + 1} is now up and running!`));
+  //shard.on('ready', () => logger.ready(`Shard ${shard.id + 1} is now up and running!`));
   shard.on('error', (err) => logger.error(`Shard ${shard.id + 1}'de sıkıntı cıktı hocisim!: \n` + (err.message ? err.message : err)));
 });
 
@@ -50,6 +50,7 @@ if (config.topggToken) {
   // Connect to Mongoose
   const mongoose = require('mongoose');
   const Mongoose = require("./Mongoose/Mongoose.js");
+  mongoose.set("strictQuery", false);
   mongoose.connect(config.mongooseToken, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -71,7 +72,6 @@ if (config.topggToken) {
 
     logger.log(`Top.gg & Database stats updated! | ${stats.serverCount} servers`);
   });
-
 }
 
 //------------------------------TOP.GG İstatistik------------------------------//

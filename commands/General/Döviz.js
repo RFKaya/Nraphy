@@ -16,6 +16,8 @@ module.exports = {
 
   async execute(client, message, args, data) {
 
+    return message.reply({ content: "Hata! TCMB API kaynaklı bir problemimiz mevcut. İlgili sorun giderilene kadar Döviz sistemleri bakımdadır.\n\nTahmini tarih: **Şubat, 2023**" });
+
     const birimler = ["USD", "EUR", "AUD", "DKK", "GBP", "CHF", "SEK", "CAD", "KWD", "NOK", "JPY", "SAR", "BGN", "RON", "RUB", "IRR", "CNY", "PKR", "QAR"];
 
     if (!args[0]) return message.channel.send({
@@ -68,7 +70,7 @@ module.exports = {
       timestamp: new Date().toISOString(),
       footer: {
         text: `Türkiye Cumhuriyeti Merkez Bankası`,
-        icon_url: message.author.avatarURL({ dynamic: true }),
+        icon_url: message.author.avatarURL(),
       },
     };
 
@@ -101,7 +103,7 @@ module.exports = {
         name: `**»** ${mesaj} ${exchangeRate.code}`,
         value: `**•** Alış **₺**${(mesaj * exchangeRate.buying).toFixed(2)}\n**•** Satış **₺**${(mesaj * exchangeRate.selling).toFixed(2)} `,
         inline: false
-      })
+      });
     }
 
     message.channel.send({ embeds: [embed] });

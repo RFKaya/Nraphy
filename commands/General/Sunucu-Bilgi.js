@@ -1,5 +1,3 @@
-const Discord = require('discord.js');
-const db = require('quick.db');
 const humanize = require("humanize-duration");
 
 module.exports = {
@@ -34,8 +32,8 @@ module.exports = {
 
     //Uyarılar
     let warns_users = 0, warns_warns = 0;
-    if (Object.keys(data.guild.warns || {}).length)
-      for await (let warnDataId of Object.keys(data.guild.warns)) {
+    if (Object.keys(data.guild.warns || {})?.length)
+      for await (let warnDataId of Object.keys(data.guild.warns || {})) {
         warns_users++;
 
         let warnData = data.guild.warns[warnDataId];

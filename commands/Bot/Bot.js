@@ -1,9 +1,9 @@
-const { ButtonBuilder, ButtonStyle } = require('discord.js');
+const { ButtonBuilder } = require('discord.js');
 const humanize = require("humanize-duration");
 const os = require('os');
 const db = require("quick.db");
-const request = require("request");
 const axios = require('axios');
+const { getLastDays } = require("../../modules/Functions");
 
 module.exports = {
   interaction: {
@@ -26,14 +26,31 @@ module.exports = {
 
     await interaction.deferReply();
 
+    var usageStatsPageEmbed = null;
+    var lastDays = await getLastDays(14); //14
+
     try {
 
-      //------------------------------Back End------------------------------//
+      //------------------------------Butonlar------------------------------//
 
-      //Botun Sahibi
+      let destekSunucusuButon = new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link');
+      let davetBağlantısıButon = new ButtonBuilder().setLabel('Davet Bağlantısı').setURL(client.settings.invite).setStyle('Link');
+      let sponsorButon = new ButtonBuilder().setLabel('Sponsor (gibir.net.tr)').setURL("https://gibir.net.tr/?utm_source=Nraphy&utm_medium=buttons&utm_id=Nraphy").setStyle('Link');
+
+      let mainPageButton = new ButtonBuilder().setLabel('Ana Sayfa').setCustomId("mainPageButton").setStyle('Primary');
+      let usageStatsPageButton = new ButtonBuilder().setLabel('Kullanım/Sistem İstatistikleri').setCustomId("usageStatsPageButton").setStyle('Primary');
+      let healthCheckPageButton = new ButtonBuilder().setLabel('Durum Kontrol').setCustomId("healthCheckPageButton").setStyle('Primary');//.setDisabled(true);
+
+      if (interaction.user.id !== client.settings.owner) healthCheckPageButton.setStyle('Danger');
+
+      //------------------------------Butonlar------------------------------//
+
+      //------------------------------Ana Sayfa------------------------------//
+
+      //---------------Botun Sahibi---------------//
       let sahip = client.users.cache.get(client.settings.owner);
 
-      //Bot Anlık İstatistikleri
+      //---------------Bot Anlık İstatistikleri---------------//
       let results = await Promise.all([
         await client.shard.fetchClientValues('guilds.cache.size'),
         await client.shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
@@ -45,140 +62,27 @@ module.exports = {
       let voiceChannels = results[2].reduce((acc, voiceChannelCount) => acc + voiceChannelCount, 0);
       let playerQueues = results[3].reduce((acc, playerQueuesSize) => acc + playerQueuesSize, 0);
 
-      //Oturum İstatistikleri
-      let clientData = await client.database.fetchClientData();
-
-      //Kullanılan Komutlar
-      let commandUses = {};
-
-      const { getLastDays } = require("../../modules/Functions");
-      let days = await getLastDays(14);
-
-      for await (let day of days) {
-        let clientDatabyDate = await client.database.fetchClientData(day);
-
-        for (var command in clientDatabyDate.commandUses) {
-
-          //sortable.push({ command: command, uses: clientDatabyDate.commandUses[command] });
-          commandUses[command] ?
-            commandUses[command] += clientDatabyDate.commandUses[command] :
-            commandUses[command] = clientDatabyDate.commandUses[command];
-        }
-      }
-
-      let sortable = [];
-      for (var command in commandUses) {
-        sortable.push([command, commandUses[command]]);
-      }
-
-      sortable = sortable.sort(function (a, b) {
-        return b[1] - a[1];
-      }).slice(0, 15);
-
-      let commandUsesList = await sortable.map(([commandName, uses]) => {
-        return `**#${sortable.indexOf(sortable.find(qurve => qurve[0] == commandName)) + 1}** - **${client.capitalizeFirstLetter(commandName, "tr")}** • \`${new Intl.NumberFormat().format(uses >= 10 ? Math.floor(uses / 10) * 10 : uses)}+ Kullanım\``;
-      });
-
-      //Kullanım/Sistem İstatistikleri
-      let userDatas = await client.database.users.find().exec();
-      let guildDatas = await client.database.guilds.find().exec();
-      let quickDBGuildDatas = await db.fetch(`guilds`);
-
-      let yeniliklerinOkunması = 0;
-      let premiumUsers = 0;
-      for await (userData of userDatas) {
-        if (userData.readDateOfChanges > client.settings.updateDate) yeniliklerinOkunması++;
-        if (userData.NraphyPremium && (userData.NraphyPremium > Date.now())) premiumUsers++;
-      }
-
-      let linkBlock_guilds = 0;
-      let buttonRole_messages = 0;
-      let inviteManager_guilds = 0;
-      let logger_guilds = 0;
-      let autoReply_guilds = 0;
-      let autoRole_guilds = 0;
-      let memberCounter_guilds = 0;
-      let spamProtection_guilds = 0;
-      let upperCaseBlock_guilds = 0;
-      let warns_users = 0;
-      let warns_warns = 0;
-      let wordGame_guilds = 0;
-      let countingGame_guilds = 0;
-      for await (guildData of guildDatas) {
-
-        //Oto-Cevap
-        if (guildData.autoReply) autoReply_guilds++;
-
-        //Bağlantı-Engel
-        if (guildData.linkBlock?.guild || guildData.linkBlock?.channels.length) linkBlock_guilds++;
-
-        //Buton-Rol
-        if (guildData.buttonRole && Object.keys(guildData.buttonRole)?.length)
-          for await (message of Object.keys(guildData.buttonRole)) {
-            buttonRole_messages++;
-          }
-
-        //Log
-        if (guildData.logger?.webhook) logger_guilds++;
-
-        //Oto-Rol
-        if (guildData.autoRole.channel) autoRole_guilds++;
-
-        //Spam Koruması
-        if (guildData.spamProtection?.guild || guildData.spamProtection?.channels.length) spamProtection_guilds++;
-
-        //Büyük Harf Engelleme
-        if (guildData.upperCaseBlock?.guild || guildData.upperCaseBlock?.channels.length) upperCaseBlock_guilds++;
-
-        //Uyarılar
-        if (guildData.warns && Object.keys(guildData.warns)?.length)
-          for await (warnDataId of Object.keys(guildData.warns)) {
-            warns_users++;
-
-            let warnData = guildData.warns[warnDataId];
-            if (warnData.length) warns_warns += warnData.length;
-          }
-
-      }
-      for await (guildDataId of Object.keys(quickDBGuildDatas)) {
-        let guildData = quickDBGuildDatas[guildDataId];
-
-        //Davet-Sistemi
-        if (guildData.inviteManager?.channel) inviteManager_guilds++;
-
-        //Sayaç
-        if (guildData.memberCounter) memberCounter_guilds++;
-
-        //Kelime-Oyunu
-        if (guildData.wordGame?.channel) wordGame_guilds++;
-
-        //Sayı-Saymaca
-        if (guildData.countingGame?.channel) countingGame_guilds++;
-      }
-
-      var availableGiveaways = await client.database.giveaways.find().lean().exec()
-        .then(g => g.filter(giveaway => !giveaway.ended));
-      var availableBetaGiveaways = await client.database.betaGiveaways.find().lean().exec()
-        .then(g => g.filter(giveaway => !giveaway.isEnded));
-
-      let yesterdayDate = (await getLastDays(2)).pop();
-      let yesterdayData = await client.database.fetchClientData(yesterdayDate);
+      //Düne göre sunucu farkını almaya yarayan kodlar
+      let yesterdayData = await client.database.fetchClientData((await getLastDays(2)).pop());
       let yesterdayGuildCountDifference = totalGuilds - yesterdayData.guildCount;
 
-      //------------------------------Back End------------------------------//
+      //---------------Hatalar---------------//
+      let errorCount = (await client.database.fetchClientData()).error;
+      let lastnDaysTotalErrors = 0;
+      for await (let day of lastDays) {
+        let clientDatabyDate = await client.database.fetchClientData(day);
+        lastnDaysTotalErrors += clientDatabyDate.error;
+      }
+      let ortalamaError = (lastnDaysTotalErrors / 14).toFixed();
+      let ortalamaErrorFark = errorCount - ortalamaError;
 
-      //------------------------------Embeds------------------------------//
-
-      //Buttonlar
-      let destekSunucusuButon = new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link');
-      let davetBağlantısıButon = new ButtonBuilder().setLabel('Davet Bağlantısı').setURL(client.settings.invite).setStyle('Link');
-      let sponsorButon = new ButtonBuilder().setLabel('Sponsor (gibir.net.tr)').setURL("https://gibir.net.tr/?utm_source=Nraphy&utm_medium=buttons&utm_id=Nraphy").setStyle('Link');
-
-      let mainPageButton = new ButtonBuilder().setLabel('Ana Sayfa').setCustomId("mainPageButton").setStyle('Primary');
-      let usageStatsPageButton = new ButtonBuilder().setLabel('Kullanım/Sistem İstatistikleri').setCustomId("usageStatsPageButton").setStyle('Primary');
-      let healthCheckPageButton = new ButtonBuilder().setLabel('Durum Kontrol').setCustomId("healthCheckPageButton").setStyle('Primary');//.setDisabled(true);
-
-      if (interaction.user.id !== client.settings.owner) healthCheckPageButton.setStyle('Danger');
+      //---------------Komutlar Hakkında---------------//
+      let commandsInteractionSupport = 0;
+      let commandsInteractionOnly = 0;
+      client.commands.forEach(command => {
+        if (command.interaction) commandsInteractionSupport++;
+        if (command.interactionOnly) commandsInteractionOnly++;
+      });
 
       //Ana Sayfa - Embed
       let mainPageEmbed = {
@@ -206,6 +110,32 @@ module.exports = {
               //`**•** Kullanılabilir Bellek: \`${((os.freemem() * (10 ** -6)) / 1024).toFixed(2)} GB\`\n` +
               `**•** Bellek Kullanımı: \`${((os.totalmem() - os.freemem()) / (1024 ** 3)).toFixed(2)} GB/${(os.totalmem() / (1024 ** 3)).toFixed(2)} GB (%${(((os.totalmem() - os.freemem()) / os.totalmem()) * 100).toFixed()})\``
           },
+          {
+            name: '**»** Hatalar (Günlük)',
+            value:
+              `**•** Tespit Edilen Hatalar: \`${errorCount} (${ortalamaErrorFark == 0 ?
+                "Ortalamaya denk"
+                : ortalamaErrorFark > 0 ?
+                  `Ortalamadan ${ortalamaErrorFark} fazla ⚠️`
+                  : `Ortalamadan ${Math.abs(ortalamaErrorFark)} az ✅`
+              })\``
+            //`**•** Shard Çökmeleri: \`${clientData.crash}\``
+          },
+          {
+            name: '**»** Müzik Sistemi (Anlık)',
+            value:
+              `**•** Bulunduğu Sesli Kanallar: \`${voiceChannels}\`\n` +
+              `**•** Aktif Müzik Kuyrukları: \`${playerQueues}\``
+          },
+          {
+            name: `**»** Komutlar Hakkında`,
+            value:
+              `**•** Komut Sayısı: \`${client.commands.size}\`\n` +
+              `**•** Slash Destekleme Oranı: \`%${(commandsInteractionSupport / client.commands.size * 100).toFixed()}\`\n` +
+              `**•** Klasik Giriş Destekleme Oranı: \`%${((client.commands.size - commandsInteractionOnly) / client.commands.size * 100).toFixed()}\`\n` +
+              `**•** Her İkisini Destekleme Oranı: \`%${((commandsInteractionSupport - commandsInteractionOnly) / client.commands.size * 100).toFixed()}\``
+            //`**•** Yalnızca Klasik Giriş Destekleyen Komutlar: ${client.commands.size - commandsInteractionOnly}`
+          },
           /*{
             name: '**»** Oturum Süresi',
             value: `**•** \`${humanize(Date.now() - clientData.registeredAt, { language: "tr", round: true, largest: 2 })}\``,
@@ -217,67 +147,7 @@ module.exports = {
         ],
       };
 
-
-      //Kullanım/Sistem İstatistikleri - Embed
-      let usageStatsPageEmbed = {
-        color: client.settings.embedColors.default,
-        author: {
-          name: `${client.user.username} • Bot Bilgileri`,
-          icon_url: client.settings.icon,
-        },
-        title: `**»** Kullanım/Sistem İstatistikleri!`,
-        fields: [
-          {
-            name: '**»** Sistemlerin Kullanım İstatistikleri (Anlık)',
-            value:
-              `**•** Bağlantı-Engel: \`${linkBlock_guilds} Sunucu\`\n` +
-              `**•** Buton-Rol: \`${buttonRole_messages} Mesaj\`\n` +
-              `**•** Büyük-Harf-Engel: \`${upperCaseBlock_guilds} Sunucu\`\n` +
-              `**•** Davet Sistemi: \`${inviteManager_guilds} Sunucu\`\n` +
-              `**•** Çekilişler: \`${availableGiveaways.length + availableBetaGiveaways.length} (${availableBetaGiveaways.length} Beta) (Devam Eden)\`\n` +
-              `**•** Galeri: \`${db.all().filter(data => data.ID.startsWith(`Galeri_`)).length} Kanal\`\n` +
-              `**•** İsim-Temizleme: \`${Object.keys(db.fetch(`isim-temizle`)).length} Sunucu\`\n` +
-              `**•** Log: \`${logger_guilds} Sunucu\`\n` +
-              `**•** Oto-Cevap: \`${autoReply_guilds} Sunucu\`\n` +
-              `**•** Oto-Rol: \`${autoRole_guilds} Sunucu\`\n` +
-              `**•** Sayaç: \`${memberCounter_guilds} Sunucu\`\n` +
-              `**•** Spam-Koruması: \`${spamProtection_guilds} Sunucu\`\n` +
-              `**•** Uyarılar: \`${warns_users} Kullanıcı, ${warns_warns} Uyarı\`\n` +
-              `**•** Kelime-Oyunu: \`${wordGame_guilds} Sunucu\`\n` +
-              `**•** Sayı-Saymaca: \`${countingGame_guilds} Sunucu\``,
-            inline: true
-          },
-          {
-            name: '**»** Kullanılan Komutlar (14 günlük)',
-            value:
-              commandUsesList.slice(0, 15).join('\n').substring(0, 950) + `\n` +
-              //`Toplam Kullanım: \`${clientData.cmd + clientData.interactionCmd} (${clientData.interactionCmd} Interaction)\`\n` +
-              `**Not:** İstatistikler anonimdir`,
-            inline: true
-          },
-          {
-            name: '**»** Hatalar (Günlük)',
-            value:
-              `**•** Tespit Edilen Hatalar: \`${clientData.error}\``
-            //`**•** Shard Çökmeleri: \`${clientData.crash}\``
-          },
-          {
-            name: '**»** Müzik Sistemi (Anlık)',
-            value:
-              `**•** Bulunduğu Sesli Kanallar: \`${voiceChannels}\`\n` +
-              `**•** Aktif Müzik Kuyrukları: \`${playerQueues}\``
-          },
-          {
-            name: '**»** Diğer Bilgiler',
-            value:
-              `**•** Güncelleme Yayınlanma Tarihi: <t:${(client.settings.updateDate / 1000).toFixed(0)}:f> - \`(${humanize(Date.now() - client.settings.updateDate, { language: "tr", round: true, largest: 1 })} önce)\`\n` +
-              `**•** Yenilikleri Okuyan Kullanıcılar: \`${yeniliklerinOkunması}\`\n` +
-              `**•** Nraphy Premium Kullanıcıları: \`${premiumUsers}\``,
-          },
-        ],
-      };
-
-      //------------------------------Embeds------------------------------//
+      //------------------------------Ana Sayfa------------------------------//
 
       interaction.editReply({
         embeds: [mainPageEmbed],
@@ -309,7 +179,7 @@ module.exports = {
 
       const collector = reply.createMessageComponentCollector({ filter, time: 900000 });
 
-      collector.on('collect', btn => {
+      collector.on('collect', async btn => {
 
         switch (btn.customId) {
           case "mainPageButton":
@@ -331,7 +201,224 @@ module.exports = {
               ]
             });
             break;
+
+          //------------------------------Kullanım/Sistem İstatistikleri------------------------------//
           case "usageStatsPageButton":
+
+            if (usageStatsPageEmbed) return interaction.editReply({
+              embeds: [usageStatsPageEmbed],
+              components: [
+                {
+                  data: { type: 1 },
+                  components: [destekSunucusuButon, davetBağlantısıButon, sponsorButon]
+                },
+                {
+                  data: { type: 1 },
+                  components: [
+                    mainPageButton.setDisabled(false),
+                    usageStatsPageButton.setDisabled(true),
+                    healthCheckPageButton.setDisabled(false)
+                  ]
+                },
+              ]
+            }); else {
+              await interaction.editReply({
+                embeds: [{
+                  color: client.settings.embedColors.default,
+                  author: {
+                    name: `${client.user.username} • Bot Bilgileri`,
+                    icon_url: client.settings.icon,
+                  },
+                  title: `**»** Kullanım/Sistem İstatistikleri!`,
+                  description: `**•** Sayfa oluşturulurken lütfen bekleyin...`,
+                }],
+                components: [
+                  {
+                    data: { type: 1 },
+                    components: [destekSunucusuButon, davetBağlantısıButon, sponsorButon]
+                  },
+                  {
+                    data: { type: 1 },
+                    components: [
+                      mainPageButton.setDisabled(true),
+                      usageStatsPageButton.setDisabled(true),
+                      healthCheckPageButton.setDisabled(true)
+                    ]
+                  },
+                ]
+              });
+            };
+
+            //---------------Sistemlerin Kullanım İstatistikleri---------------//
+            let userDatas = await client.database.users.find().exec();
+            let guildDatas = await client.database.guilds.find().exec();
+
+            let linkBlock_guilds = 0;
+            let buttonRole_messages = 0;
+            let inviteManager_guilds = 0;
+            let gallery_channels = 0;
+            let logger_guilds = 0;
+            let campaignNews_guilds = 0;
+            let autoReply_guilds = 0;
+            let autoRole_guilds = 0;
+            let memberCounter_guilds = 0;
+            let spamProtection_guilds = 0;
+            let upperCaseBlock_guilds = 0;
+            let warns_users = 0;
+            let warns_warns = 0;
+            let wordGame_guilds = 0;
+            let countingGame_guilds = 0;
+            for await (let guildData of guildDatas) {
+
+              //Oto-Cevap
+              if (guildData.autoReply) autoReply_guilds++;
+
+              //Bağlantı-Engel
+              if (guildData.linkBlock?.guild || guildData.linkBlock?.channels.length) linkBlock_guilds++;
+
+              //Buton-Rol
+              if (guildData.buttonRole && Object.keys(guildData.buttonRole)?.length)
+                for await (let message of Object.keys(guildData.buttonRole)) {
+                  buttonRole_messages++;
+                }
+
+              //Kampanya-Haber
+              if (guildData.campaignNews) campaignNews_guilds++;
+
+              //Gallery
+              if (guildData.gallery) gallery_channels++;
+
+              //Log
+              if (guildData.logger?.webhook) logger_guilds++;
+
+              //Oto-Rol
+              if (guildData.autoRole?.channel) autoRole_guilds++;
+
+              //Spam Koruması
+              if (guildData.spamProtection?.guild || guildData.spamProtection?.channels.length) spamProtection_guilds++;
+
+              //Büyük Harf Engelleme
+              if (guildData.upperCaseBlock?.guild || guildData.upperCaseBlock?.channels.length) upperCaseBlock_guilds++;
+
+              //Uyarılar
+              if (guildData.warns && Object.keys(guildData.warns)?.length)
+                for await (let warnDataId of Object.keys(guildData.warns)) {
+                  warns_users++;
+
+                  let warnData = guildData.warns[warnDataId];
+                  if (warnData.length) warns_warns += warnData.length;
+                }
+
+              //Kelime-Oyunu
+              if (guildData.wordGame?.channel) wordGame_guilds++;
+
+              //Sayı-Saymaca
+              if (guildData.countingGame?.channel) countingGame_guilds++;
+
+            }
+
+            await client.wait(1000);
+
+            let quickDBGuildDatas = await db.fetch(`guilds`);
+            for await (let guildDataId of Object.keys(quickDBGuildDatas)) {
+              let guildData = quickDBGuildDatas[guildDataId];
+
+              //Davet-Sistemi
+              if (guildData.inviteManager?.channel) inviteManager_guilds++;
+
+              //Sayaç
+              if (guildData.memberCounter) memberCounter_guilds++;
+
+            }
+            //Çekilişler
+            var availableGiveaways = await client.database.giveaways.find().lean().exec()
+              .then(g => g.filter(giveaway => !giveaway.ended));
+            var availableBetaGiveaways = await client.database.betaGiveaways.find().lean().exec()
+              .then(g => g.filter(giveaway => !giveaway.isEnded));
+
+            //---------------Kullanılan Komutlar---------------//
+            let commandUses = {};
+
+            for await (let day of lastDays) {
+              let clientDatabyDate = await client.database.fetchClientData(day);
+
+              for (var command in clientDatabyDate.commandUses) {
+
+                //sortable.push({ command: command, uses: clientDatabyDate.commandUses[command] });
+                commandUses[command] ?
+                  commandUses[command] += clientDatabyDate.commandUses[command] :
+                  commandUses[command] = clientDatabyDate.commandUses[command];
+              }
+            }
+
+            let sortable = [];
+            for (var command in commandUses) {
+              sortable.push([command, commandUses[command]]);
+            }
+
+            sortable = sortable.sort(function (a, b) {
+              return b[1] - a[1];
+            }).slice(0, 15);
+
+            let commandUsesList = await sortable.map(([commandName, uses]) => {
+              return `**#${sortable.indexOf(sortable.find(qurve => qurve[0] == commandName)) + 1}** - **${client.capitalizeFirstLetter(commandName, "tr")}** • \`${new Intl.NumberFormat().format(uses >= 10 ? Math.floor(uses / 10) * 10 : uses)}+ Kullanım\``;
+            });
+
+            //---------------Diğer Bilgiler---------------//
+            let yeniliklerinOkunması = 0;
+            let premiumUsers = 0;
+            for await (let userData of userDatas) {
+              if (userData.readDateOfChanges > client.settings.updateDate) yeniliklerinOkunması++;
+              if (userData.NraphyPremium && (userData.NraphyPremium > Date.now())) premiumUsers++;
+            }
+
+            usageStatsPageEmbed = {
+              color: client.settings.embedColors.default,
+              author: {
+                name: `${client.user.username} • Bot Bilgileri`,
+                icon_url: client.settings.icon,
+              },
+              title: `**»** Kullanım/Sistem İstatistikleri!`,
+              fields: [
+                {
+                  name: '**»** Sistemlerin Kullanım İstatistikleri (Anlık)',
+                  value:
+                    `**•** Bağlantı-Engel: \`${linkBlock_guilds} Sunucu\`\n` +
+                    `**•** Buton-Rol: \`${buttonRole_messages} Mesaj\`\n` +
+                    `**•** Büyük-Harf-Engel: \`${upperCaseBlock_guilds} Sunucu\`\n` +
+                    `**•** Davet Sistemi: \`${inviteManager_guilds} Sunucu\`\n` +
+                    `**•** Çekilişler: \`${availableGiveaways.length + availableBetaGiveaways.length} (${availableBetaGiveaways.length} Beta) (Devam Eden)\`\n` +
+                    `**•** Galeri: \`${gallery_channels} Kanal\`\n` +
+                    `**•** İsim-Temizleme: \`${Object.keys(db.fetch(`isim-temizle`)).length} Sunucu\`\n` +
+                    `**•** Kampanya-Haber: \`${campaignNews_guilds} Sunucu\`\n` +
+                    `**•** Log: \`${logger_guilds} Sunucu\`\n` +
+                    `**•** Oto-Cevap: \`${autoReply_guilds} Sunucu\`\n` +
+                    `**•** Oto-Rol: \`${autoRole_guilds} Sunucu\`\n` +
+                    `**•** Sayaç: \`${memberCounter_guilds} Sunucu\`\n` +
+                    `**•** Spam-Koruması: \`${spamProtection_guilds} Sunucu\`\n` +
+                    `**•** Uyarılar: \`${warns_users} Kullanıcı, ${warns_warns} Uyarı\`\n` +
+                    `**•** Kelime-Oyunu: \`${wordGame_guilds} Sunucu\`\n` +
+                    `**•** Sayı-Saymaca: \`${countingGame_guilds} Sunucu\``,
+                  inline: true
+                },
+                {
+                  name: '**»** Kullanılan Komutlar (14 günlük)',
+                  value:
+                    commandUsesList.slice(0, 15).join('\n').substring(0, 950) + `\n` +
+                    //`Toplam Kullanım: \`${clientData.cmd + clientData.interactionCmd} (${clientData.interactionCmd} Interaction)\`\n` +
+                    `**Not:** İstatistikler anonimdir`,
+                  inline: true
+                },
+                {
+                  name: '**»** Diğer Bilgiler',
+                  value:
+                    `**•** Güncelleme Yayınlanma Tarihi: <t:${(client.settings.updateDate / 1000).toFixed(0)}:f> - \`(${humanize(Date.now() - client.settings.updateDate, { language: "tr", round: true, largest: 1 })} önce)\`\n` +
+                    `**•** Yenilikleri Okuyan Kullanıcılar: \`${yeniliklerinOkunması}\`\n` +
+                    `**•** Nraphy Premium Kullanıcıları: \`${premiumUsers}\``,
+                },
+              ],
+            };
+
             interaction.editReply({
               embeds: [usageStatsPageEmbed],
               components: [
@@ -349,7 +436,10 @@ module.exports = {
                 },
               ]
             });
+
             break;
+
+          //------------------------------Kullanım/Sistem İstatistikleri------------------------------//
           case "healthCheckPageButton":
 
             //---------------Owner Only---------------//

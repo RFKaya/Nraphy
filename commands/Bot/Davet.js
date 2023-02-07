@@ -16,7 +16,7 @@ module.exports = {
 
   async execute(client, interaction, data) {
 
-    let davetBağlantısıButon = new ButtonBuilder().setLabel('Davet Bağlantısı').setURL(client.settings.invite).setStyle('Link')
+    let davetBağlantısıButon = new ButtonBuilder().setLabel('Davet Bağlantısı').setURL(client.settings.invite).setStyle('Link');
 
     interaction.reply({
       embeds: [
@@ -31,18 +31,18 @@ module.exports = {
           timestamp: new Date(),
           footer: {
             text: `${(interaction.type == 2) ? interaction.user.username : interaction.author.username} tarafından istendi.`,
-            icon_url: (interaction.type == 2) ? interaction.user.displayAvatarURL({ dynamic: true, size: 1024 }) : interaction.author.displayAvatarURL({ dynamic: true, size: 1024 }),
+            icon_url: (interaction.type == 2) ? interaction.user.displayAvatarURL() : interaction.author.displayAvatarURL(),
           },
         }
       ],
       components: [
-         {
-              data: { type: 1 }, components: [
+        {
+          data: { type: 1 }, components: [
             davetBağlantısıButon
           ]
         },
       ]
-    })
+    });
 
   }
 };

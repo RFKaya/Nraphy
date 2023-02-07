@@ -1,7 +1,6 @@
 const { Client, GatewayIntentBits, Options } = require('discord.js');
 const Discord = require('discord.js');
 const fs = require("fs");
-const db = require("quick.db");
 const util = require("util");
 const readdir = util.promisify(fs.readdir);
 
@@ -27,6 +26,7 @@ const client = new Client({
       GatewayIntentBits.GuildScheduledEvents
     ],
   failIfNotExists: false,
+  restRequestTimeout: 60000
   /*sweepers: {
     ...Options.DefaultSweeperSettings,
     threads: {
@@ -53,32 +53,28 @@ client.warnsMap = new Map();
 //------------------------------Ayarlar------------------------------//
 
 client.settings = {
-  presence: "❤️ /komutlar • /aşk-ölçer",
+  presence: "Nraphy!",
   prefix: "n!",
   owner: "700385307077509180",
   icon: "https://cdn.discordapp.com/attachments/801418986809589771/975048501912272997/Narpitti.png",
   embedColors: {
-    default: 0xEB1C5A, //"eb1c5a" (Nraphy), "00ffb8" (Test),
+    default: 0xEB1C5A,
     green: 0x2ECC71,
     red: 0xE74C3C,
     yellow: 0xFEE75C,
     blue: 0x3498DB,
   },
   language: "tr",
-  invite: "https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code",
-  webPanel: { //This is useless
-    "clientSecret": "",
-    "domain": "",
-    "clientIP": "",
-    "port": 0000,
-    "customDomain": false,
-  },
-  updateDate: 1663505474594
+  invite: "https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code"
 };
 
 //------------------------------Ayarlar------------------------------//
 
 //------------------------------Kurulum------------------------------//
+
+/*setInterval(function () {
+  process.send({ qurve: true, anivi: false });
+}, 1000);*/
 
 client.events = new Discord.Collection();
 client.commands = new Discord.Collection();
@@ -86,7 +82,6 @@ client.logger = require("./modules/Logger.js");
 client.date = require("./modules/Date.js");
 //client.userFetcher = require("./modules/userFetcher.js");
 client.config = require("./config.json");
-client.databaseCache = process.argv[4];
 client.listGuilds = async function () {
   const guilds = [];
   const guildsArray = await client.shard.broadcastEval(c => c.guilds.cache);
@@ -150,9 +145,10 @@ async function startUp() {
 
   //client.logger.load(`Commands Loaded!`)
 
-  // Connect to Mongoose
+  //---------------Mongoose Database---------------//
   const mongoose = require('mongoose');
   client.database = require('./Mongoose/Mongoose.js');
+  mongoose.set("strictQuery", false);
   mongoose.connect(client.config.mongooseToken, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -161,6 +157,184 @@ async function startUp() {
   }).catch((err) => {
     console.log('Unable to connect to MongoDB Database.\nError: ' + err);
   });
+
+  //Database Queue
+  //client.databaseCache = {};//process.argv[4];
+  client.databaseQueue = { users: {}, guilds: {}, client: {} };
+  setInterval(() => {
+
+    //users
+    if (Object.keys(client.databaseQueue.users).length) {
+      for (const [userId, queueDatas] of Object.entries(client.databaseQueue.users)) {
+        //userId = "700385307077509180"
+        //queueDatas = { statistics: { commandUses: 3 } };
+
+        (async function () {
+          const userData = await client.database.fetchUser(userId);
+
+          for (const [key, value] of Object.entries(queueDatas)) {
+            //key = 'statistics'
+            //value = { commandUses: 4 }
+
+            if (key == "statistics") {
+
+              for (const [statisticKey, statisticValue] of Object.entries(value)) {
+                //statisticKey = 'commandUses'
+                //statisticValue = 4
+
+                if (statisticKey == "commandUses") {
+
+                  delete client.databaseQueue.users[userId];
+
+                  const userData = await client.database.fetchUser(userId);
+                  userData.statistics.commandUses += statisticValue;
+                  if (userData.commandUses) {
+                    userData.statistics.commandUses += userData.commandUses;
+                    userData.commandUses = undefined;
+                  }
+                  await userData.save();
+
+                }
+              }
+            }
+          }
+        })();
+      }
+    }
+
+    //guilds
+    if (Object.keys(client.databaseQueue.guilds).length) {
+      for (const [guildId, queueDatas] of Object.entries(client.databaseQueue.guilds)) {
+        //guildId = "746357184211714089"
+        /*queueDatas = { wordGame: { stats: ... } };*/
+
+        (async function () {
+          const guildData = await client.database.fetchGuild(guildId);
+          let changedDataStatus = false;
+          //let dataStatus_stats = false;
+
+          for (const [key, value] of Object.entries(queueDatas)) {
+            //key = 'wordGame'
+            //value = { stats: { userId: ... } }
+
+            if (key == "wordGame") {
+
+              for await (const [key, wordGameStats] of Object.entries(value)) {
+                //key = 'stats'
+                //wordGameStats = { userId: { wordCount: 5, wordLength, 21 } }
+
+                if (key == "longestWord") {
+
+                  //Veri yoksa atla, varsa changedDataStatus'a true çek.
+                  if (!client.databaseQueue.guilds[guildId].wordGame.longestWord) continue;
+                  if (!changedDataStatus) changedDataStatus = true;
+
+                  //Verileri guildData'ya gönderme
+                  guildData.wordGame.longestWord = {
+                    word: client.databaseQueue.guilds[guildId].wordGame.longestWord.word,
+                    author: client.databaseQueue.guilds[guildId].wordGame.longestWord.author
+                  };
+
+                  //Gönderilen verileri önbellekten temizleme
+                  delete client.databaseQueue.guilds[guildId].wordGame.longestWord;
+
+                }
+
+                if (key == "history") {
+
+                  //Veri yoksa atla, varsa changedDataStatus'a true çek.
+                  if (!client.databaseQueue.guilds[guildId].wordGame.history?.length) continue;
+                  if (!changedDataStatus) changedDataStatus = true;
+
+                  //Verileri guildData'ya gönderme
+                  guildData.wordGame.history = guildData.wordGame.history
+                    .concat(client.databaseQueue.guilds[guildId].wordGame.history)
+                    .slice(-200);
+
+                  //Gönderilen verileri önbellekten temizleme
+                  delete client.databaseQueue.guilds[guildId].wordGame.history;
+
+                }
+
+                if (key == "lastWord") {
+
+                  //Veri yoksa atla, varsa changedDataStatus'a true çek.
+                  if (!client.databaseQueue.guilds[guildId].wordGame.lastWord) continue;
+                  if (!changedDataStatus) changedDataStatus = true;
+
+                  //Verileri guildData'ya gönderme
+                  guildData.wordGame.lastWord = {
+                    word: client.databaseQueue.guilds[guildId].wordGame.lastWord.word,
+                    author: client.databaseQueue.guilds[guildId].wordGame.lastWord.author
+                  };
+                  /*if (!guildData.wordGame.lastWord) guildData.wordGame.lastWord = {};
+                  guildData.wordGame.lastWord.word = client.databaseQueue.guilds[guildId].wordGame.lastWord.word;
+                  guildData.wordGame.lastWord.author = client.databaseQueue.guilds[guildId].wordGame.lastWord.author;*/
+
+                  //Gönderilen verileri önbellekten temizleme
+                  delete client.databaseQueue.guilds[guildId].wordGame.lastWord;
+
+                }
+
+                if (key == "stats") {
+
+                  for (const [statUserId, statValues] of Object.entries(wordGameStats)) {
+                    //statUserId = 'userId'
+                    //statValues = { wordCount: 5, wordLength, 21 }
+
+                    //Veri yoksa atla, varsa changedDataStatus'a true çek.
+                    if (!statValues.wordCount && !statValues.wordLength) continue;
+                    if (!changedDataStatus) changedDataStatus = true;
+
+                    //guildData'da ilgili veriler yoksa
+                    guildData.wordGame.stats ||= {};
+                    guildData.wordGame.stats[statUserId] ||= {};
+                    guildData.wordGame.stats[statUserId].wordCount ||= 0;
+                    guildData.wordGame.stats[statUserId].wordLength ||= 0;
+
+                    //Verileri guildData'ya gönderme
+                    guildData.wordGame.stats[statUserId].wordCount += statValues.wordCount;
+                    guildData.wordGame.stats[statUserId].wordLength += statValues.wordLength;
+
+                    //Gönderilen verileri önbellekten temizleme
+                    client.databaseQueue.guilds[guildId].wordGame.stats[statUserId].wordCount -= statValues.wordCount;
+                    client.databaseQueue.guilds[guildId].wordGame.stats[statUserId].wordLength -= statValues.wordLength;
+
+                  }
+
+                  if (!changedDataStatus) delete client.databaseQueue.guilds[guildId].wordGame.stats;
+
+                }
+              }
+
+            } else if (key == "countingGame") {
+
+              if (value.number) {
+
+                //Veri varsa changedDataStatus'a true çek.
+                if (!changedDataStatus) changedDataStatus = true;
+
+                //guildData'da ilgili veriler yoksa
+                guildData.countingGame.number = value.number;
+
+                //Gönderilen verileri önbellekten temizleme
+                delete client.databaseQueue.guilds[guildId].countingGame;
+
+              };
+
+            }
+
+            if (changedDataStatus) {
+              guildData.markModified('wordGame');
+              await guildData.save(); //.then(console.log("new guildData saved"));
+            }
+
+          }
+        })();
+      }
+    }
+
+  }, 60000);
 
   await client.login(client.config.token);
 }
@@ -195,7 +369,7 @@ process.on("unhandledRejection", (err) => {
   client.logger.error(err);
 });
 process.on('uncaughtException', (err) => {
-  console.error(err);
+  //console.error(err);
   client.logger.error(err);
 });
 
@@ -208,8 +382,8 @@ process.on('uncaughtException', (err) => {
 //------------------------------Müzik------------------------------//
 
 const { Player, QueryType } = require("discord-player");
-const playdl = require("play-dl");
-const extractor = require("./utils/extractor.js");
+//const playdl = require("play-dl");
+//const extractor = require("./utils/extractor.js");
 
 client.player = new Player(client,
   {
@@ -221,9 +395,15 @@ client.player = new Player(client,
     }
   }
 );
-client.player.use("dodong", extractor);
+//client.player.use("dodong", extractor);
 /*client.filters = ['bassboost', '8D', 'vaporwave', 'nightcore', 'phaser', 'tremolo', 'vibrato', 'reverse', 'treble', 'normalizer', 'surrounding', 'pulsator', 'subboost',
   'kakaoke', 'flanger', 'gate', 'haas', 'mcompand', 'mono', 'mstlr', 'mstrr', 'compressor', 'expander', 'softlimiter', 'chorus', 'chorus2d', 'chorus3d', 'fadein'];*/
+
+/*playdl.getFreeClientID().then((clientID) => {
+  playdl.setToken({
+    soundcloud: { client_id: clientID }
+  });
+});*/
 
 const playerFiles = fs.readdirSync('./events/player/').filter(file => file.endsWith('.js'));
 for (const eventFile of playerFiles) {
@@ -233,30 +413,7 @@ for (const eventFile of playerFiles) {
   client.player.on(eventName, event.bind(null, client));
 }
 
-playdl.getFreeClientID().then((clientID) => {
-  playdl.setToken({
-    soundcloud: { client_id: clientID }
-  });
-});
-
 //------------------------------Müzik------------------------------//
-
-//------------------------------Presence Yenileme------------------------------//
-
-setInterval(() => {
-
-  //Bot Durum
-  client.user.setPresence({
-    activities: [{
-      name: client.settings.presence,
-      type: 5, //LISTENING - WATCHING - PLAYING - STREAMING
-    }],
-    //status: "online", //online, idle, dnd
-  });//.catch(console.error);
-
-}, 3600000);
-
-//------------------------------Presence Yenileme------------------------------//
 
 String.prototype.toEN = function () {
   return this//UPPERS:     // LOWERS:

@@ -1,5 +1,6 @@
 {
   "token": "TOKEN",
+  "totalShards": "auto",
   "topggToken": "",
   "mongooseToken": ""
 }

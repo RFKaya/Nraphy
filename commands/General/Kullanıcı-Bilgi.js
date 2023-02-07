@@ -69,7 +69,7 @@ module.exports = {
       },
       title: `**»** ${user.tag}`,
       thumbnail: {
-        url: user.displayAvatarURL({ dynamic: true, size: 1024 }),
+        url: user.displayAvatarURL({ size: 1024 }),
       },
       fields: [
         {
@@ -102,7 +102,7 @@ module.exports = {
     if (Premium) embed.fields.push(
       {
         name: '**»** Premium Süresi',
-        value: `**•** ${!Premium ? "`Hesabına tanımlı bir Premium bulunmuyor.`" : `\`${kalanPremiumSüresi}\``}`,
+        value: `**•** \`${kalanPremiumSüresi}\``,
       }
     );
 

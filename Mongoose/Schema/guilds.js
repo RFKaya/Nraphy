@@ -1,27 +1,30 @@
+const { IntegrationExpireBehavior } = require("discord.js");
 const mongoose = require("mongoose");
 
-module.exports = mongoose.model("guild", new mongoose.Schema({
+const schema = new mongoose.Schema({
 
   guildId: { type: String, unique: true },
   registeredAt: { type: Number, default: Date.now() },
 
   //Nraphy Verileri
   prefix: { type: String, default: "n!" },
+  NraphyBoost: Number,
   NraphyLogs: {
     type: [Object]
   },
 
-  //Moderasyon
+  //Sunucu Ayarları
   autoReply: Boolean,
 
   autoRole: {
     role: String,
     channel: String,
     setupChannel: String
-
   },
 
   buttonRole: Object,
+
+  campaignNews: String,
 
   gallery: String,
 
@@ -35,7 +38,6 @@ module.exports = mongoose.model("guild", new mongoose.Schema({
     guild: Boolean,
     channels: [String],
     exempts: { channels: [String], roles: [String] }
-
   },
 
   logger: {
@@ -74,16 +76,30 @@ module.exports = mongoose.model("guild", new mongoose.Schema({
   //Oyunlar
   countingGame: {
     channel: String,
-    number: { type: Number, default: 0},
+    number: Number,
     setupChannel: String
   },
 
   wordGame: {
     channel: String,
-    lastWord: String,
     setupChannel: String,
-    stats: Object
-
+    lastWord: { word: String, author: String },
+    writeMore: Boolean,
+    stats: Object,
+    longestWord: { word: String, author: String },
+    history: [String]
   },
 
-}));
+});
+
+schema.pre('save', async function () {
+  //console.log("guild schema - save event");
+
+  //global.database.guildsCache[this.guildId] = this;
+  function funcName(client, { guildId }) {
+    delete global.database.guildsCache[guildId];
+  }
+  global.client.shard.broadcastEval(funcName, { context: { guildId: this.guildId } });
+});
+
+module.exports = mongoose.model('guild', schema);

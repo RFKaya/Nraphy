@@ -32,13 +32,13 @@ module.exports = {
           timestamp: new Date(),
           footer: {
             text: `${(interaction.type == 2) ? interaction.user.username : interaction.author.username} tarafından istendi.`,
-            icon_url: (interaction.type == 2) ? interaction.user.displayAvatarURL({ dynamic: true, size: 1024 }) : interaction.author.displayAvatarURL({ dynamic: true, size: 1024 }),
+            icon_url: (interaction.type == 2) ? interaction.user.displayAvatarURL() : interaction.author.displayAvatarURL(),
           },
         }
       ],
       components: [
-         {
-              data: { type: 1 }, components: [
+        {
+          data: { type: 1 }, components: [
             destekSunucusuButon
           ]
         },

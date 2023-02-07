@@ -69,7 +69,7 @@ module.exports = {
             .addField("**»** Şarkının İsmi", "**•** " + `${trackName}`)
             .addField("**»** Şarkının Albümü", "**•** " + `${trackAlbum}`)
             .addField("**»** Şarkının Sanatçısı", "**•** " + `${trackAuthor}`)
-            .setFooter(message.author.username + ` tarafından istendi.`, message.author.avatarURL({ dynamic: true }))
+            .setFooter(message.author.username + ` tarafından istendi.`, message.author.avatarURL())
             .setTimestamp()*/
 
         card.build().then(Card => {
@@ -80,7 +80,7 @@ module.exports = {
             url: `https://open.spotify.com/track/${activity.syncId}`,
             author: {
               name: `${member.user.username} kullanıcısının Spotify'da dinlediği şarkı!`,
-              icon_url: member.user.displayAvatarURL({ dynamic: true, size: 1024 }),
+              icon_url: member.user.displayAvatarURL(),
             },
             image: {
               url: 'attachment://SpotifyCardCreatedByNraphy.png',

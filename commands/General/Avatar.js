@@ -45,11 +45,11 @@ module.exports = {
         fields: [
           {
             name: "Farklı Uzantılarla",
-            value: `[png](${user.displayAvatarURL({ format: "png", size: 1024, })}) • [jpg](${user.displayAvatarURL({ format: "jpg", size: 1024, })}) • [webp](${user.displayAvatarURL({ format: "webp", size: 1024 })})`,
+            value: `[png](${user.displayAvatarURL({ extension: "png", forceStatic: true, size: 1024, })}) • [jpg](${user.displayAvatarURL({ extension: "jpg", forceStatic: true, size: 1024, })}) • [webp](${user.displayAvatarURL({ extension: "webp", forceStatic: true, size: 1024 })})`,
           },
         ],
         image: {
-          url: user.displayAvatarURL({ dynamic: true, size: 1024 }),
+          url: user.displayAvatarURL(),
         },
       }]
     });
