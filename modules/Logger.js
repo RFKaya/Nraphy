@@ -65,6 +65,7 @@ exports.error = async (content) => {
   //console.log(`${timestamp} ${chalk.red("ERROR")} ${content}`);
   console.log(`${timestamp} ${chalk.red("ERROR")}`);
   console.error(content);
+  if (content.requestBody?.json) console.log("error.requestBody.json:", content.requestBody.json);
 
   //Log TXT
   fs.appendFile(logFile,
@@ -105,11 +106,11 @@ exports.warn = async (content) => {
 };
 
 //------------------------------⬇️ Eski ⬇️------------------------------//
-exports.log = (content, type = "log", createPermaLog = true) => {
+exports.log = (content, type = "log", writeFileLog = true) => {
 
   let timestamp = dateModule.timestamp();
 
-  if (type !== "interaction" && createPermaLog) {
+  if (type !== "interaction" && writeFileLog) {
     fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) ${content}\n\n`,
       function (err) {
         if (err) return console.log(err);

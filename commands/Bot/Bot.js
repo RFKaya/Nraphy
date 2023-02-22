@@ -22,8 +22,6 @@ module.exports = {
 
   async execute(client, interaction, data) {
 
-    return interaction.reply({ content: "Bu komut Nraphy client'ına özel olarak hazırlanmıştır. Farklı client'larda kullanmak için düzenleme gerekir." });
-
     await interaction.deferReply();
 
     var usageStatsPageEmbed = null;
@@ -55,7 +53,7 @@ module.exports = {
         await client.shard.fetchClientValues('guilds.cache.size'),
         await client.shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
         await client.shard.broadcastEval(c => c.voice.adapters.size),
-        await client.shard.broadcastEval(c => c.player.queues.size)
+        await client.shard.broadcastEval(c => c.distube?.queues.size || 0)
       ]);
       let totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
       let totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
@@ -79,9 +77,11 @@ module.exports = {
       //---------------Komutlar Hakkında---------------//
       let commandsInteractionSupport = 0;
       let commandsInteractionOnly = 0;
+      let commandsVoteRequired = 0;
       client.commands.forEach(command => {
         if (command.interaction) commandsInteractionSupport++;
         if (command.interactionOnly) commandsInteractionOnly++;
+        if (command.voteRequired) commandsVoteRequired++;
       });
 
       //Ana Sayfa - Embed
@@ -133,8 +133,17 @@ module.exports = {
               `**•** Komut Sayısı: \`${client.commands.size}\`\n` +
               `**•** Slash Destekleme Oranı: \`%${(commandsInteractionSupport / client.commands.size * 100).toFixed()}\`\n` +
               `**•** Klasik Giriş Destekleme Oranı: \`%${((client.commands.size - commandsInteractionOnly) / client.commands.size * 100).toFixed()}\`\n` +
-              `**•** Her İkisini Destekleme Oranı: \`%${((commandsInteractionSupport - commandsInteractionOnly) / client.commands.size * 100).toFixed()}\``
-            //`**•** Yalnızca Klasik Giriş Destekleyen Komutlar: ${client.commands.size - commandsInteractionOnly}`
+              `**•** Her İkisini Destekleme Oranı: \`%${((commandsInteractionSupport - commandsInteractionOnly) / client.commands.size * 100).toFixed()}\`\n\n` +
+
+              `**•** __Oy (Vote) Zorunlu Komutlar__ \`(%${(commandsVoteRequired / client.commands.size * 100).toFixed()})\`\n` +
+              `**•** \`${client.commands
+                .filter(command => command.voteRequired)
+                .map(command => (command.interaction || command).name)
+                .map(command => command.replace(/-/g, " ").toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
+                  return letter.toUpperCase();
+                }))
+                .join(', ')
+              }\``
           },
           /*{
             name: '**»** Oturum Süresi',
@@ -555,7 +564,7 @@ module.exports = {
 
     } catch (err) {
 
-      console.log(err);
+      client.logger.error(err);
 
       await interaction.editReply({ content: "Elimde olmayan sebeplerden dolayı verileri alamadım :/" });
 

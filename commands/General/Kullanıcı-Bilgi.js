@@ -92,7 +92,7 @@ module.exports = {
       }
     );
 
-    if (NC) embed.fields.push(
+    if (userData.NraphyCoin) embed.fields.push(
       {
         name: '**»** NraphyCoin',
         value: `**•** \`${NC} NraphyCoin\` <:NraphyCoin:946801199976419339>`,

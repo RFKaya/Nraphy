@@ -1,6 +1,4 @@
-const Discord = require("discord.js");
-const { MessageActionRow, ButtonBuilder } = require('discord.js');
-const { stripIndents } = require("common-tags");
+const { ButtonBuilder } = require('discord.js');
 
 module.exports = {
   name: "yasakla",
@@ -148,9 +146,10 @@ module.exports = {
         name: '» Bir üye yasaklandı!',
         icon_url: client.settings.icon,
       },
-      description: stripIndents` **•** **Yasaklanan Üye:** ${toBan} (**${toBan.id}**)
-                **•** **Sebep:** ${sebep}
-                **•** **Yetkili:** ${message.author}`,
+      description:
+        `**•** **Yasaklanan Üye:** ${toBan} (**${toBan.id}**)\n` +
+        `**•** **Sebep:** ${sebep}\n` +
+        `**•** **Yetkili:** ${message.author}`,
       thumbnail: {
         url: toBan.displayAvatarURL({ size: 1024 }),
       },

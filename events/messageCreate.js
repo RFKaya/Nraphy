@@ -1,7 +1,3 @@
-const Discord = require("discord.js");
-const db = require("quick.db");
-const lastWarn = {};
-
 module.exports = async (client, message) => {
 
   if (!message.guild) return;
@@ -9,6 +5,7 @@ module.exports = async (client, message) => {
   if (message.author.bot) return;
 
   const guildData = await client.database.fetchGuild(message.guild.id);
+  var userData;
 
   const prefix = guildData.prefix || client.settings.prefix;
 
@@ -37,12 +34,14 @@ module.exports = async (client, message) => {
       const cmd = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases?.includes(commandName));
       if (!cmd) return;
 
+      userData ||= await client.database.fetchUser(message.author.id);
+
       const data = {
         guild: guildData,
-        //user: userData,
+        user: userData,
         cmd,
-        prefix
-        //premium: userData.NraphyPremium && userData.NraphyPremium > Date.now();
+        prefix,
+        premium: userData.NraphyPremium && userData.NraphyPremium > Date.now()
       };
 
       //---------------NSFW---------------//
@@ -147,7 +146,7 @@ module.exports = async (client, message) => {
 
         //---------------Command Cooldown---------------//
 
-        let cmdCooldown = cmd.cooldown || 1000;
+        let cmdCooldown = data.premium ? (cmd.cooldown || 1000) / (3 / 2) : cmd.cooldown || 1000;
 
         const userCacheLastCmds = userCache.lastCmds || (userCache.lastCmds = {});
 
@@ -156,7 +155,12 @@ module.exports = async (client, message) => {
           return message.reply({
             embeds: [{
               color: client.settings.embedColors.red,
-              description: `**»** Bu komutu tekrar kullanabilmen için **${Math.ceil((cmdLastUsage + cmdCooldown - Date.now()) / 1000)} saniye** beklemelisin.`
+              description:
+                data.premium ?
+                  `**»** Bu komutu tekrar kullanabilmen için **${Math.ceil((cmdLastUsage + cmdCooldown - Date.now()) / 1000)} saniye** beklemelisin.`
+                  :
+                  `**»** Bu komutu tekrar kullanabilmen için **${Math.ceil((cmdLastUsage + cmdCooldown - Date.now()) / 1000)} saniye** beklemelisin.\n` +
+                  `**•** Nraphy Premium ile bekleme sürelerini kısaltabilirsin. \`/premium Bilgi\``
             }],
           });
 
@@ -187,10 +191,10 @@ module.exports = async (client, message) => {
 
           (!linkBlock.exempts || (
             //Kanal Muaf
-            (!linkBlock.exempts.channels || linkBlock.exempts.channels.length == 0 || !linkBlock.exempts.channels.includes(message.channel.id)) &&
+            (!linkBlock.exempts.channels?.length || !linkBlock.exempts.channels.includes(message.channel.id)) &&
 
             //Rol Muaf
-            (!linkBlock.exempts.roles || linkBlock.exempts.roles.length == 0 || !message.member.roles.cache.map(map => map.id).some(role => linkBlock.exempts.roles.includes(role)))
+            (!linkBlock.exempts.roles?.length || !message.member.roles.cache.map(map => map.id).some(role => linkBlock.exempts.roles.includes(role)))
           )) &&
 
           //ManageMessages Yetki Muaf
@@ -209,7 +213,7 @@ module.exports = async (client, message) => {
 
 
           if (reklam.some(word => messageContent.includes(word))) {
-            message.delete();
+            message.delete().catch(e => { });
 
             //---------------Warner---------------//
 
@@ -237,143 +241,13 @@ module.exports = async (client, message) => {
 
     //Galeri
     let gallery = guildData.gallery;
-
-    if (
-      //Galeri açıksa ve o kanal galeri kanalıysa
-      message.channel.id == gallery &&
-
-      //Mesaj sahibi kanalları yönet yetkisine sahip değilse
-      !message.channel.permissionsFor(message.member).has("ManageChannels") &&
-
-      //Mesaj eklenti içeriyormiyorsa
-      !message.attachments.size) {
-
-      let repliedMessage;
-      if (message.reference) await message.channel.messages.fetch(message.reference.messageId).then(repliedMsg => repliedMessage = repliedMsg);
-
-      //Alıntılanmış yoksa ya da alıntılanmış mesajın eklentisi yoksa
-      if (!repliedMessage || repliedMessage.attachments.size == 0) {
-
-        message.delete({ reason: `Bu kanalda yalnızca görsel paylaşılabilir. Bu sistemi kapatmak istiyorsanız, "${prefix}galeri sıfırla" yazmanız yeterlidir.` });
-
-        let time = 5000 - (Date.now() - lastWarn[message.author.id]);
-        lastWarn[message.author.id] = Date.now();
-        if (!time || time <= 0)
-          message.channel.send({
-            embeds: [
-              {
-                color: client.settings.embedColors.red,
-                title: '**»** Bu Kanalda Sadece **Fotoğraf/Video** Paylaşabilirsin!',
-                description: `**•** Sistemi kapatmak için \`${prefix}galeri\` komutunu kullanabilirsin.`
-              }
-            ]
-          }).then(msg => setTimeout(() => { msg.delete(); }, 5000));
-
-
-      }
-    }
+    if (gallery)
+      require("./functions/gallery.js")(client, message, gallery);
 
     //Spam Koruması
-
     const spamProtection = guildData.spamProtection;
-    if (spamProtection && message.content) {
-
-      const LIMIT = 6;
-      const TIME = 11000;
-
-      if (!message.author.bot && message.member?.moderatable) {
-
-        //O kanalda spam koruması çalışacak mı?
-        if (spamProtection.guild || spamProtection.channels?.includes(message.channel.id)) {
-
-          //Muaflar
-          if (
-
-            (!spamProtection.exempts || (
-              //Kanal Muaf
-              (!spamProtection.exempts.channels || spamProtection.exempts.channels.length == 0 || !spamProtection.exempts.channels.includes(message.channel.id)) &&
-
-              //Rol Muaf
-              (!spamProtection.exempts.roles || spamProtection.exempts.roles.length == 0 || !message.member.roles.cache.map(map => map.id).some(role => spamProtection.exempts.roles.includes(role)))
-            )) &&
-
-            //ManageMessages Yetki Muaf
-            !message.member.permissions.has("ManageMessages")
-
-          ) {
-
-            let fn = setTimeout(() => {
-              const userDatake = client.usersMap.get(message.author.id);
-              userDatake.msgCount -= 1;
-            }, TIME);
-
-            if (!client.usersMap.has(message.author.id)) {
-
-              client.usersMap.set(message.author.id, {
-                msgCount: 1,
-                timer: fn
-              });
-
-            } else {
-
-              const userDatake = client.usersMap.get(message.author.id);
-              ++userDatake.msgCount;
-
-              if (parseInt(userDatake.msgCount) >= LIMIT) {
-                if (!client.warnsMap.get(message.author.id)) {
-                  client.warnsMap.set(message.author.id, true);
-                  message.reply({
-                    embeds: [
-                      {
-                        color: client.settings.embedColors.red,
-                        author: {
-                          name: `${message.author.username}, spam yapmayı kes!`,
-                          icon_url: message.author.displayAvatarURL({ size: 1024 }),
-                        },
-                        footer: {
-                          text: 'Spam yapmaya devam edersen susturulacaksın.',
-                          icon_url: client.settings.icon,
-                        },
-                      }
-                    ]
-                  }).then(async msg => {
-                    while (true) {
-                      await client.wait(1500);
-                      const userDatake = client.usersMap.get(message.author.id);
-                      if (userDatake.msgCount < 1) {
-                        client.warnsMap.set(message.author.id, false);
-                        msg.delete();
-                        break;
-                      }
-                    }
-                  });
-                }
-              }
-
-              if (parseInt(userDatake.msgCount) >= (LIMIT + 5)) {
-                //message.reply("dur sana bi mute atim de gör.");
-                message.member.timeout(60000, "Nraphy Bot • Spam Koruması")
-                  .then(message.channel.send({
-                    embeds: [
-                      {
-                        color: client.settings.embedColors.red,
-                        author: {
-                          name: `${message.author.username}, spam yaptığın için susturuldun! 🛡️`,
-                          icon_url: message.author.displayAvatarURL({ size: 1024 }),
-                        }
-                      }
-                    ]
-                  }))
-                  //.then(msg => setTimeout(() => { msg.delete() }, 30000))
-                  .catch(error => {
-                    client.logger.error(error);
-                  });
-              }
-            }
-          }
-        }
-      }
-    }
+    if (spamProtection && message.content)
+      require("./functions/spamProtection.js")(client, message, spamProtection);
 
     //CapsLock Block
     //client.logger.log(`CAPSLOCK-ENGEL TETİKLENDİ! • ${message.guild.name} (${message.guild.id})`);
@@ -398,19 +272,11 @@ module.exports = async (client, message) => {
           color: client.settings.embedColors.default,
           description: `**»** Prefixim \`${prefix}\` • \`${prefix}komutlar\` yazarak tüm komutlara ulaşabilirsin.`
         }]
-      });
+      }).catch(e => { });
 
-    } else if (message.content.startsWith(`<@!${client.user.id}>`) || message.content.startsWith(`<@${client.user.id}>`)) {
-
-      let soruSorCmd = client.commands.get("soru-sor");
-      let soruSorArgs = message.content.slice(message.content.startsWith(`<@!${client.user.id}>`) ? `<@!${client.user.id}>`.length : `<@${client.user.id}>`.length).trim().split(/ +/g);
-
-      soruSorCmd.execute(client, message, { prefix }, soruSorArgs);
-
-      client.logger.cmdLog(message.author, message.guild, "message", soruSorCmd.interaction.name, message.content);
     }
 
-    const userData = await client.database.fetchUser(message.author.id, false);
+    userData ||= await client.database.fetchUser(message.author.id, false);
 
     //AFK
     if (userData?.AFK?.time) {

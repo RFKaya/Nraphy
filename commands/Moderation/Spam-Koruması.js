@@ -375,8 +375,8 @@ module.exports = {
               embeds: [
                 {
                   color: client.settings.embedColors.red,
-                  title: `**»** Koruma Listesindeki Kalan Son Kanalı Listeden Çıkkaramazsın!`,
-                  description: `**•** Önce başka kanal ekle veya direkt sistemi kapat. \`/spam-koruması Bilgi\``,
+                  title: `**»** Koruma Listesindeki Kalan Son Kanalı Listeden Çıkaramazsın!`,
+                  description: `**•** Önce başka kanal ekle veya direkt sistemi kapat. \`/spam-koruması Kapat\``,
                 }
               ],
               ephemeral: true

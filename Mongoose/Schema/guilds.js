@@ -8,7 +8,7 @@ const schema = new mongoose.Schema({
 
   //Nraphy Verileri
   prefix: { type: String, default: "n!" },
-  NraphyBoost: Number,
+  NraphyBoost: Date,
   NraphyLogs: {
     type: [Object]
   },
@@ -70,6 +70,8 @@ const schema = new mongoose.Schema({
     exempts: { channels: [String], roles: [String] },
     rate: { type: Number, default: 70 }
   },
+
+  tempChannels: String,
 
   warns: Object,
 

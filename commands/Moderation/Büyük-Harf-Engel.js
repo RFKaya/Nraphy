@@ -227,7 +227,7 @@ module.exports = {
 
         if (getOperation == "ac") {
 
-          if (upperCaseBlock && upperCaseBlock.guild)
+          if (upperCaseBlock?.guild)
             return interaction.reply({
               embeds: [
                 {
@@ -298,7 +298,7 @@ module.exports = {
         const getOperation = interaction.options.getString("işlem");
         const getChannel = interaction.options.getChannel("kanal");
 
-        if (!getChannel.type == 0)
+        if (getChannel.type !== 0)
           return interaction.reply({
             embeds: [
               {
@@ -312,7 +312,7 @@ module.exports = {
 
         if (getOperation == "ekle") {
 
-          if (upperCaseBlock && upperCaseBlock.guild)
+          if (upperCaseBlock?.guild)
             return interaction.reply({
               embeds: [
                 {
@@ -324,7 +324,7 @@ module.exports = {
               ephemeral: true
             });
 
-          if (upperCaseBlock && upperCaseBlock.channels && upperCaseBlock.channels.includes(getChannel.id))
+          if (upperCaseBlock?.channels?.includes(getChannel.id))
             return interaction.reply({
               embeds: [
                 {
@@ -351,7 +351,7 @@ module.exports = {
 
         } else if (getOperation == "kaldir") {
 
-          if (upperCaseBlock && upperCaseBlock.guild)
+          if (upperCaseBlock?.guild)
             return interaction.reply({
               embeds: [
                 {
@@ -363,7 +363,7 @@ module.exports = {
               ephemeral: true
             });
 
-          if (!upperCaseBlock || !upperCaseBlock.channels || upperCaseBlock.channels.length == 0)
+          if (!upperCaseBlock?.channels || upperCaseBlock.channels.length == 0)
             return interaction.reply({
               embeds: [
                 {
@@ -392,8 +392,8 @@ module.exports = {
               embeds: [
                 {
                   color: client.settings.embedColors.red,
-                  title: `**»** Koruma Listesindeki Kalan Son Kanalı Listeden Çıkkaramazsın!`,
-                  description: `**•** Önce başka kanal ekle veya direkt sistemi kapat. \`/büyük-harf-engel Bilgi\``,
+                  title: `**»** Koruma Listesindeki Kalan Son Kanalı Listeden Çıkaramazsın!`,
+                  description: `**•** Önce başka kanal ekle veya direkt sistemi kapat. \`/büyük-harf-engel Kapat\``,
                 }
               ],
               ephemeral: true
@@ -482,7 +482,7 @@ module.exports = {
               ephemeral: true
             });
 
-          if (upperCaseBlock && upperCaseBlock.exempts && upperCaseBlock.exempts.channels && upperCaseBlock.exempts.channels.includes(getChannel.id))
+          if (upperCaseBlock?.exempts?.channels?.includes(getChannel.id))
             return interaction.reply({
               embeds: [
                 {
@@ -510,7 +510,7 @@ module.exports = {
 
         } else if (getOperation == "kaldir") {
 
-          if (!upperCaseBlock || !upperCaseBlock.exempts || !upperCaseBlock.exempts.channels || upperCaseBlock.exempts.channels.length == 0)
+          if (!upperCaseBlock?.exempts?.channels || upperCaseBlock.exempts.channels.length == 0)
             return interaction.reply({
               embeds: [
                 {
@@ -558,7 +558,7 @@ module.exports = {
 
         if (getOperation == "ekle") {
 
-          if (upperCaseBlock && upperCaseBlock.exempts && upperCaseBlock.exempts.roles && upperCaseBlock.exempts.roles.includes(getRole.id))
+          if (upperCaseBlock?.exempts?.roles?.includes(getRole.id))
             return interaction.reply({
               embeds: [
                 {
@@ -586,7 +586,7 @@ module.exports = {
 
         } else if (getOperation == "kaldir") {
 
-          if (!upperCaseBlock || !upperCaseBlock.exempts || !upperCaseBlock.exempts.roles || upperCaseBlock.exempts.roles.length == 0)
+          if (!upperCaseBlock?.exempts?.roles || upperCaseBlock.exempts.roles.length == 0)
             return interaction.reply({
               embeds: [
                 {

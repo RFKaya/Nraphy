@@ -1,7 +1,16 @@
 module.exports = {
-  name: "şifre",
-  description: "Rastgele bir şifre verir.",
-  usage: "şifre <Uzunluk>",
+  interaction: {
+    name: "şifre",
+    description: "Rastgele bir şifre verir.",
+    options: [
+      {
+        name: "uzunluk",
+        description: "Şifrenin kaç karakter uzunluğunda olmasını istiyorsun?",
+        type: 4,
+        required: true
+      },
+    ],
+  },
   aliases: ["sifre", "şifre-oluştur", "sifreolustur", "sifreoluştur", "sifre-oluştur", "şifre-olustur", "şifreoluştur", "şifreolustur", "rastgele-sifre", "rastgelesifre", "rastgele-şifre"],
   category: "General",
   memberPermissions: [],
@@ -10,36 +19,51 @@ module.exports = {
   cooldown: false,
   ownerOnly: false,
 
-  async execute(client, message, args, data) {
+  async execute(client, interaction, data, args) {
 
-    let uzunluk = args[0];
+    var uzunluk;
+    if (interaction.type === 2) {
+      uzunluk = interaction.options.getInteger("uzunluk");
+    } else {
+      uzunluk = args[0];
+    }
 
     if (!uzunluk)
-      return message.channel.send({
+      return interaction.reply({
         embeds: [
           {
             color: client.settings.embedColors.red,
             title: '**»** Şifrenin Kaç Karakter Olacağını Belirtmelisin!',
-            description: `**•** Örnek kullanım: \`${data.prefix}şifre 32\``
+            description: `**•** Örnek kullanım: \`/şifre 32\``
           }
         ]
       });
 
 
-    let x = /(-)/;
-    if (isNaN(uzunluk) || uzunluk.includes(',') || uzunluk.includes('.') || uzunluk.match(x))
-      return message.channel.send({
+    if (isNaN(uzunluk))
+      return interaction.reply({
         embeds: [
           {
             color: client.settings.embedColors.red,
             title: '**»** Geçerli Bir Uzunluk Belirtmelisin!',
-            description: `**•** Örnek kullanım: \`${data.prefix}şifre 32\``
+            description: `**•** Örnek kullanım: \`/şifre 32\``
           }
         ]
       });
 
-    if (uzunluk <= 0)
-      return message.channel.send({
+    if (uzunluk < 0)
+      return interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            title: '**»** SEN BENİ ÇILDIRTMAK MI İSTİYORSUN?!',
+            description: `**•** UZUNLUĞU NEGATİF OLAN ŞİFRE Mİ OLUR? :rage:`
+          }
+        ]
+      });
+
+    if (uzunluk == 0)
+      return interaction.reply({
         embeds: [
           {
             color: client.settings.embedColors.red,
@@ -49,8 +73,8 @@ module.exports = {
         ]
       });
 
-    if (uzunluk > 500)
-      return message.channel.send({
+    if (Math.trunc(uzunluk) > 500)
+      return interaction.reply({
         embeds: [
           {
             color: client.settings.embedColors.red,
@@ -69,7 +93,7 @@ module.exports = {
       return retVal;
     }
 
-    var şifre = generatePassword(parseInt(uzunluk));
+    var şifre = generatePassword(parseInt(Math.trunc(uzunluk)));
 
     /*var şifre = password.generate({
       length: `${uzunluk}`,
@@ -90,12 +114,12 @@ module.exports = {
 
     var cevap = cevaplar[Math.floor(Math.random() * cevaplar.length)];
 
-    message.channel.send({
+    return interaction.reply({
       embeds: [
         {
           color: client.settings.embedColors.default,
           title: `**»** ${cevap}`,
-          description: `**•** ${şifre}`,
+          description: şifre //`**•** ${şifre}`,
         }
       ]
     });

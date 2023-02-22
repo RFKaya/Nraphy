@@ -2,12 +2,12 @@ const { ButtonBuilder, WebhookClient } = require('discord.js');
 
 module.exports = {
 
-  buttonConfirmation: async function (interaction, confirmationEmbeds) {
+  buttonConfirmation: async function (interaction, confirmationEmbeds, confirmatoryUserId = null) {
 
-    let confirmButton = new ButtonBuilder().setLabel('Onayla').setCustomId("confirmButton").setStyle('Success');
-    let denyButton = new ButtonBuilder().setLabel('İptal Et').setCustomId("denyButton").setStyle('Danger');
+    const confirmButton = new ButtonBuilder().setLabel('Onayla').setCustomId("confirmButton").setStyle('Success');
+    const denyButton = new ButtonBuilder().setLabel('İptal Et').setCustomId("denyButton").setStyle('Danger');
 
-    await interaction.reply({
+    const reply = await interaction.reply({
       embeds: confirmationEmbeds,
       components: [
         {
@@ -18,29 +18,59 @@ module.exports = {
       ]
     });
 
-    const reply = await interaction.fetchReply();
-    const filter = i => {
-      i.deferUpdate();
-      return i.user.id === interaction.user.id;
-    };
+    if (interaction.type === 0) {
 
-    return reply.awaitMessageComponent({ filter, time: 180000 })
-      .then(btn => btn.customId === "confirmButton" ? true : btn.customId === "denyButton" && false)
-      .catch(err => {
+      const filter = i => {
+        return i.message.id === reply.id && i.deferUpdate() && i.user.id === (confirmatoryUserId || interaction.author.id);
+      };
 
-        return false;
+      return reply.awaitMessageComponent({ filter, time: 180000 })
+        .then(btn => {
+          if (btn.customId === "confirmButton") return { reply, status: true };
+          else if (btn.customId === "denyButton") return { reply, status: false };
+        })
+        .catch(err => {
 
-        /*interaction.editReply({
-            embeds: [
-                {
-                    color: client.settings.embedColors.red,
-                    description: "**»** Herhangi bir seçim yapılmadığı için işlem iptal edildi."
-                }
-            ],
-            components: []
-        })*/
+          return { reply, status: true };
 
-      });
+          /*interaction.editReply({
+              embeds: [
+                  {
+                      color: client.settings.embedColors.red,
+                      description: "**»** Herhangi bir seçim yapılmadığı için işlem iptal edildi."
+                  }
+              ],
+              components: []
+          })*/
+
+        });
+
+    } else if (interaction.type === 2) {
+
+      const replyMessage = await interaction.fetchReply();
+      const filter = i => {
+        return i.message.id === replyMessage.id && i.deferUpdate() && i.user.id === (confirmatoryUserId || interaction.user.id);
+      };
+
+      return replyMessage.awaitMessageComponent({ filter, time: 180000 })
+        .then(btn => btn.customId === "confirmButton" ? true : btn.customId === "denyButton" && false)
+        .catch(err => {
+
+          return false;
+
+          /*interaction.editReply({
+              embeds: [
+                  {
+                      color: client.settings.embedColors.red,
+                      description: "**»** Herhangi bir seçim yapılmadığı için işlem iptal edildi."
+                  }
+              ],
+              components: []
+          })*/
+
+        });
+
+    }
 
   },
 

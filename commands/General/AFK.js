@@ -1,6 +1,3 @@
-const Discord = require("discord.js");
-const db = require("quick.db");
-
 module.exports = {
   name: "AFK",
   description: "Deneyerek görebilirsiniz.",
@@ -53,12 +50,9 @@ module.exports = {
     /*db.set(`AFK-Nick_${message.author.id}.${message.guild.id}`, message.member.displayName);
     db.set(`AFK_${message.author.id}.${message.guild.id}`, Date.now());
     db.set(`AFK-Sebep_${message.author.id}.${message.guild.id}`, sebep);*/
-    const userData = await client.database.fetchUser(message.author.id);
-    userData.AFK.reason = sebep;
-    userData.AFK.time = Date.now();
-
-    await userData.save();
-
+    data.user.AFK.reason = sebep;
+    data.user.AFK.time = Date.now();
+    await data.user.save();
 
     message.reply({
       embeds: [

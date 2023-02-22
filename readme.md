@@ -10,18 +10,19 @@ Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte
 Bu projede tüm Nraphy kodları açık olarak paylaşılmamıştır. Botun güncel hâli saklıdır, güncel hâli ileri zamanlarda paylaşılacaktır, takipte kalabilirsin. Bu projede, Nraphy'de bulunan sistemlerle ilgili durumlar aşağıdaki gibidir:
 ### Sistemler
 > ✅ Bağlantı Engel <br>
+> ✅ Buton Rol <br>
 > ✅ Büyük Harf Engel <br>
+> ✅ Davet Sistemi <br>
 > ✅ Galeri <br>
+> ✅ İsim Temizleme <br>
+> ✅ Log <br>
 > ✅ Müzik Sistemi <br>
 > ✅ Oto Rol <br>
+> ✅ Sayaç <br>
 > ✅ Spam Koruması <br>
-> ❌ Buton Rol <br>
-> ❌ Davet Sistemi <br>
 > ❌ Çekiliş/Drop <br>
-> ❌ İsim Temizleme <br>
-> ❌ Log <br>
 > ❌ Oto Cevap <br>
-> ❌ Sayaç <br>
+> ❌ Sunucu Kur <br>
 > ❌ Uyarı <br>
 
 ### Oyun Sistemleri
@@ -31,9 +32,9 @@ Bu projede tüm Nraphy kodları açık olarak paylaşılmamıştır. Botun günc
 ### Komutlar
 > ✅ Müzik Komutları <br>
 > ✅ Botla İlgili Komutlar <br>
-> 🟠 Yetkili Komutları <br>
-> 🟠 Eğlence Komutları <br>
-> 🟠 Genel Komutlar <br>
+> ✅ Yetkili Komutları <br>
+> ✅ Eğlence Komutları <br>
+> ✅ Genel Komutlar <br>
 > 🟠 Oyunlar <br>
 > ❌ Çekiliş <br>
 > ❌ NraphyCoin <br>
