@@ -59,7 +59,7 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
 > 🎉 Tebrikler, kurulumu tamamladın! Botu çalıştırmak için konsola `npm start` yazabilirsin.
 
 ## 🔔 Güncelleme Desteği
-Eğer bu yazıyı okuyorsanız güncelleme desteği devam etmektedir. Güncellemeyi keseceksem de tam burada bildiririm. Her güncelleme için birkaç ayda bir yoklamakta fayda var. 15 Star'a ulaştığımızda bir sonraki güncellemeyi yayınlayacağım. Projeyi yıldızlayarak katkıda bulunabilirsiniz! 
+Eğer bu yazıyı okuyorsanız güncelleme desteği devam etmektedir. Güncellemeyi keseceksem de tam burada bildiririm. Her güncelleme için birkaç ayda bir yoklamakta fayda var. 35 Star'a ulaştığımızda bir sonraki güncellemeyi yayınlayacağım. Projeyi yıldızlayarak katkıda bulunabilirsiniz! 
 
 ## 💞 Yardıma İhtiyacın Olursa
 [Nraphy Discord Sunucusu](https://discord.gg/JhasTMZr2A)'na katılabilir ve destek alabilirsin. Baştan uyarayım, emeksizce ve bilgisizce bot sahibi olma peşindekiler lütfen projeyi terk etsinler.
