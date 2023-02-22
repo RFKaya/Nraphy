@@ -1,4 +1,3 @@
-const Discord = require("discord.js");
 const humanize = require("humanize-duration");
 
 module.exports = {

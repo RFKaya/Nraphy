@@ -2,20 +2,33 @@ const Discord = require("discord.js");
 const canvacord = require("canvacord");
 
 module.exports = {
-  name: "spotify",
-  description: "Dinlediğiniz şarkının bilgilerini verir.",
-  usage: "spotify",
+  interaction: {
+    name: "spotify",
+    description: "Dinlediğiniz şarkının bilgilerini verir..",
+    options: [
+      {
+        name: "kullanıcı",
+        description: "Bir kullanıcı ID'si ya da etiketi gir.",
+        type: 6,
+        required: false
+      },
+    ],
+  },
   aliases: ["spo", "spoti", "spotif", "spotify", "spotifi"],
   category: "General",
   memberPermissions: [],
   botPermissions: ["SendMessages", "EmbedLinks", "AttachFiles"],
   nsfw: false,
-  cooldown: 3000,
+  cooldown: 4000,
   ownerOnly: false,
 
-  async execute(client, message, args, data) {
+  async execute(client, interaction, data, args) {
 
-    let member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
+    if (interaction.type == 2) {
+      var member = interaction.guild.members.cache.get(interaction.options.getUser("kullanıcı")?.id) || interaction.member;
+    } else {
+      var member = interaction.mentions.members.first() || interaction.guild.members.cache.get(args[0]) || interaction.member;
+    }
 
     let Activity = member.presence.activities;
     var SpotifyActivity;
@@ -24,7 +37,7 @@ module.exports = {
     });
 
     if (member.presence.activities.length === 0 || !SpotifyActivity) {
-      return message.channel.send({
+      return interaction.reply({
         embeds: [
           {
             color: client.settings.embedColors.red,
@@ -86,7 +99,7 @@ module.exports = {
               url: 'attachment://SpotifyCardCreatedByNraphy.png',
             },
           };
-          return message.channel.send({ embeds: [exampleEmbed], files: [file] });
+          return interaction.reply({ embeds: [exampleEmbed], files: [file] });
 
           //new Discord.MessageAttachment(Card, "SpotifyCard.png"));
         });

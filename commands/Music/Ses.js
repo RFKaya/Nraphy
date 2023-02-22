@@ -17,51 +17,56 @@ module.exports = {
   memberPermissions: [],
   botPermissions: ["SendMessages", "EmbedLinks"],
   nsfw: false,
-  cooldown: false,
+  cooldown: 5000,
   ownerOnly: false,
 
   async execute(client, interaction, data) {
 
-    if (!interaction.member.voice.channel) return interaction.reply({
-      embeds: [{
-        color: client.settings.embedColors.red,
-        description: "**»** Bir odada değilsin. Herhangi bir odaya geç ve tekrar dene!"
-      }]
-    });
+    if (!interaction.member.voice.channel)
+      return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          description: "**»** Bir odada değilsin. Herhangi bir odaya geç ve tekrar dene!"
+        }]
+      });
 
-    if (interaction.guild.members.me.voice.channel && interaction.member.voice.channel.id !== interaction.guild.members.me.voice.channel.id) return interaction.reply({
-      embeds: [{
-        color: client.settings.embedColors.red,
-        description: "**»** Aynı odada değiliz! Bulunduğum odaya katıl ve tekrar dene!"
-      }]
-    });
+    if (interaction.guild.members.me.voice.channel && interaction.member.voice.channel.id !== interaction.guild.members.me.voice.channel.id)
+      return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          description: "**»** Aynı odada değiliz! Bulunduğum odaya katıl ve tekrar dene!"
+        }]
+      });
 
-    const queue = client.player.getQueue(interaction.guild);
+    const queue = client.distube.getQueue(interaction.guild);
 
-    if (!queue || !queue.nowPlaying()) return interaction.reply({
-      embeds: [{
-        color: client.settings.embedColors.red,
-        description: "**»** Şu anda bir şarkı çalmıyor."
-      }]
-    });
+    if (!queue || !queue.songs || queue.songs.length == 0)
+      return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          description: "**»** Şu anda bir şarkı çalmıyor."
+        }]
+      });
 
     const ses = interaction.options.getInteger("ses");
 
-    if (!ses || isNaN(ses) || ses === 'Infinity') return interaction.reply({
-      embeds: [{
-        color: client.settings.embedColors.red,
-        title: "**»** **1** ve **100** Arasında Bir Sayı Girmelisin!",
-        description: `**•** Örnek kullanım: \`/ses 50\``
-      }]
-    });
+    if (!ses || isNaN(ses) || ses === 'Infinity')
+      return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          title: "**»** **1** ve **200** Arasında Bir Sayı Girmelisin!",
+          description: `**•** Örnek kullanım: \`/ses 35\``
+        }]
+      });
 
-    if (Math.round(parseInt(ses)) < 1 || Math.round(parseInt(ses)) > 100) return interaction.reply({
-      embeds: [{
-        color: client.settings.embedColors.red,
-        title: "**»** Girdiğin Sayı **1**'den Az veya **100**'den Çok Olamaz!",
-        description: `**•** Örnek kullanım: \`/ses 35\``
-      }]
-    });
+    if (Math.round(parseInt(ses)) < 1 || Math.round(parseInt(ses)) > 200)
+      return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          title: "**»** Girdiğin Sayı **1**'den Az veya **200**'den Çok Olamaz!",
+          description: `**•** Örnek kullanım: \`/ses 35\``
+        }]
+      });
 
     await queue.setVolume(ses);
 
@@ -71,5 +76,6 @@ module.exports = {
         description: `**»** Ses seviyesi başarıyla **${parseInt(ses)}%** olarak ayarlandı!`
       }]
     });
+
   },
 };

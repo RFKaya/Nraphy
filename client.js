@@ -1,29 +1,33 @@
 const { Client, GatewayIntentBits, Options } = require('discord.js');
 const Discord = require('discord.js');
 const fs = require("fs");
+const db = require("quick.db");
 const util = require("util");
 const readdir = util.promisify(fs.readdir);
 
 const client = new Client({
   intents:
     [
-      GatewayIntentBits.Guilds,
-      GatewayIntentBits.GuildMembers,
-      GatewayIntentBits.GuildBans,
+      GatewayIntentBits.AutoModerationConfiguration,
+      GatewayIntentBits.AutoModerationExecution,
+      //GatewayIntentBits.DirectMessageReactions,
+      //GatewayIntentBits.DirectMessageTyping,
+      //GatewayIntentBits.DirectMessages,
+      GatewayIntentBits.GuildModeration,
       GatewayIntentBits.GuildEmojisAndStickers,
       GatewayIntentBits.GuildIntegrations,
-      GatewayIntentBits.GuildWebhooks,
       GatewayIntentBits.GuildInvites,
-      GatewayIntentBits.GuildVoiceStates,
-      GatewayIntentBits.GuildPresences,
-      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.GuildMembers,
       GatewayIntentBits.GuildMessageReactions,
       GatewayIntentBits.GuildMessageTyping,
-      GatewayIntentBits.DirectMessages,
-      GatewayIntentBits.DirectMessageReactions,
-      GatewayIntentBits.DirectMessageTyping,
-      GatewayIntentBits.MessageContent,
-      GatewayIntentBits.GuildScheduledEvents
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.GuildModeration,
+      GatewayIntentBits.GuildPresences,
+      GatewayIntentBits.GuildScheduledEvents,
+      GatewayIntentBits.GuildVoiceStates,
+      GatewayIntentBits.GuildWebhooks,
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.MessageContent
     ],
   failIfNotExists: false,
   restRequestTimeout: 60000
@@ -42,6 +46,8 @@ const client = new Client({
 
 const interactionCommands = [];
 
+//Önbellek Veri Tabanı
+global.database = { guildsCache: {}, usersCache: {} };
 client.userDataCache = {};
 client.guildDataCache = {};
 
@@ -53,12 +59,15 @@ client.warnsMap = new Map();
 //------------------------------Ayarlar------------------------------//
 
 client.settings = {
-  presence: "Nraphy!",
+  presences: [
+    "🙏 /komutlar • Geçmiş olsun",
+    "🙏 Geçmiş olsun Türkiye • /komutlar"
+  ],
   prefix: "n!",
   owner: "700385307077509180",
   icon: "https://cdn.discordapp.com/attachments/801418986809589771/975048501912272997/Narpitti.png",
   embedColors: {
-    default: 0xEB1C5A,
+    default: 0xEB1C5A, //"eb1c5a" (Nraphy), "00ffb8" (Test),
     green: 0x2ECC71,
     red: 0xE74C3C,
     yellow: 0xFEE75C,
@@ -72,12 +81,9 @@ client.settings = {
 
 //------------------------------Kurulum------------------------------//
 
-/*setInterval(function () {
-  process.send({ qurve: true, anivi: false });
-}, 1000);*/
-
 client.events = new Discord.Collection();
 client.commands = new Discord.Collection();
+client.database = require('./Mongoose/Mongoose.js');
 client.logger = require("./modules/Logger.js");
 client.date = require("./modules/Date.js");
 //client.userFetcher = require("./modules/userFetcher.js");
@@ -143,11 +149,10 @@ async function startUp() {
     });
   });
 
-  //client.logger.load(`Commands Loaded!`)
-
   //---------------Mongoose Database---------------//
   const mongoose = require('mongoose');
   client.database = require('./Mongoose/Mongoose.js');
+  client.databaseQueue = { users: {}, guilds: {}, client: {} };
   mongoose.set("strictQuery", false);
   mongoose.connect(client.config.mongooseToken, {
     useNewUrlParser: true,
@@ -157,184 +162,6 @@ async function startUp() {
   }).catch((err) => {
     console.log('Unable to connect to MongoDB Database.\nError: ' + err);
   });
-
-  //Database Queue
-  //client.databaseCache = {};//process.argv[4];
-  client.databaseQueue = { users: {}, guilds: {}, client: {} };
-  setInterval(() => {
-
-    //users
-    if (Object.keys(client.databaseQueue.users).length) {
-      for (const [userId, queueDatas] of Object.entries(client.databaseQueue.users)) {
-        //userId = "700385307077509180"
-        //queueDatas = { statistics: { commandUses: 3 } };
-
-        (async function () {
-          const userData = await client.database.fetchUser(userId);
-
-          for (const [key, value] of Object.entries(queueDatas)) {
-            //key = 'statistics'
-            //value = { commandUses: 4 }
-
-            if (key == "statistics") {
-
-              for (const [statisticKey, statisticValue] of Object.entries(value)) {
-                //statisticKey = 'commandUses'
-                //statisticValue = 4
-
-                if (statisticKey == "commandUses") {
-
-                  delete client.databaseQueue.users[userId];
-
-                  const userData = await client.database.fetchUser(userId);
-                  userData.statistics.commandUses += statisticValue;
-                  if (userData.commandUses) {
-                    userData.statistics.commandUses += userData.commandUses;
-                    userData.commandUses = undefined;
-                  }
-                  await userData.save();
-
-                }
-              }
-            }
-          }
-        })();
-      }
-    }
-
-    //guilds
-    if (Object.keys(client.databaseQueue.guilds).length) {
-      for (const [guildId, queueDatas] of Object.entries(client.databaseQueue.guilds)) {
-        //guildId = "746357184211714089"
-        /*queueDatas = { wordGame: { stats: ... } };*/
-
-        (async function () {
-          const guildData = await client.database.fetchGuild(guildId);
-          let changedDataStatus = false;
-          //let dataStatus_stats = false;
-
-          for (const [key, value] of Object.entries(queueDatas)) {
-            //key = 'wordGame'
-            //value = { stats: { userId: ... } }
-
-            if (key == "wordGame") {
-
-              for await (const [key, wordGameStats] of Object.entries(value)) {
-                //key = 'stats'
-                //wordGameStats = { userId: { wordCount: 5, wordLength, 21 } }
-
-                if (key == "longestWord") {
-
-                  //Veri yoksa atla, varsa changedDataStatus'a true çek.
-                  if (!client.databaseQueue.guilds[guildId].wordGame.longestWord) continue;
-                  if (!changedDataStatus) changedDataStatus = true;
-
-                  //Verileri guildData'ya gönderme
-                  guildData.wordGame.longestWord = {
-                    word: client.databaseQueue.guilds[guildId].wordGame.longestWord.word,
-                    author: client.databaseQueue.guilds[guildId].wordGame.longestWord.author
-                  };
-
-                  //Gönderilen verileri önbellekten temizleme
-                  delete client.databaseQueue.guilds[guildId].wordGame.longestWord;
-
-                }
-
-                if (key == "history") {
-
-                  //Veri yoksa atla, varsa changedDataStatus'a true çek.
-                  if (!client.databaseQueue.guilds[guildId].wordGame.history?.length) continue;
-                  if (!changedDataStatus) changedDataStatus = true;
-
-                  //Verileri guildData'ya gönderme
-                  guildData.wordGame.history = guildData.wordGame.history
-                    .concat(client.databaseQueue.guilds[guildId].wordGame.history)
-                    .slice(-200);
-
-                  //Gönderilen verileri önbellekten temizleme
-                  delete client.databaseQueue.guilds[guildId].wordGame.history;
-
-                }
-
-                if (key == "lastWord") {
-
-                  //Veri yoksa atla, varsa changedDataStatus'a true çek.
-                  if (!client.databaseQueue.guilds[guildId].wordGame.lastWord) continue;
-                  if (!changedDataStatus) changedDataStatus = true;
-
-                  //Verileri guildData'ya gönderme
-                  guildData.wordGame.lastWord = {
-                    word: client.databaseQueue.guilds[guildId].wordGame.lastWord.word,
-                    author: client.databaseQueue.guilds[guildId].wordGame.lastWord.author
-                  };
-                  /*if (!guildData.wordGame.lastWord) guildData.wordGame.lastWord = {};
-                  guildData.wordGame.lastWord.word = client.databaseQueue.guilds[guildId].wordGame.lastWord.word;
-                  guildData.wordGame.lastWord.author = client.databaseQueue.guilds[guildId].wordGame.lastWord.author;*/
-
-                  //Gönderilen verileri önbellekten temizleme
-                  delete client.databaseQueue.guilds[guildId].wordGame.lastWord;
-
-                }
-
-                if (key == "stats") {
-
-                  for (const [statUserId, statValues] of Object.entries(wordGameStats)) {
-                    //statUserId = 'userId'
-                    //statValues = { wordCount: 5, wordLength, 21 }
-
-                    //Veri yoksa atla, varsa changedDataStatus'a true çek.
-                    if (!statValues.wordCount && !statValues.wordLength) continue;
-                    if (!changedDataStatus) changedDataStatus = true;
-
-                    //guildData'da ilgili veriler yoksa
-                    guildData.wordGame.stats ||= {};
-                    guildData.wordGame.stats[statUserId] ||= {};
-                    guildData.wordGame.stats[statUserId].wordCount ||= 0;
-                    guildData.wordGame.stats[statUserId].wordLength ||= 0;
-
-                    //Verileri guildData'ya gönderme
-                    guildData.wordGame.stats[statUserId].wordCount += statValues.wordCount;
-                    guildData.wordGame.stats[statUserId].wordLength += statValues.wordLength;
-
-                    //Gönderilen verileri önbellekten temizleme
-                    client.databaseQueue.guilds[guildId].wordGame.stats[statUserId].wordCount -= statValues.wordCount;
-                    client.databaseQueue.guilds[guildId].wordGame.stats[statUserId].wordLength -= statValues.wordLength;
-
-                  }
-
-                  if (!changedDataStatus) delete client.databaseQueue.guilds[guildId].wordGame.stats;
-
-                }
-              }
-
-            } else if (key == "countingGame") {
-
-              if (value.number) {
-
-                //Veri varsa changedDataStatus'a true çek.
-                if (!changedDataStatus) changedDataStatus = true;
-
-                //guildData'da ilgili veriler yoksa
-                guildData.countingGame.number = value.number;
-
-                //Gönderilen verileri önbellekten temizleme
-                delete client.databaseQueue.guilds[guildId].countingGame;
-
-              };
-
-            }
-
-            if (changedDataStatus) {
-              guildData.markModified('wordGame');
-              await guildData.save(); //.then(console.log("new guildData saved"));
-            }
-
-          }
-        })();
-      }
-    }
-
-  }, 60000);
 
   await client.login(client.config.token);
 }
@@ -354,10 +181,9 @@ client.on("ready", async () => {
 client.on("disconnect", () => client.logger.error("Bot is disconnecting..."));
 client.on("reconnecting", () => client.logger.error("Bot reconnecting..."));
 client.on("error", (e) => client.logger.error(e));
-client.on("warn", (info) => client.logger.error(info)); //client.logger.error(info, "warn"));
+client.on("warn", (info) => { console.log("client.on(\"warn\") event"); client.logger.error(info); });
 //client.on("debug", (log) => client.logger.debug(log))
 //client.on("raw", r => { if (r.t !== "PRESENCE_UPDATE") client.logger.debug(r.t) })
-//client.player.on("debug", r => console.log(r)) 
 
 client.on('shardError', error => {
   console.error('A websocket connection encountered an error:', error);
@@ -365,7 +191,7 @@ client.on('shardError', error => {
 });
 
 process.on("unhandledRejection", (err) => {
-  console.error(err);
+  //console.error(err);
   client.logger.error(err);
 });
 process.on('uncaughtException', (err) => {
@@ -381,39 +207,156 @@ process.on('uncaughtException', (err) => {
 
 //------------------------------Müzik------------------------------//
 
-const { Player, QueryType } = require("discord-player");
-//const playdl = require("play-dl");
-//const extractor = require("./utils/extractor.js");
+const { DisTube } = require('distube');
+const { SpotifyPlugin } = require('@distube/spotify');
+const { SoundCloudPlugin } = require('@distube/soundcloud');
+const { YtDlpPlugin } = require('@distube/yt-dlp');
 
-client.player = new Player(client,
-  {
-    searchEngine: QueryType.AUTO,
-    ytdlOptions: {
-      filter: 'audioonly',
-      //quality: 'highestaudio',
-      //highWaterMark: 1 << 25
-    }
+client.distube = new DisTube(client, {
+  leaveOnStop: true,
+  leaveOnEmpty: true,
+  emptyCooldown: 15,
+  leaveOnFinish: true,
+  emitNewSongOnly: true,
+  emitAddSongWhenCreatingQueue: false,
+  emitAddListWhenCreatingQueue: false,
+  plugins: [
+    new SpotifyPlugin({
+      emitEventsAfterFetching: true,
+    }),
+    new SoundCloudPlugin(),
+    new YtDlpPlugin()
+  ]
+});
+
+client.distube
+  .on('playSong', (queue, song) => {
+    let embed = {
+      color: client.settings.embedColors.green,
+      title: `**»** **${queue.voiceChannel.name}** odasında şimdi oynatılıyor;`,
+      description: `**•** [${song.name}](${song.url})`, //(${song.formattedDuration})
+      thumbnail: {
+        url: song.thumbnail,
+      },
+    };
+
+    if (song.metadata.commandMessage.type === 2 && !song.metadata.commandMessage.replied)
+      song.metadata.commandMessage.editReply({ embeds: [embed] });
+    else queue.textChannel.send({ embeds: [embed] });
+    //` | Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n${status(queue)}`);
+  })
+  .on('addSong', (queue, song) => {
+    let embed = {
+      color: client.settings.embedColors.green,
+      title: `**»** Sıraya Bir Şarkı Eklendi!`,
+      description: `**•** [${song.name}](${song.url})`,
+      thumbnail: {
+        url: song.thumbnail,
+      },
+    };
+    if (song.metadata.commandMessage.type === 2)
+      song.metadata.commandMessage.editReply({ embeds: [embed] });
+    else queue.textChannel.send({ embeds: [embed] });
+  })
+  .on('addList', (queue, playlist) => {
+    let embed = {
+      color: client.settings.embedColors.green,
+      title: `**»** Sıraya Bir Oynatma Listesi Eklendi!`,
+      description:
+        `**•** [${playlist.name}](${playlist.url})\n` +
+        `**•** Sıraya **${playlist.songs.length}** şarkı eklendi.`,
+      thumbnail: {
+        url: playlist.thumbnail,
+      },
+    };
+    if (playlist.metadata.commandMessage.type === 2)
+      playlist.metadata.commandMessage.editReply({ embeds: [embed] });
+    else queue.textChannel.send({ embeds: [embed] });
   }
-);
-//client.player.use("dodong", extractor);
-/*client.filters = ['bassboost', '8D', 'vaporwave', 'nightcore', 'phaser', 'tremolo', 'vibrato', 'reverse', 'treble', 'normalizer', 'surrounding', 'pulsator', 'subboost',
-  'kakaoke', 'flanger', 'gate', 'haas', 'mcompand', 'mono', 'mstlr', 'mstrr', 'compressor', 'expander', 'softlimiter', 'chorus', 'chorus2d', 'chorus3d', 'fadein'];*/
 
-/*playdl.getFreeClientID().then((clientID) => {
-  playdl.setToken({
-    soundcloud: { client_id: clientID }
+  )
+  .on('error', (channel, e) => {
+    console.log(channel);
+    console.log(e);
+    client.logger.error(e);
+    channel?.send({
+      embeds: [
+        {
+          color: client.settings.embedColors.red,
+          title: '**»** Bir Hata Oluştu!',
+          description: `**•** Sorunu geliştirici ekibe ilettim, en kısa sürede çözülecektir.`
+        }
+      ]
+    });
+  })
+  .on('empty', queue => {
+    queue.textChannel.send({
+      embeds: [
+        {
+          color: client.settings.embedColors.red,
+          title: `**»** Oynatma Sonlandırıldı!`,
+          description: `**•** Odada kimse kalmadığı için oynatma bitirildi.`,
+        }
+      ]
+    });
+  })
+  .on('searchNoResult', (message, query) => {
+    console.log(`searchNoResult`);
+    message.channel.send({
+      embeds: [
+        {
+          color: client.settings.embedColors.red,
+          description: `**»** Bir sonuç bulunamadı!`,
+        }
+      ]
+    });
+  })
+  .on('finish', queue => {
+    queue.textChannel.send({
+      embeds: [
+        {
+          color: client.settings.embedColors.default,
+          title: `**»** Oynatma Sonlandırıldı!`,
+          description: `**•** Sırada şarkı kalmadığı için oynatma bitirildi!`,
+        }
+      ]
+    });
   });
-});*/
-
-const playerFiles = fs.readdirSync('./events/player/').filter(file => file.endsWith('.js'));
-for (const eventFile of playerFiles) {
-  const event = require(`./events/player/${eventFile}`);
-  const eventName = eventFile.split(".")[0];
-  //client.logger.event(`Loading Event: ${eventName}`);
-  client.player.on(eventName, event.bind(null, client));
-}
 
 //------------------------------Müzik------------------------------//
+
+//------------------------------Log Sistemi------------------------------//
+
+//Starting all events
+const eventFiles = fs.readdirSync('./events/logger/').filter(file => file.endsWith('.js'));
+//client.logger.load(`Loading Events...`)
+for (const file of eventFiles) {
+  const event = require(`./events/logger/${file}`);
+  const eventName = file.split(".")[0];
+  //client.logger.event(`Loading Event: ${eventName}`);
+  client.on(eventName, event.bind(null, client));
+}
+
+//------------------------------Log Sistemi------------------------------//
+
+//------------------------------Davet Sistemi Başlangıç------------------------------//
+
+client.on('inviteCreate', async invite => {
+
+  const inviteManager = db.fetch(`guilds.${invite.guild.id}.inviteManager`);
+
+  if (inviteManager?.channel && invite.guild.members.cache.get(client.user.id).permissions.has("ManageGuild")) {
+
+    const invites = await invite.guild.invites.fetch();
+    const codeUses = new Map();
+
+    invites.each(inv => codeUses.set(inv.code, inv.uses));
+    client.guildInvites.set(invite.guild.id, codeUses);
+
+  }
+});
+
+//------------------------------Davet Sistemi Bitiş------------------------------//
 
 String.prototype.toEN = function () {
   return this//UPPERS:     // LOWERS:

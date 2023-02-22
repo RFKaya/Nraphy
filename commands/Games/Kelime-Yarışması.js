@@ -1,6 +1,4 @@
-const Discord = require('discord.js');
-const { delay, randomRange, verify } = require('../../utils/Util.js');
-const { MessageActionRow, ButtonBuilder } = require('discord.js');
+const { ButtonBuilder } = require('discord.js');
 const words = require('../../utils/Words.json');
 
 module.exports = {
@@ -99,8 +97,6 @@ module.exports = {
 
         msg.awaitMessageComponent({ filter, time: 25000 })
           .then(async btn => {
-
-            btn.deferUpdate()
 
             if (btn.customId === "confirmButton") {
 

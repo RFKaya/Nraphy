@@ -1,6 +1,4 @@
-const Discord = require("discord.js");
-const { MessageActionRow, ButtonBuilder } = require('discord.js');
-const { stripIndents } = require("common-tags");
+const { ButtonBuilder } = require('discord.js');
 
 module.exports = {
   name: "kick",
@@ -127,9 +125,10 @@ module.exports = {
         name: '» Bir üye tekmelendi!',
         icon_url: client.settings.icon,
       },
-      description: stripIndents` **•** **Tekmelenen Üye:** ${toKick} (**${toKick.id}**)
-                **•** **Sebep:** ${sebep}
-                **•** **Yetkili:** ${message.author}`,
+      description:
+        `**•** **Tekmelenen Üye:** ${toKick} (**${toKick.id}**)\n` +
+        `**•** **Sebep:** ${sebep}\n` +
+        `**•** **Yetkili:** ${message.author}`,
       thumbnail: {
         url: toKick.displayAvatarURL({ size: 1024 }),
       },

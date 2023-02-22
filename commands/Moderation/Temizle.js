@@ -1,7 +1,16 @@
 module.exports = {
-  name: "temizle",
-  description: "Belirlediğiniz miktarda mesaj siler.",
-  usage: "temizle <Miktar>",
+  interaction: {
+    name: "temizle",
+    description: "Belirlediğiniz miktarda mesajı siler.",
+    options: [
+      {
+        name: "mesaj",
+        description: "Kaç adet mesajın silinmesini istiyorsun?",
+        type: 4,
+        required: true
+      },
+    ]
+  },
   aliases: ["temizle", "clear", "sil"],
   category: "Moderation",
   memberPermissions: ["ManageMessages"],
@@ -10,59 +19,67 @@ module.exports = {
   cooldown: 5000,
   ownerOnly: false,
 
-  async execute(client, message, args, data) {
+  async execute(client, interaction, data, args) {
 
     //------------------------------Main Kısım------------------------------//
 
-    if (!args[0])
-      return message.channel.send({
+    var mesaj;
+    if (interaction.type === 2) {
+      mesaj = parseInt(interaction.options.getInteger("mesaj"));
+    } else {
+      mesaj = parseInt(args[0]);
+    }
+
+    if (!mesaj)
+      return interaction.reply({
         embeds: [
           {
             color: client.settings.embedColors.red,
             title: '**»** Bir Miktar Belirtmelisin!',
-            description: `**•** Örnek kullanım: \`${data.prefix}temizle <2-200>\``
+            description: `**•** Örnek kullanım: \`/temizle 15\``
           }
-        ]
+        ],
+        ephemeral: true
       });
 
-    const mesaj = args.join(" ");
-    if (isNaN(mesaj) || mesaj.includes(',') || mesaj.includes('.')) return message.channel.send({
-      embeds: [
-        {
-          color: client.settings.embedColors.red,
-          title: '**»** Yalnızca Sayı Girmelisin!',
-          description: `**•** Örnek kullanım: \`${data.prefix}temizle 15\``
-        }
-      ]
-    });
-
-    const m = parseInt(mesaj) + 1;
-
-    if (m > 201)
-      return message.channel.send({
+    if (isNaN(mesaj))
+      return interaction.reply({
         embeds: [
           {
             color: client.settings.embedColors.red,
-            title: '**»** En Fazla 200 Mesaj Silebilirsin!',
-            description: `**•** Discord izin vermiyor, verse dükkan senin.`
+            title: '**»** Yalnızca Sayı Girmelisin!',
+            description: `**•** Örnek kullanım: \`/temizle 15\``
           }
-        ]
-      })
-        .then(msg => setTimeout(() => msg.delete(), 4000))
-        .then(setTimeout(() => message.delete(), 4000));
+        ],
+        ephemeral: true
+      });
 
-    if (m < 3)
-      return message.channel.send({
+
+    if (mesaj <= 1)
+      return interaction.reply({
         embeds: [
           {
             color: client.settings.embedColors.red,
             title: '**»** En Az 2 Mesaj Silebilirsin!',
             description: `**•** Bir mesaj sileceksen direkt silebilirsin, hiç mesaj sileceksen de...`
           }
-        ]
-      })
-        .then(msg => setTimeout(() => msg.delete(), 4000))
-        .then(setTimeout(() => message.delete(), 4000));
+        ],
+        ephemeral: true
+      }).then(msg => interaction.type !== 2 && setTimeout(() => msg.delete().catch(null), 4000));
+
+    if (mesaj > 200)
+      return interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            title: '**»** En Fazla 200 Mesaj Silebilirsin!',
+            description: `**•** Discord izin vermiyor, verse dükkan senin.`
+          }
+        ],
+        ephemeral: true
+      }).then(msg => interaction.type !== 2 && setTimeout(() => msg.delete().catch(null), 4000));
+
+    const m = mesaj + (interaction.type === 2 ? 0 : 1);
 
     //------------------------------Main Kısım------------------------------//
 
@@ -73,54 +90,49 @@ module.exports = {
       title: `**»** Başarıyla ${mesaj} Mesaj Silindi!`,
       timestamp: new Date(),
       footer: {
-        text: `${message.author.username} tarafından silindi.`,
-        icon_url: message.author.displayAvatarURL(),
+        text: `${(interaction.author || interaction.user).username} tarafından silindi.`,
+        icon_url: (interaction.author || interaction.user).displayAvatarURL(),
       },
     };
 
-    if (m < 101) {
-      message.channel.bulkDelete(m)
-        .catch(err => message.channel.send({
-          embeds: [
-            {
-              color: client.settings.embedColors.red,
-              title: '**»** Bir Hata Oluştu!',
-              description: `**•** 14 günden eski mesajları silemiyorum.`
-            }
-          ]
-        }));
-      message.channel.send({ embeds: [embed] }).then(msg => setTimeout(() => msg.delete(), 4000));
-    }
+    try {
 
-    if (m > 100 && m < 200) {
-      message.channel.bulkDelete(100);
-      message.channel.bulkDelete(m - 100)
-        .catch(err => message.channel.send({
-          embeds: [
-            {
-              color: client.settings.embedColors.red,
-              title: '**»** Bir Hata Oluştu!',
-              description: `**•** 14 günden eski mesajları silemiyorum.`
-            }
-          ]
-        }));
-      message.channel.send({ embeds: [embed] }).then(msg => setTimeout(() => msg.delete(), 4000));
-    }
+      //2-100
+      if (m <= 100) {
+        await interaction.channel.bulkDelete(m);
+      }
 
-    if (mesaj == 200) {
-      message.channel.bulkDelete(100);
-      message.channel.bulkDelete(100)
-        .catch(err => message.channel.send({
-          embeds: [
-            {
-              color: client.settings.embedColors.red,
-              title: '**»** Bir Hata Oluştu!',
-              description: `**•** 14 günden eski mesajları silemiyorum.`
-            }
-          ]
-        }));
-      message.channel.send({ embeds: [embed] }).then(msg => setTimeout(() => msg.delete(), 4000));
-    };
+      //101-199 arası
+      if (m > 100 && !(m >= 200)) {
+        interaction.channel.bulkDelete(100);
+        interaction.channel.bulkDelete(m - 100);
+      }
+
+      //200
+      if (m === 200 || mesaj === 200) {
+        interaction.channel.bulkDelete(100);
+        interaction.channel.bulkDelete(100);
+      };
+
+      return interaction.reply({ embeds: [embed] }).then(msg => {
+        setTimeout(() => interaction.type === 2 ? interaction.deleteReply() : msg.delete().catch(null), 4000);
+      });
+
+    } catch (err) {
+
+      return interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            title: '**»** Bir Hata Oluştu!',
+            description:
+              `**•** Bazı mesajlar silinmiş, bazıları silinememiş olabilir.\n\n` +
+              `**•** 14 günden eski mesajla karşılaşılmış olabilir.\n`
+          }
+        ]
+      });
+
+    }
 
     //------------------------------Normal Temizle------------------------------//
 

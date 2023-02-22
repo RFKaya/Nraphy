@@ -18,7 +18,7 @@ const schema = new mongoose.Schema({
 
   NraphyCoin: { type: Number, default: 0, get: Math.floor },
   NraphyPremium: { type: Number, default: null },
-  USD: { type: Number, default: 0 },
+  USD: Number,
 
   commandUses: Number, //{ type: Number, default: 0 },
   statistics: {

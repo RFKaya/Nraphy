@@ -200,7 +200,7 @@ module.exports = {
       if (await channelChecker(interaction, channel, ["ViewChannel", "SendMessages", "EmbedLinks"])) return;
 
       //Kanal Zaten Varsa (Kanal Değişikliği)
-      if (wordGame && wordGame.channel && interaction.guild.channels.cache.has(wordGame.channel)) {
+      if (wordGame?.channel && interaction.guild.channels.cache.has(wordGame.channel)) {
 
         //Kelime Oyunu Zaten Aynı Kanalda
         if (wordGame.channel == channel.id) {
@@ -378,7 +378,7 @@ module.exports = {
 
         //Sıralama
         let wordGameLeaderboard = [];
-        if (wordGame && wordGame.stats)
+        if (wordGame?.stats)
           for await (let user of Object.keys(wordGame.stats || {})) {
             let statUser = wordGame.stats[user];
             wordGameLeaderboard.push({ ID: user, wordLengths: statUser.wordLength, words: statUser.wordCount, point: ((statUser.wordLength ? statUser.wordCount : 0) / 2 + statUser.wordCount).toFixed(0) });
@@ -389,7 +389,7 @@ module.exports = {
 
         //İstatistikler
         let wordGameStats = { totalWordLengths: 0, totalWords: 0 };
-        if (wordGame && wordGame.stats) for await (let user of Object.keys(wordGame.stats || {})) {
+        if (wordGame?.stats) for await (let user of Object.keys(wordGame.stats || {})) {
           let statUser = await wordGame.stats[user];
           wordGameStats = {
             totalWordLengths: wordGameStats.totalWordLengths + (statUser.wordLength ? statUser.wordLength : 0),
@@ -397,7 +397,7 @@ module.exports = {
           };
         }
         let longestWordUser;
-        if (wordGame && wordGame.longestWord) await client.users.fetch(wordGame.longestWord.author).then(async user => { longestWordUser = user; });
+        if (wordGame?.longestWord) await client.users.fetch(wordGame.longestWord.author).then(async user => { longestWordUser = user; });
 
         //TXT Oluşturma
         let attachment = new Discord.AttachmentBuilder(
@@ -418,7 +418,7 @@ module.exports = {
         data.guild.wordGame.longestWord = undefined;
         data.guild.wordGame.history = undefined;
         data.guild.markModified('wordGame');
-        await data.guild.save().then(console.log);
+        await data.guild.save();
 
         interaction.editReply({
           embeds: [

@@ -13,14 +13,15 @@ module.exports = async (client, interaction) => {
       let cmd = client.commands.get(interaction.commandName);
       if (!cmd) return;
 
-      let guildData = await client.database.fetchGuild(interaction.guild.id);
+      var guildData = await client.database.fetchGuild(interaction.guild.id);
+      var userData = await client.database.fetchUser(interaction.user.id);
 
       const data = {};
       data.guild = guildData;
-      //data.user = userData;
+      data.user = userData;
       data.cmd = cmd;
       data.prefix = guildData.prefix || client.settings.prefix;
-      //data.premium = (userData.NraphyPremium && userData.NraphyPremium > Date.now());
+      data.premium = (userData.NraphyPremium && userData.NraphyPremium > Date.now());
 
       //---------------NSFW---------------//
       if (cmd.nsfw && !interaction.channel.nsfw) {
@@ -42,9 +43,7 @@ module.exports = async (client, interaction) => {
       if (cmd.voteRequired) {
         let topgg = require(`@top-gg/sdk`);
         let topggapi = new topgg.Api(client.config.topggToken);
-        let userData = await client.database.fetchUser(interaction.user.id);
-        let premium = data.premium = (userData.NraphyPremium && userData.NraphyPremium > Date.now());
-        if (!premium && !(await topggapi.hasVoted(interaction.user.id))) {
+        if (!data.premium && !(await topggapi.hasVoted(interaction.user.id))) {
           return interaction.reply({
             embeds: [{
               color: client.settings.embedColors.red,
@@ -142,14 +141,19 @@ module.exports = async (client, interaction) => {
         client.userDataCache[interaction.user.id].lastCmds = {};
       }
 
-      let cmdCooldown = cmd.cooldown || 1000;
+      let cmdCooldown = data.premium ? (cmd.cooldown || 1000) / (3 / 2) : cmd.cooldown || 1000;
 
       let cmdLastUsage = client.userDataCache[interaction.user.id].lastCmds[cmd.interaction.name] || 0;
       if (cmdLastUsage && ((cmdLastUsage + cmdCooldown) > Date.now())) {
         return interaction.reply({
           embeds: [{
             color: client.settings.embedColors.red,
-            description: `**»** Bu komutu tekrar kullanabilmen için **${Math.ceil(((cmdLastUsage + cmdCooldown) - Date.now()) / 1000)} saniye** beklemelisin.`
+            description:
+              data.premium ?
+                `**»** Bu komutu tekrar kullanabilmen için **${Math.ceil((cmdLastUsage + cmdCooldown - Date.now()) / 1000)} saniye** beklemelisin.`
+                :
+                `**»** Bu komutu tekrar kullanabilmen için **${Math.ceil((cmdLastUsage + cmdCooldown - Date.now()) / 1000)} saniye** beklemelisin.\n` +
+                `**•** Nraphy Premium ile bekleme sürelerini kısaltabilirsin. \`/premium Bilgi\``
           }],
           ephemeral: true
         });
@@ -165,4 +169,27 @@ module.exports = async (client, interaction) => {
       await cmd.execute(client, interaction, data);
 
     } catch (err) { client.logger.error(err); }
+
+  else if (interaction.type == 3)
+    try {
+
+      if (interaction.componentType == 2) {
+
+        let guildData = await client.database.fetchGuild(interaction.guild.id);
+
+        /*//Geçici Kanallar
+        if (interaction.customId === "tempChannels_deleteChannel") {
+          client.logger.log(`GEÇİCİ KANALLAR TETİKLENDİ! (KANAL SİLME İŞLEMİ) • ${interaction.guild.name} (${interaction.guild.id})`);
+          require("./functions/tempChannels.js").deleteChannel(client, interaction, guildData);
+        }*/
+
+        //Buton-Rol
+        if (Object.keys(guildData.buttonRole || {}).length && guildData.buttonRole[interaction.message.id]) {
+          client.logger.log(`BUTON-ROL TETİKLENDİ! • ${interaction.guild.name} (${interaction.guild.id})`);
+          require("./functions/buttonRole.js")(client, interaction, guildData);
+        }
+      }
+
+    } catch (err) { client.logger.error(err); };
+
 };

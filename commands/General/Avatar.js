@@ -1,5 +1,3 @@
-const Discord = require("discord.js");
-
 module.exports = {
   interaction: {
     name: "avatar",
@@ -49,7 +47,7 @@ module.exports = {
           },
         ],
         image: {
-          url: user.displayAvatarURL(),
+          url: user.displayAvatarURL({ size: 1024 }),
         },
       }]
     });

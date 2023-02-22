@@ -1,7 +1,4 @@
-const { author } = require("canvacord");
-const Discord = require("discord.js");
 const humanize = require("humanize-duration");
-const db = require("quick.db");
 
 module.exports = {
   interaction: {
@@ -14,7 +11,7 @@ module.exports = {
   memberPermissions: [],
   botPermissions: ["SendMessages", "EmbedLinks"],
   nsfw: false,
-  cooldown: false,
+  cooldown: 10000,
   ownerOnly: false,
 
   async execute(client, interaction, data) {
@@ -26,6 +23,7 @@ module.exports = {
         server_count: await client.shard.fetchClientValues("guilds.cache.size"),
         user_count: await client.shard.fetchClientValues("users.cache.size"),
         uptime: await client.shard.fetchClientValues("uptime"),
+        memoryUsageRss: await client.shard.broadcastEval(function () { return process.memoryUsage().rss; })
       };
 
       let shardDatas = [];
@@ -36,7 +34,8 @@ module.exports = {
           serverCount: shardInfo.server_count[i],
           userCount: shardInfo.user_count[i],
           ping: shardInfo.ping[i],
-          uptime: shardInfo.uptime[i]
+          uptime: shardInfo.uptime[i],
+          memoryUsageRss: shardInfo.memoryUsageRss[i]
         });
       }
 
@@ -53,7 +52,8 @@ module.exports = {
               `**• Sunucular:** ${shardData.serverCount}\n` +
               `**• Kullanıcılar:** ${shardData.userCount}\n` +
               `**• Ping:** ${shardData.ping}ms\n` +
-              `**• Uptime:** ${humanize(shardData.uptime, { language: "tr", round: true, largest: 2 })}`,
+              `**• Uptime:** ${humanize(shardData.uptime, { language: "tr", round: true, largest: 2 })}\n` +
+              `**• Memory Usage (Rss):** ${(shardData.memoryUsageRss / (1024 ** 2)).toFixed()} MB`,
             inline: true,
           })),
           footer: {
@@ -65,7 +65,7 @@ module.exports = {
 
     } catch (err) {
 
-      console.log(err);
+      client.logger.error(err);
 
       await interaction.reply({ content: "Elimde olmayan sebeplerden dolayı verileri alamadım :/" });
 

@@ -9,7 +9,7 @@ module.exports = {
   memberPermissions: [],
   botPermissions: ["SendMessages", "EmbedLinks"],
   nsfw: true,
-  cooldown: 1500,
+  cooldown: 1000,
   ownerOnly: false,
   voteRequired: true,
 
@@ -53,14 +53,15 @@ module.exports = {
             description:
               `**•** Belirtebileceğin içerikler; \n\n` +
 
+              `**•** \`${data.prefix}nsfw 4k\` \n` +
               `**•** \`${data.prefix}nsfw anal\` \n` +
               `**•** \`${data.prefix}nsfw ass\` \n` +
               `**•** \`${data.prefix}nsfw boobs\` \n` +
               `**•** \`${data.prefix}nsfw gonewild\` \n` +
-              `**•** \`${data.prefix}nsfw hneko\` \n` +
               `**•** \`${data.prefix}nsfw pgif\` \n` +
               `**•** \`${data.prefix}nsfw pussy\` \n` +
               `**•** \`${data.prefix}nsfw thigh\` \n\n` +
+              `**•** Hentai NSFW içerikleri: \`hass, hmidriff, hentai, hneko, hkitsune, hanal, hthigh, hboobs\` \n\n` +
 
               `**•** Not: Mesajının sonunda miktar belirterek tek seferde birden fazla içerik talep edebilirsin. \n\n` +
 
@@ -77,7 +78,7 @@ module.exports = {
           {
             color: client.settings.embedColors.red,
             title: '**»** Talep Edilen İçerik Miktarı Sadece Sayı Olmalı!',
-            description: `**•** Örnek kullanım: \`${data.prefix}nsfw xxx 3\``
+            description: `**•** Örnek kullanım: \`${data.prefix}nsfw XXX 3\``
           }
         ]
       });
@@ -92,7 +93,7 @@ module.exports = {
         ]
       });
 
-      if (i < 1)
+    if (i < 1)
       return interaction.reply({
         embeds: [
           {
@@ -102,9 +103,9 @@ module.exports = {
         ]
       });
 
-    client.userDataCache[interaction.author.id].lastCmds[this.name] = Date.now() + ((i - 1) * this.cooldown);
+    client.userDataCache[interaction.author.id].lastCmds[this.name] = Date.now() + 600 + ((i - 1) * (data.premium ? (this.cooldown / (3 / 2)) : this.cooldown));
 
-    interaction.react('✅');
+    if (i > 1) interaction.react('✅');
 
     try {
 

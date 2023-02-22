@@ -34,8 +34,8 @@ module.exports = {
               {
                 name: '**»** Galeri Sistemi Hangi Mesajları Silmez?',
                 value:
-                  `**•** Bir resim içeren mesaj alıntılandıysa; \n` +
-                  `**•** Mesajı gönderen, **Kanalları Yönet** yetkisine sahipse o mesaj silinmez.`,
+                  //`**•** Bir resim içeren mesaj alıntılandıysa; \n` +
+                  `**•** Mesajı gönderen kişi **Kanalları Yönet** yetkisine sahipse o mesaj silinmez.`,
               },
               {
                 name: '**»** Nasıl Açılır?',

@@ -19,4 +19,6 @@ module.exports = mongoose.model("betaGiveaway", new mongoose.Schema({
 
   hoster: String,
 
+  isDrop: { type: Boolean, default: false }
+
 }));

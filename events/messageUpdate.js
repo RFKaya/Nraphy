@@ -19,10 +19,10 @@ module.exports = async (client, oldMessage, newMessage) => {
 
           (!linkBlock.exempts || (
             //Kanal Muaf
-            (!linkBlock.exempts.channels || linkBlock.exempts.channels.length == 0 || !linkBlock.exempts.channels.includes(newMessage.channel.id)) &&
+            (!linkBlock.exempts.channels?.length || !linkBlock.exempts.channels.includes(newMessage.channel.id)) &&
 
             //Rol Muaf
-            (!linkBlock.exempts.roles || linkBlock.exempts.roles.length == 0 || !newMessage.member.roles.cache.map(map => map.id).some(role => linkBlock.exempts.roles.includes(role)))
+            (!linkBlock.exempts.roles?.length || !newMessage.member.roles.cache.map(map => map.id).some(role => linkBlock.exempts.roles.includes(role)))
           )) &&
 
           //ManageMessages Yetki Muaf
@@ -40,7 +40,7 @@ module.exports = async (client, oldMessage, newMessage) => {
             .replace('https://gibir.net.tr', "");
 
           if (reklam.some(word => messageContent.includes(word))) {
-            newMessage.delete();
+            newMessage.delete().catch(e => { });
 
             //---------------Warner---------------//
 
@@ -71,9 +71,9 @@ module.exports = async (client, oldMessage, newMessage) => {
     //client.logger.log(`CAPSLOCK-ENGEL TETİKLENDİ! • ${message.guild.name} (${message.guild.id})`);
     require("./functions/upperCaseBlock.js")(client, newMessage, guildData);
 
-  } catch (err) { 
+  } catch (err) {
     client.logger.error(err);
-    console.log(newMessage)
-   };
+    console.log(newMessage);
+  };
 
 };

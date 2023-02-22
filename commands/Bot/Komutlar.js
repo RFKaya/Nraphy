@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const { MessageActionRow, ButtonBuilder } = require('discord.js');
 
 module.exports = {
   interaction: {
@@ -131,6 +130,7 @@ module.exports = {
         }
       }
     });
+    embedModeration.fields = embedModeration.fields.sort(function (a, b) { return b.value.split(/\r\n|\r|\n/).length - a.value.split(/\r\n|\r|\n/).length; });
 
     //Eğlence Komutları - Back End
     let commandsFun = [];
@@ -433,7 +433,10 @@ module.exports = {
         `🤖 • Botla İlgili Komutlar (**${commandsBot.length}**)\n\n` +
 
         `Hata bildirimi veya öneriler için: \`/bildiri\`\n` +
-        `**[YENİ!]** Kampanya Haber Sistemi: \`/kampanya-haber Bilgi\``,
+        `**[BİLGİ!]** Nraphy bot, Türkiye'deki en iyi bottur!`
+        /*`${(userData.readDateOfChanges < client.settings.updateDate) ?
+          `✉️ Okunmamış yenilikler mevcut! \`/yenilikler\` yazarak okuyabilirsin!` :
+          `Gelişmelerden haberdar olmak için destek sunucumuza katılabilirsiniz!`}`*/,
       fields: [fieldsLinks],
     };
 
@@ -508,59 +511,55 @@ module.exports = {
     interaction.reply({
       embeds: [embedMainPage],
       components: [row]
-    }).then(msg => {
+    }).then(async msg => {
 
       if (interaction.type === 2) {
 
-        (async () => {
-          const reply = await interaction.fetchReply();
-          const filter = i => {
-            i.deferUpdate();
-            return i.user.id === interaction.user.id && i.message.id === reply.id;
-          };
-          var calc = interaction.channel.createMessageComponentCollector({ filter, time: 1800000 });
+        const reply = await interaction.fetchReply();
+        const filter = i => {
+          return i.message.id === reply.id && i.deferUpdate() && i.user.id === interaction.user.id;
+        };
+        var calc = interaction.channel.createMessageComponentCollector({ filter, time: 1800000 });
 
-          calc.on('collect', async int => {
+        calc.on('collect', async int => {
 
-            let collectedOption = row.components[0].options.find(selectMenuOption => selectMenuOption.data.value == int.values.toString());
-            row.components[0].setPlaceholder(`${collectedOption.data.emoji.name} ${collectedOption.data.label}`);
+          let collectedOption = row.components[0].options.find(selectMenuOption => selectMenuOption.data.value == int.values.toString());
+          row.components[0].setPlaceholder(`${collectedOption.data.emoji.name} ${collectedOption.data.label}`);
 
-            if (int.values.toString() === "mainPageOption") {
-              interaction.editReply({ embeds: [embedMainPage], components: [row] });
+          if (int.values.toString() === "mainPageOption") {
+            interaction.editReply({ embeds: [embedMainPage], components: [row] });
 
-            } else if (int.values.toString() === "moderationOption") {
-              interaction.editReply({ embeds: [embedModeration], components: [row] });
+          } else if (int.values.toString() === "moderationOption") {
+            interaction.editReply({ embeds: [embedModeration], components: [row] });
 
-            } else if (int.values.toString() === "funOption") {
-              interaction.editReply({ embeds: [embedFun], components: [row] });
+          } else if (int.values.toString() === "funOption") {
+            interaction.editReply({ embeds: [embedFun], components: [row] });
 
-            } else if (int.values.toString() === "generalOption") {
-              interaction.editReply({ embeds: [embedGeneral], components: [row] });
+          } else if (int.values.toString() === "generalOption") {
+            interaction.editReply({ embeds: [embedGeneral], components: [row] });
 
-            } else if (int.values.toString() === "gamesOption") {
-              interaction.editReply({ embeds: [embedGames], components: [row] });
+          } else if (int.values.toString() === "gamesOption") {
+            interaction.editReply({ embeds: [embedGames], components: [row] });
 
-            } else if (int.values.toString() === "NCOption") {
-              interaction.editReply({ embeds: [embedNC], components: [row] });
+          } else if (int.values.toString() === "NCOption") {
+            interaction.editReply({ embeds: [embedNC], components: [row] });
 
-            } else if (int.values.toString() === "botOption") {
-              interaction.editReply({ embeds: [embedBot], components: [row] });
+          } else if (int.values.toString() === "botOption") {
+            interaction.editReply({ embeds: [embedBot], components: [row] });
 
-            } else if (int.values.toString() === "musicOption") {
-              interaction.editReply({ embeds: [embedMusic], components: [row] });
+          } else if (int.values.toString() === "musicOption") {
+            interaction.editReply({ embeds: [embedMusic], components: [row] });
 
-            } else if (int.values.toString() === "giveawayOption") {
-              interaction.editReply({ embeds: [embedGiveaway], components: [row] });
+          } else if (int.values.toString() === "giveawayOption") {
+            interaction.editReply({ embeds: [embedGiveaway], components: [row] });
 
-            }
-          });
-        })();
+          }
+        });
 
       } else {
 
         const filter = i => {
-          i.deferUpdate();
-          return i.user.id === interaction.author.id;
+          return i.message.id === msg.id && i.deferUpdate() && i.user.id === interaction.author.id;
         };
         var calc = msg.createMessageComponentCollector({ filter, time: 1800000 });
 
