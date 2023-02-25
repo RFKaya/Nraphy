@@ -212,7 +212,7 @@ module.exports = {
 
         if (getOperation == "ac") {
 
-          if (spamProtection && spamProtection.guild)
+          if (spamProtection?.guild)
             return interaction.reply({
               embeds: [
                 {
@@ -281,7 +281,7 @@ module.exports = {
         const getOperation = interaction.options.getString("işlem");
         const getChannel = interaction.options.getChannel("kanal");
 
-        if (!getChannel.type == 0)
+        if (getChannel.type !== 0)
           return interaction.reply({
             embeds: [
               {
@@ -295,7 +295,7 @@ module.exports = {
 
         if (getOperation == "ekle") {
 
-          if (spamProtection && spamProtection.guild)
+          if (spamProtection?.guild)
             return interaction.reply({
               embeds: [
                 {
@@ -307,7 +307,7 @@ module.exports = {
               ephemeral: true
             });
 
-          if (spamProtection && spamProtection.channels && spamProtection.channels.includes(getChannel.id))
+          if (spamProtection?.channels && spamProtection.channels.includes(getChannel.id))
             return interaction.reply({
               embeds: [
                 {
@@ -334,7 +334,7 @@ module.exports = {
 
         } else if (getOperation == "kaldir") {
 
-          if (spamProtection && spamProtection.guild)
+          if (spamProtection?.guild)
             return interaction.reply({
               embeds: [
                 {
@@ -346,7 +346,7 @@ module.exports = {
               ephemeral: true
             });
 
-          if (!spamProtection || !spamProtection.channels || spamProtection.channels.length == 0)
+          if (!!spamProtection?.channels || spamProtection.channels.length == 0)
             return interaction.reply({
               embeds: [
                 {
@@ -412,7 +412,7 @@ module.exports = {
 
         if (getOperation == "ekle") {
 
-          if (spamProtection && !spamProtection.guild)
+          if (!spamProtection?.guild)
             return interaction.reply({
               embeds: [
                 {
@@ -424,7 +424,7 @@ module.exports = {
               ephemeral: true
             });
 
-          if (spamProtection && spamProtection.exempts && spamProtection.exempts.channels && spamProtection.exempts.channels.includes(getChannel.id))
+          if (spamProtection?.exempts?.channels && spamProtection.exempts.channels.includes(getChannel.id))
             return interaction.reply({
               embeds: [
                 {
@@ -451,7 +451,7 @@ module.exports = {
 
         } else if (getOperation == "kaldir") {
 
-          if (!spamProtection || !spamProtection.exempts || !spamProtection.exempts.channels || spamProtection.exempts.channels.length == 0)
+          if (!spamProtection?.exempts?.channels || spamProtection.exempts.channels.length == 0)
             return interaction.reply({
               embeds: [
                 {
@@ -498,7 +498,7 @@ module.exports = {
 
         if (getOperation == "ekle") {
 
-          if (spamProtection && spamProtection.exempts && spamProtection.exempts.roles && spamProtection.exempts.roles.includes(getRole.id))
+          if (spamProtection?.exempts?.roles && spamProtection.exempts.roles.includes(getRole.id))
             return interaction.reply({
               embeds: [
                 {
@@ -525,7 +525,7 @@ module.exports = {
 
         } else if (getOperation == "kaldir") {
 
-          if (!spamProtection || !spamProtection.exempts || !spamProtection.exempts.roles || spamProtection.exempts.roles.length == 0)
+          if (!spamProtection?.exempts?.roles || spamProtection.exempts.roles.length == 0)
             return interaction.reply({
               embeds: [
                 {

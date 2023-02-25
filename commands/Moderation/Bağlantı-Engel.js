@@ -234,7 +234,7 @@ module.exports = {
 
         if (getOperation == "ac") {
 
-          if (linkBlock && linkBlock.guild)
+          if (linkBlock?.guild)
             return interaction.reply({
               embeds: [
                 {
@@ -305,7 +305,7 @@ module.exports = {
         const getOperation = interaction.options.getString("işlem");
         const getChannel = interaction.options.getChannel("kanal");
 
-        if (!getChannel.type == 0)
+        if (getChannel.type !== 0)
           return interaction.reply({
             embeds: [
               {
@@ -319,7 +319,7 @@ module.exports = {
 
         if (getOperation == "ekle") {
 
-          if (linkBlock && linkBlock.guild)
+          if (linkBlock?.guild)
             return interaction.reply({
               embeds: [
                 {
