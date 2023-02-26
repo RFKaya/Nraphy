@@ -15,7 +15,7 @@ Bu projede tüm Nraphy kodları açık olarak paylaşılmamıştır. Botun günc
 > ✅ Davet Sistemi <br>
 > ✅ Galeri <br>
 > ✅ İsim Temizleme <br>
-> ✅ Log <br>
+> ✅ Log (Son Güncelleme: 22 Şubat 2023) <br>
 > ✅ Müzik Sistemi <br>
 > ✅ Oto Rol <br>
 > ✅ Sayaç <br>
