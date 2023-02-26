@@ -71,6 +71,7 @@ Aşağıdaki kişilere, projelere ve aklıma gelmeyen daha nice kaynağa, emekle
 * [Akif9748](https://github.com/Akif9748)
 ### Projeler
 * [Alita](https://github.com/KSJaay/Alita)
+* [Atlanta](https://github.com/Androz2091/AtlantaBot)
 * [Dodong](https://github.com/nizewn/Dodong)
 * [Eyesense-Music-Bot](https://github.com/naseif/Eyesense-Music-Bot)
 ### Diğer
