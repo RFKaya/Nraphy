@@ -4,7 +4,7 @@ module.exports = async (client, member) => {
 
   const guildData = await client.database.fetchGuild(member.guild.id);
 
-  let autoRole = guildData.autoRole;
+  let autoRole = guildData?.autoRole;
   let memberCounter = guildData?.memberCounter;
   let inviteManager = guildData?.inviteManager;
 
