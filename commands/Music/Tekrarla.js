@@ -7,9 +7,9 @@ module.exports = {
         name: "tekrar",
         description: "Tekrarlama modunun sırayı ya da mevcut şarkıyı tekrarlayacağını belirt.",
         choices: [
-          { name: "şarkı", value: "sarki" },
-          { name: "sıra", value: "sira" },
-          { name: "kapat", value: "kapat" }
+          { name: "Mevcut şarkı", value: "sarki" },
+          { name: "Tüm sıra", value: "sira" },
+          { name: "Kapat", value: "kapat" }
         ],
         type: 3,
         required: true
@@ -65,7 +65,7 @@ module.exports = {
         }]
       });
     } else if (choice == 'sira') {
-      if (queue.tracks.length <= 1) {
+      if (queue.songs.length <= 1) {
         return interaction.reply({
           embeds: [{
             color: client.settings.embedColors.red,

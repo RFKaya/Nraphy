@@ -14,7 +14,7 @@ module.exports = {
   aliases: ["oylama"],
   category: "Moderation",
   memberPermissions: ["ManageMessages"],
-  botPermissions: ["SendMessages", "EmbedLinks"],
+  botPermissions: ["SendMessages", "EmbedLinks", "AddReactions"],
   nsfw: false,
   cooldown: 3000,
   ownerOnly: false,
@@ -34,7 +34,7 @@ module.exports = {
           {
             color: client.settings.embedColors.red,
             title: '**»** Bir Anket Metni Belirtmelisin!',
-            description: `**•** Örnek kullanım: \`/anket YaGo'nun kafasına taşla vurmalı mıyım?\``
+            description: `**•** Örnek kullanım: \`/anket YaGo'yu yasaklamalı mıyız?\``
           }
         ]
       });
@@ -50,14 +50,15 @@ module.exports = {
         ]
       });
 
-    if (interaction.type == 2) await interaction.reply({
-      embeds: [{
-        color: client.settings.embedColors.green,
-        title: "**»** Başarılı!",
-        description: `**•** Anket mesajı gönderiliyor...`
-      }],
-      ephemeral: true
-    });
+    if (interaction.type == 2)
+      await interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.green,
+          title: "**»** Başarılı!",
+          description: `**•** Anket mesajı gönderiliyor...`
+        }],
+        ephemeral: true
+      });
 
     interaction.channel.send({
       embeds: [{
@@ -74,8 +75,8 @@ module.exports = {
         },
       }]
     }).then(async message => {
-      await message.react('<:evetcik:618420600901206026>');
-      await message.react('<:hayircik:618420671466438656>');
+      await message.react('👍');
+      await message.react('👎');
     });
   }
 };

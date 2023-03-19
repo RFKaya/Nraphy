@@ -18,7 +18,7 @@ module.exports = async (client, oldMessage, newMessage) => {
       color: client.settings.embedColors.red,
       author: {
         name: `${newMessage.author.tag} (ID: ${newMessage.author.id})`,
-        icon_url: newMessage.author.displayAvatarURL({ size: 1024 })
+        icon_url: newMessage.author.displayAvatarURL()
       },
       title: `**»** \`#${newMessage.guild.channels.cache.get(newMessage.channelId).name}\` kanalında bir mesaj düzenledi!`,
       url: newMessage.url,
@@ -26,12 +26,12 @@ module.exports = async (client, oldMessage, newMessage) => {
       /*timestamp: new Date(),
       footer: {
           text: `${messageExecutor.tag} tarafından silindi.`,
-          icon_url: messageExecutor.displayAvatarURL({ size: 1024 }),
+          icon_url: messageExecutor.displayAvatarURL(),
       },*/
     };
 
     //Logging
     require('../functions/logManager')(client, guildData, { embeds: [embed] });
 
-  } catch (err) { client.logger.error(err); };
+  } catch (err) { require('../functions/logManager').errors(client, guildData, err); };
 };

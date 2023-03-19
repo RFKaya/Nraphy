@@ -30,7 +30,7 @@ manager.on('shardCreate', (shard) => {
 
 try {
   logger.client(`Loading Client...`);
-  manager.spawn({ timeout: 300000 })
+  manager.spawn({ timeout: 600000 })
     /*.then(shards => {
       shards.forEach(shard => {
         shard.on('message', message => {

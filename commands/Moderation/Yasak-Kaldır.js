@@ -1,7 +1,3 @@
-const Discord = module.require("discord.js");
-const { MessageActionRow, ButtonBuilder } = require('discord.js');
-const db = require('quick.db');
-
 module.exports = {
   name: "yasak-kaldır",
   description: "Belirttiğiniz kişinin banını kaldırır.",
@@ -59,90 +55,57 @@ module.exports = {
     let member = await client.users.fetch(user);
     let banUser = await message.guild.bans.fetch(user);
 
-    let confirmButton = new ButtonBuilder().setLabel('Onayla').setCustomId("confirmButton").setStyle('Success');
-    let denyButton = new ButtonBuilder().setLabel('İptal Et').setCustomId("denyButton").setStyle('Danger');
-
-    message.channel.send({
-      embeds: [
+    const { buttonConfirmation } = require("../../modules/Functions");
+    const buttonConfirmationResult = await buttonConfirmation(
+      message,
+      [
         {
           color: client.settings.embedColors.default,
           author: {
             name: `${member.tag} kullanıcısının yasağını kaldırmak istiyor musun?`,
-            icon_url: member.displayAvatarURL({ size: 1024 }),
+            icon_url: member.displayAvatarURL(),
+          },
+        }
+      ]
+    );
+
+    if (!buttonConfirmationResult.status)
+      return buttonConfirmationResult.reply.edit({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            title: '**»** Yasak Kaldırma İşlemini İptal Ettim!',
+            description: `**•** Madem iptal edecektin, neden uğraştırıyorsun bizi?`
+          }
+        ],
+        components: []
+      });
+
+    await message.guild.members.unban(member);
+
+    return buttonConfirmationResult.reply.edit({
+      embeds: [
+        {
+          color: client.settings.embedColors.green,
+          author: {
+            name: `${member.tag} kullanıcısının yasağı kaldırıldı!`,
+            icon_url: member.displayAvatarURL(),
+          },
+          //title: '**»** Rauqq#3916 kullanıcısının yasağı kaldırıldı!',
+          fields: [
+            {
+              name: '**»** Yasaklanma Sebebi',
+              value: `**•** ${banUser.reason ? banUser.reason : "Hiçbir sebep verilmedi"}`,
+            },
+          ],
+          timestamp: new Date(),
+          footer: {
+            text: `${message.author.username} tarafından kaldırıldı.`,
+            icon_url: message.author.displayAvatarURL(),
           },
         }
       ],
-      components: [
-        {
-          data: { type: 1 }, components: [
-            confirmButton, denyButton
-          ]
-        }
-      ]
-    }).then(msg => {
-
-      const filter = i => {
-        i.deferUpdate();
-        return i.user.id === message.author.id;
-      };
-
-      msg.awaitMessageComponent({ filter, time: 120000 })
-        .then(async btn => {
-
-          if (btn.customId === "confirmButton") {
-            message.guild.members.unban(member);
-            msg.edit({
-              embeds: [
-                {
-                  color: client.settings.embedColors.green,
-                  author: {
-                    name: `${member.tag} kullanıcısının yasağı kaldırıldı!`,
-                    icon_url: member.displayAvatarURL({ size: 1024 }),
-                  },
-                  //title: '**»** Rauqq#3916 kullanıcısının yasağı kaldırıldı!',
-                  fields: [
-                    {
-                      name: '**»** Yasaklanma Sebebi',
-                      value: `**•** ${banUser.reason ? banUser.reason : "Hiçbir sebep verilmedi"}`,
-                    },
-                  ],
-                  timestamp: new Date(),
-                  footer: {
-                    text: `${message.author.username} tarafından kaldırıldı.`,
-                    icon_url: message.author.displayAvatarURL(),
-                  },
-                }
-              ],
-              components: []
-            });
-
-          } else if (btn.customId === "denyButton") {
-
-            return msg.edit({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: '**»** Yasak Kaldırma İşlemini İptal Ettim!',
-                  description: `**•** Madem iptal edecektin, neden uğraştırıyorsun bizi?`
-                }
-              ],
-              components: []
-            });
-          }
-        }).catch(err => {
-
-          return msg.edit({
-            embeds: [
-              {
-                color: client.settings.embedColors.red,
-                title: '**»** Yasak Kaldırma İşlemini İptal Ettim!',
-                description: `**•** Madem iptal edecektin, neden uğraştırıyorsun bizi?`
-              }
-            ],
-            components: []
-          });
-
-        });
+      components: []
     });
 
   }

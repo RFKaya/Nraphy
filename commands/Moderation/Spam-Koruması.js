@@ -127,11 +127,12 @@ module.exports = {
   nsfw: false,
   cooldown: false,
   ownerOnly: false,
+  voteRequired: true,
 
   async execute(client, interaction, data) {
     const getSubcommand = interaction.options.getSubcommandGroup(false);
     const getCommand = interaction.options.getSubcommand();
-    const spamProtection = data.guild.spamProtection;//db.fetch(`guilds.${interaction.guild.id}.spamProtection`)
+    const spamProtection = data.guild.spamProtection;
 
     //------------------------------Bilgi------------------------------//
     if (getCommand == "bilgi") {

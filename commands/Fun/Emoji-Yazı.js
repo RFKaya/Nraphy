@@ -1,5 +1,3 @@
-const Discord = require('discord.js');
-
 module.exports = {
   interaction: {
     name: "Emojilere Çevir",
@@ -20,7 +18,7 @@ module.exports = {
       let message;
       if (interaction.type == 2) {
         message = await interaction.channel.messages.fetch(interaction.targetId);
-        message = message.content
+        message = message.content;
       } else {
         message = args.join(' ');
       }
@@ -76,7 +74,7 @@ module.exports = {
           ]
         });
 
-      let emojiYazı = message.split('').map(c => mapping[c.toUpperCase()] || c).join(' ').toString()
+      let emojiYazı = message.split('').map(c => mapping[c.toUpperCase()] || c).join(' ').toString();
 
       if (!emojiYazı || !emojiYazı.length || emojiYazı.length == 0 || emojiYazı.trim().length === 0)
         return interaction.reply({
@@ -101,10 +99,10 @@ module.exports = {
         });
 
 
-      interaction.reply({ content: emojiYazı })
+      interaction.reply({ content: emojiYazı });
     } catch (err) {
-      interaction.reply("hata cıktı koc")
-      client.logger.error(err) 
+      interaction.reply("hata cıktı koc");
+      client.logger.error(err);
     };
 
   }

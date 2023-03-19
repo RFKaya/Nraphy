@@ -73,8 +73,7 @@ module.exports = {
     }).then(msg => {
 
       const filter = i => {
-        i.deferUpdate();
-        return i.user.id === message.author.id;
+        return i.message.id === msg.id && i.deferUpdate() && i.user.id === message.author.id;
       };
 
       const calc = msg.createMessageComponentCollector({ filter, time: 180000 });

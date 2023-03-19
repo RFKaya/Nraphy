@@ -1,4 +1,4 @@
-const { ButtonBuilder, WebhookClient } = require('discord.js');
+const { ButtonBuilder } = require('discord.js');
 
 module.exports = {
 
@@ -31,7 +31,7 @@ module.exports = {
         })
         .catch(err => {
 
-          return { reply, status: true };
+          return { reply, status: false };
 
           /*interaction.editReply({
               embeds: [
@@ -96,49 +96,6 @@ module.exports = {
 
     return dates;
 
-  },
-
-  createLog: async function (guildId, guildData, embeds) {
-
-    if (!guildData) guildData = await global.client.database.fetchGuild(guildId);//const guildData = await client.database.fetchGuild(guildId);
-
-    let logger = guildData.logger;
-    if (!logger?.webhook) return;
-
-    let webhookClient = new WebhookClient({ url: logger.webhook });
-
-    webhookClient.send({ embeds: embeds })
-      .catch(async error => {
-        if (error.code == 10015) {
-          global.client.logger.log(`Log sisteminde Webhook silinmiş. Log sıfırlanıyor... • ${guildId} (${guildId})`);
-          guildData.logger.webhook = null;
-          guildData.markModified('logger.webhook');
-          await guildData.save();
-        }
-      });
-
-  },
-
-  messageToWebURL: function (message = '') {
-
-    /*const mapping = {
-        'ı': 'i',
-        'İ': 'I',
-        'ü': 'u',
-        'Ü': 'U',
-        'Ö': 'O',
-        'ö': 'o',
-        'Ç': 'C',
-        'ç': 'c',
-        'ş': 's',
-        'Ş': 'S',
-        'Ğ': 'G',
-        'ğ': 'g'
-      };*/
-
-    message = encodeURI(message);// = message.split('').map(c => mapping[c] || c).join('');
-
-    return message;
   },
 
   messageChecker: function (interaction, message = '', example = '') {

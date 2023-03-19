@@ -1,7 +1,9 @@
-const chalk = require("chalk"),
+const { WebhookClient } = require('discord.js'),
+  chalk = require("chalk"),
   fs = require("fs"),
   dateModule = require("./Date.js"),
-  capitalizeFirstLetter = ([first, ...rest], locale = "tr-TR") => first.toLocaleUpperCase(locale) + rest.join('');
+  capitalizeFirstLetter = ([first, ...rest], locale = "tr-TR") => first.toLocaleUpperCase(locale) + rest.join(''),
+  config = require("../config.json");
 
 var nowDate = new Date(),
   logFile = `./logs/log-${nowDate.getFullYear()}.${(nowDate.getMonth() + 1)}.txt`;
@@ -65,7 +67,9 @@ exports.error = async (content) => {
   //console.log(`${timestamp} ${chalk.red("ERROR")} ${content}`);
   console.log(`${timestamp} ${chalk.red("ERROR")}`);
   console.error(content);
-  if (content.requestBody?.json) console.log("error.requestBody.json:", content.requestBody.json);
+  if (content.requestBody?.json?.data?.embeds) console.log("error.requestBody.json.data.embeds:", content.requestBody.json.data.embeds);
+  else if (content.requestBody?.json?.embeds) console.log("error.requestBody.json.embeds:", content.requestBody.json.embeds);
+  else if (content.requestBody?.json) console.log("error.requestBody.json:", content.requestBody.json);
 
   //Log TXT
   fs.appendFile(logFile,

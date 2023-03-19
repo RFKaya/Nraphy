@@ -17,7 +17,7 @@ module.exports = {
 
   async execute(client, interaction, data) {
 
-    interaction.reply({
+    await interaction.reply({
       embeds: [
         {
           color: client.settings.embedColors.default,
@@ -57,7 +57,7 @@ module.exports = {
             },
           }
         ]
-      });
+      }).catch(e => { });
     }, 2400);
 
   }

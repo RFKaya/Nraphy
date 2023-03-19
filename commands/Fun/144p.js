@@ -1,4 +1,3 @@
-const Discord = require("discord.js");
 var request = require("request");
 
 module.exports = {

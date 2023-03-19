@@ -7,7 +7,7 @@ module.exports = {
   aliases: ["sfw"],
   category: "NSFW",
   memberPermissions: [],
-  botPermissions: ["SendMessages", "EmbedLinks"],
+  botPermissions: ["SendMessages", "EmbedLinks", "AddReactions"],
   nsfw: true,
   cooldown: 1000,
   ownerOnly: false,

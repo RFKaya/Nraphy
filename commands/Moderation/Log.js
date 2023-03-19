@@ -1,3 +1,5 @@
+const { ButtonBuilder } = require('discord.js');
+
 module.exports = {
   interaction: {
     name: "log",
@@ -38,6 +40,7 @@ module.exports = {
   nsfw: false,
   cooldown: 10000,
   ownerOnly: false,
+  voteRequired: true,
 
   async execute(client, interaction, data) {
 
@@ -45,7 +48,7 @@ module.exports = {
 
     if (getCommand == "bilgi") {
 
-      interaction.reply({
+      return interaction.reply({
         embeds: [
           {
             color: client.settings.embedColors.default,
@@ -62,8 +65,8 @@ module.exports = {
                 name: '**»** Log Sistemi Hangi Olayları Bildirir?',
                 value:
                   `**•** Mesaj Düzenleme ve Silme (İçerikleriyle birlikte)\n` +
-                  `**•** Emoji Ekleme, Düzenleme ve Silme\n` +
-                  `**•** Beta olduğu için şimdilik bu kadar. Yakında diğer olayları da bildirir hâle gelecek.`,
+                  `**•** Emoji Oluşturma, Düzenleme ve Silme\n` +
+                  `**•** Yakında daha fazla olay bildirir hâle gelecek.`,
               },
               {
                 name: '**»** Log Sistemi Nasıl Açılır?',
@@ -78,6 +81,9 @@ module.exports = {
                 value: `**•** Bunun için bana kızmayın üzülürüm. Log sistemi bir anda olacak iş değil, yavaşça ve sizin önerilerinizle geliştirilecek. Bu yüzden \`/bildir\` komutuyla bug/öneri bildirileri yapmayı unutmayın. Anlayışınız için teşekkürler.`,
               },
             ],
+            image: {
+              url: "https://cdn.discordapp.com/attachments/892082183710330950/994300796638347445/unknown.png"
+            }
           }
         ],
       });
@@ -86,68 +92,58 @@ module.exports = {
 
       const getChannel = interaction.options.getChannel("kanal");
 
-      if (!getChannel.type == 0)
-        return interaction.reply({
-          embeds: [
-            {
-              color: client.settings.embedColors.red,
-              title: `**»** Geçerli Bir Kanal Belirtmelisin!`,
-              description: `**•** Belirttiğin kanal, oda veya kategori olmamalı. Sadece yazı kanalı.`,
-            }
-          ],
-          ephemeral: true
-        });
-
-      const permissions = require("../../utils/Permissions.json");
-      let clientPerms = [];
-      this.botPermissions.forEach((perm) => {
-        if (!getChannel.permissionsFor(interaction.guild.members.me).has(perm)) {
-          clientPerms.push(permissions[perm]);
-        }
-      });
-      if (clientPerms.length > 0) {
-        return interaction.reply({
-          embeds: [{
-            color: client.settings.embedColors.red,
-            author: {
-              name: `#${getChannel.name} Kanalında Gereken İzinlere Sahip Değilim!`,
-              icon_url: interaction.guild.iconURL(),
-            },
-            fields: [
-              {
-                name: '**»** İhtiyacım Olan İzinler;',
-                value: "**•** " + clientPerms.map((p) => `${p}`).join("\n**•** "),
-              },
-            ]
-          }]
-        });
-      }
+      //Kanal Kontrol
+      const { channelChecker } = require("../../modules/Functions");
+      if (await channelChecker(interaction, getChannel, ["ViewChannel", "SendMessages", "EmbedLinks", "ManageChannels", "ManageWebhooks"], false)) return;
 
       await interaction.deferReply();
 
-      getChannel.createWebhook({
+      //Zaten o kanalda aktif mi?
+      if (data.guild.logger?.webhook && (await getChannel.fetchWebhooks()).find(webhook => webhook.url === data.guild.logger.webhook))
+        return interaction.editReply({
+          embeds: [
+            {
+              color: client.settings.embedColors.red,
+              title: '**»** O Kanalda Zaten Bu Sistem Aktif!',
+              description: `**•** Bir sorun mu var? Destek sunucumuza gelebilirsin \:)`
+            }
+          ],
+          components: [
+            {
+              data: { type: 1 }, components: [
+                new ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/QvaDHvuYVm`).setStyle('Link')
+              ]
+            },
+          ]
+        });
+
+      const webhook = await getChannel.createWebhook({
         name: 'Nraphy Logger (Beta)',
         avatar: 'https://media.discordapp.net/attachments/727501328519004200/910108789796110346/Nraphy-Test-Logo-Kare.png',
         reason: `Nraphy Log Sistemi • ${interaction.user.tag} tarafından açıldı.`
-      }).then(async webhook => {
-
-        data.guild.logger.webhook = webhook.url;
-        data.guild.markModified('logger.webhook');
-        await data.guild.save();
-
-        interaction.editReply(`Oldu bu iş! Loglamaya başlıyorum artık. Bir mesaj yazıp silerek deneyebilirsin. Log kanal: ${getChannel}`);
-        //db.set(`guilds.${interaction.guild.id}.logger.webhook`, webhook.url)
-
       }).catch(err => {
-
-        interaction.editReply(`Log kanalını ayarlayamadım. Yetkilerimle ilgili bir sorun olabilir. Çözemezsen destek sunucumuzda bildirebilirsin.\n\nhttps://discord.gg/QvaDHvuYVm`);
         client.logger.error(err);
+        return interaction.editReply(`Log kanalını ayarlayamadım. Yetkilerimle ilgili bir sorun olabilir. Çözemezsen destek sunucumuzda bildirebilirsin.\n\nhttps://discord.gg/QvaDHvuYVm`);
+      });
 
+      data.guild.logger.webhook = webhook.url;
+      data.guild.markModified('logger.webhook');
+      await data.guild.save();
+
+      return interaction.editReply({
+        embeds: [
+          {
+            color: client.settings.embedColors.green,
+            title: `**»** Log Sistemi \`#${getChannel.name}\` Kanalına Ayarlandı!`,
+            url: getChannel.url,
+            description: `**•** Bir mesaj yazıp silerek log sistemini deneyebilirsin \:)`
+          }
+        ]
       });
 
     } else if (getCommand == "kapat") {
 
-      interaction.reply("kapama yok. kanal ayarlarına gir webhook'u sil.");
+      return interaction.reply("Kapatma henüz mevcut değil. Kanal ayarlarına gir webhook'u sil.");
 
     }
 

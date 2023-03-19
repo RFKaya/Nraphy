@@ -15,7 +15,7 @@ module.exports = {
 
   async execute(client, message, args, data) {
 
-    let opponent = message.mentions.users.first()
+    let opponent = message.mentions.users.first();
 
     if (!opponent) return message.channel.send({
       embeds: [
@@ -67,121 +67,91 @@ module.exports = {
       ]
     });
 
-    client.gamesPlaying.set(message.channel.id, this.name)
-    try {
+    client.gamesPlaying.set(message.channel.id, this.name);
 
-      let confirmButton = new ButtonBuilder().setLabel('Kabul Et').setCustomId("confirmButton").setStyle('Success')
-      let denyButton = new ButtonBuilder().setLabel('İptal Et').setCustomId("denyButton").setStyle('Danger')
+    const { buttonConfirmation } = require("../../modules/Functions");
+    const buttonConfirmationResult = await buttonConfirmation(
+      message,
+      [
+        {
+          color: client.settings.embedColors.default,
+          title: `**»** ${opponent.username}, kelime yarışması isteğini kabul ediyor musun?`,
+          description: `**•** Butonları kullanarak cevaplayabilirsin.`
+        }
+      ],
+      opponent.id
+    );
+    if (!buttonConfirmationResult.status) {
 
-      await message.channel.send({
+      client.gamesPlaying.delete(message.channel.id);
+
+      return buttonConfirmationResult.reply.edit({
         embeds: [
           {
-            color: client.settings.embedColors.default,
-            title: `**»** ${opponent.username} oyunu kabul ediyor musun?`,
-            description: `**•** Butonları kullanarak cevaplayabilirsin.`
+            color: client.settings.embedColors.red,
+            title: '**»** Meydan Okuma Kabul Edilmedi!',
+            description: `**•** Üzgünüm, istersen [destek sunucumuza](https://discord.gg/VppTU9h) katılıp orada birilerini bulabilirsin.`
           }
         ],
-        components: [
+        components: []
+      });
+
+    }
+
+    await buttonConfirmationResult.reply.edit({
+      embeds: [
+        {
+          color: client.settings.embedColors.default,
+          title: '**»** Hazırlanın!',
+          description: `**•** 3 saniye sonra kelime geliyor!`
+        }
+      ],
+      components: []
+    });
+
+    try {
+
+      const word = words[Math.floor(Math.random() * words.length)];
+
+      await setTimeout(() => {
+        message.channel.send({
+          embeds: [
+            {
+              color: client.settings.embedColors.default,
+              title: `**»** Hemen \`${word.toLocaleLowerCase('tr-TR')}\` kelimesini yaz!`,
+            }
+          ]
+        });
+      }, 3000);
+
+      const filter = res => [opponent.id, message.author.id].includes(res.author.id) && res.content.toLocaleLowerCase('tr-TR') === word;
+      const winner = await message.channel.awaitMessages({ filter, max: 1, time: 10000 });
+
+      client.gamesPlaying.delete(message.channel.id);
+      if (!winner.size)
+        return message.channel.send({
+          embeds: [
+            {
+              color: client.settings.embedColors.red,
+              title: '**»** Kimse Kazanamadı!',
+              description: `**•** Dostluk kazanmış olabilir. Belki o da kaybetmiştir.`
+            }
+          ]
+        });
+
+      return message.channel.send({
+        embeds: [
           {
-            type: 1, components: [
-              confirmButton, denyButton
-            ]
+            color: client.settings.embedColors.green,
+            title: `**»** Tebrikler ${winner.first().author.username}! Kazandın! 🏆`,
+            //description: `**•** Farklı bir kanalda dene veya sıranı bekle.`
           }
         ]
-      }).then(msg => {
+      });
 
-        const filter = i => {
-          i.deferUpdate();
-          return i.user.id === opponent.id;
-        };
-
-        msg.awaitMessageComponent({ filter, time: 25000 })
-          .then(async btn => {
-
-            if (btn.customId === "confirmButton") {
-
-              await msg.edit({
-                embeds: [
-                  {
-                    color: client.settings.embedColors.default,
-                    title: '**»** Hazırlanın!',
-                    description: `**•** 3 saniye sonra kelime geliyor!`
-                  }
-                ],
-                components: []
-              })
-
-              const word = words[Math.floor(Math.random() * words.length)];
-
-              await setTimeout(() => {
-                message.channel.send({
-                  embeds: [
-                    {
-                      color: client.settings.embedColors.default,
-                      title: '**»** Hemen `' + word.toLocaleLowerCase('tr-TR') + '` kelimesini yaz!',
-                      //description: `**•** Farklı bir kanalda dene veya sıranı bekle.`
-                    }
-                  ]
-                });
-              }, 3000)
-              //await msg.channel.send(`_Kelimeyi tamamen küçük harfle yazınız._`);
-              const filter = res => [opponent.id, message.author.id].includes(res.author.id) && res.content.toLocaleLowerCase('tr-TR') === word;
-              const winner = await message.channel.awaitMessages({ filter, max: 1, time: 10000 });
-              client.gamesPlaying.delete(message.channel.id)
-              if (!winner.size) return message.channel.send({
-                embeds: [
-                  {
-                    color: client.settings.embedColors.red,
-                    title: '**»** Kimse Kazanamadı!',
-                    description: `**•** Dostluk kazanmış olabilir. Belki o da kaybetmiştir.`
-                  }
-                ]
-              });
-              return message.channel.send({
-                embeds: [
-                  {
-                    color: client.settings.embedColors.green,
-                    title: `**»** Tebrikler ${winner.first().author.username}! Kazandın! 🏆`,
-                    //description: `**•** Farklı bir kanalda dene veya sıranı bekle.`
-                  }
-                ]
-              });
-
-            } else if (btn.customId === "denyButton") {
-
-              client.gamesPlaying.delete(message.channel.id)
-
-              return msg.edit({
-                embeds: [
-                  {
-                    color: client.settings.embedColors.red,
-                    title: '**»** Meydan Okuma Reddedildi!',
-                    description: `**•** Üzgünüm, istersen [Destek Sunucumuza](https://discord.gg/VppTU9h) katılıp orada birilerini bulabilirsin.`
-                  }
-                ],
-                components: []
-              });
-
-            }
-          }).catch(err => {
-
-            client.gamesPlaying.delete(message.channel.id)
-
-            msg.edit({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: '**»** Meydan Okuma Kabul Edilmedi!',
-                  description: `**•** Üzgünüm, istersen [Destek Sunucumuza](https://discord.gg/VppTU9h) katılıp orada birilerini bulabilirsin.`
-                }
-              ],
-              components: []
-            });
-          });
-      })
     } catch (err) {
-      client.gamesPlaying.delete(message.channel.id)
-      throw err;
+      client.logger.error(err);
+      client.gamesPlaying.delete(message.channel.id);
     }
 
   }

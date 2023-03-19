@@ -45,7 +45,7 @@ module.exports = {
       return interaction.reply({
         embeds: [{
           color: client.settings.embedColors.red,
-          description: `**»** Bir şarkı adı/bağlantısı girmelisin! \`/çal Faded\``
+          description: `**»** Bir şarkı adı/bağlantısı girmelisin! \`/ara Faded\``
         }]
       });
 
@@ -118,29 +118,7 @@ module.exports = {
 
           } catch (error) {
 
-            client.logger.error(error);
-
-            let messageContent = {
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: "**»** Bir Hata Oluştu!",
-                  description:
-                    `**•** Hatayla ilgili geliştirici ekip bilgilendirildi.\n` +
-                    `**•** En kısa sürede çözülecektir`
-                }
-              ],
-              components: [
-                {
-                  type: 1, components: [
-                    new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link')
-                  ]
-                },
-              ]
-            };
-            if (interaction.type == 2)
-              return interaction.editReply(messageContent);
-            else return interaction.reply(messageContent);
+            require('../../events/distube/functions/errorHandler.js')(client, error, interaction.channel, interaction);
 
           }
 
@@ -150,8 +128,7 @@ module.exports = {
 
           const reply = await interaction.fetchReply();
           const filter = i => {
-            i.deferUpdate();
-            return i.user.id === interaction.user.id && i.message.id === reply.id;
+            return i.message.id === reply.id && i.deferUpdate() && i.user.id === interaction.user.id;
           };
 
           interaction.channel.awaitMessageComponent({ filter, time: 120000, max: 1 })
@@ -182,7 +159,7 @@ module.exports = {
                 musicPlayer(parseInt(btn.customId));
               }
 
-            });/*.catch(err => {
+            }).catch(err => {
 
               return interaction.editReply({
                 embeds: [{
@@ -192,13 +169,12 @@ module.exports = {
                 components: []
               });
 
-            });*/
+            });
 
         } else {
 
           const filter = i => {
-            i.deferUpdate();
-            return i.user.id === interaction.author.id;
+            return i.message.id === msg.id && i.deferUpdate() && i.user.id === interaction.author.id;
           };
 
           msg.awaitMessageComponent({ filter, time: 120000, max: 1 })
@@ -229,7 +205,7 @@ module.exports = {
                 musicPlayer(parseInt(btn.customId));
               }
 
-            });/*.catch(err => {
+            }).catch(err => {
 
               return msg.edit({
                 embeds: [{
@@ -239,7 +215,7 @@ module.exports = {
                 components: []
               });
 
-            });*/
+            });
 
         }
 

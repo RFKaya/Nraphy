@@ -29,7 +29,7 @@ module.exports = async (client, message, wordGame, guildData) => {
       guildData.markModified('wordGame');
       await guildData.save();
 
-      return message.guild.channels.cache.get(wordGame.setupChannel).send({
+      return message.guild.channels.cache.get(wordGame.setupChannel)?.send({
         embeds: [{
           color: client.settings.embedColors.red,
           author: {
@@ -67,7 +67,7 @@ module.exports = async (client, message, wordGame, guildData) => {
               description: `**•** ${description}`
             }
           ]
-        }).then(msg => setTimeout(() => msg.delete().catch(e => { }), 5000));
+        }).then(msg => setTimeout(() => msg.delete().catch(e => { }), 4500));
       }
 
       //Mesaj Silme

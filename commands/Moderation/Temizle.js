@@ -1,3 +1,5 @@
+const { ButtonBuilder } = require('discord.js');
+
 module.exports = {
   interaction: {
     name: "temizle",
@@ -65,7 +67,7 @@ module.exports = {
           }
         ],
         ephemeral: true
-      }).then(msg => interaction.type !== 2 && setTimeout(() => msg.delete().catch(null), 4000));
+      }).then(msg => interaction.type !== 2 && setTimeout(() => msg.delete().catch(e => { }), 4000));
 
     if (mesaj > 200)
       return interaction.reply({
@@ -77,60 +79,87 @@ module.exports = {
           }
         ],
         ephemeral: true
-      }).then(msg => interaction.type !== 2 && setTimeout(() => msg.delete().catch(null), 4000));
+      }).then(msg => interaction.type !== 2 && setTimeout(() => msg.delete().catch(e => { }), 4000));
 
-    const m = mesaj + (interaction.type === 2 ? 0 : 1);
+    const m = mesaj + 1;
 
     //------------------------------Main Kısım------------------------------//
 
     //------------------------------Normal Temizle------------------------------//
 
-    let embed = {
-      color: client.settings.embedColors.green,
-      title: `**»** Başarıyla ${mesaj} Mesaj Silindi!`,
-      timestamp: new Date(),
-      footer: {
-        text: `${(interaction.author || interaction.user).username} tarafından silindi.`,
-        icon_url: (interaction.author || interaction.user).displayAvatarURL(),
-      },
-    };
-
     try {
 
+      if (interaction.type === 2) await interaction.deferReply();
+
+      let deletedMessages = 0;
       //2-100
       if (m <= 100) {
-        await interaction.channel.bulkDelete(m);
+        await interaction.channel.bulkDelete(m, true).then(bulkDelete => deletedMessages += bulkDelete.size);
       }
 
       //101-199 arası
       if (m > 100 && !(m >= 200)) {
-        interaction.channel.bulkDelete(100);
-        interaction.channel.bulkDelete(m - 100);
+        bulkDelete = await interaction.channel.bulkDelete(100, true).then(bulkDelete => deletedMessages += bulkDelete.size);
+        bulkDelete = await interaction.channel.bulkDelete(m - 100, true).then(bulkDelete => deletedMessages += bulkDelete.size);
       }
 
       //200
       if (m === 200 || mesaj === 200) {
-        interaction.channel.bulkDelete(100);
-        interaction.channel.bulkDelete(100);
+        await interaction.channel.bulkDelete(100, true).then(bulkDelete => deletedMessages += bulkDelete.size);
+        await interaction.channel.bulkDelete(100, true).then(bulkDelete => deletedMessages += bulkDelete.size);
+      }
+
+      var embed = {
+        color: client.settings.embedColors.green,
+        title: `**»** Başarıyla ${deletedMessages - 1} Mesaj Silindi!`,
+        timestamp: new Date(),
+        footer: {
+          text: `${(interaction.author || interaction.user).username} tarafından silindi.`,
+          icon_url: (interaction.author || interaction.user).displayAvatarURL(),
+        },
       };
 
-      return interaction.reply({ embeds: [embed] }).then(msg => {
-        setTimeout(() => interaction.type === 2 ? interaction.deleteReply() : msg.delete().catch(null), 4000);
-      });
+      //Hiç mesaj silinemedi
+      if (deletedMessages <= 1) {
+        embed = {
+          color: client.settings.embedColors.red,
+          title: '**»** Bir Hata Oluştu!'
+        };
+      }
+
+      //Bazı mesajlar silinemedi
+      if (deletedMessages !== m) embed.description = `**•** **${(m - 1) - (deletedMessages - 1)}** adet mesaj, 14 günden eski olduğu için silinemedi.`;
+
+      const reply = await (interaction.type === 2 ?
+        interaction.channel.send({ embeds: [embed] })
+        : interaction.reply({ embeds: [embed] }));
+      setTimeout(() => reply.delete().catch(e => { }), 4000);
 
     } catch (err) {
 
-      return interaction.reply({
+      client.logger.error(err);
+
+      let messageContent = {
         embeds: [
           {
             color: client.settings.embedColors.red,
             title: '**»** Bir Hata Oluştu!',
             description:
-              `**•** Bazı mesajlar silinmiş, bazıları silinememiş olabilir.\n\n` +
-              `**•** 14 günden eski mesajla karşılaşılmış olabilir.\n`
+              `**•** Hatayla ilgili geliştirici bilgilendirildi.\n` +
+              `**•** En kısa sürede çözülecektir.`
           }
+        ],
+        components: [
+          {
+            type: 1, components: [
+              new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link')
+            ]
+          },
         ]
-      });
+      };
+      if (interaction.type === 2)
+        return interaction.channel.send(messageContent);
+      else return interaction.reply(messageContent);
 
     }
 

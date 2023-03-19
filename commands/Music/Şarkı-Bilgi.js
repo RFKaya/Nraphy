@@ -71,6 +71,11 @@ module.exports = {
             value: queue.repeatMode == 2 ? '**•** Mevcut sıra tekrarlanıyor.' : queue.repeatMode == 1 ? '**•** Mevcut şarkı tekrarlanıyor.' : '**•** Kapalı',
             inline: true
           },
+          {
+            name: `**»** Bassboost \`/bassboost\``,
+            value: `**•** ${queue.filters.has('bassboost') ? queue.volume === 500 ? "BASSBOOST KÖKLENMİŞ! 🤯" : "Açık!" : "Kapalı"}`,
+            inline: false
+          },
           { name: '**»** Şarkı Sözleri', value: `**•** Şarkı sözleri için \`/şarkı-sözleri\` komutunu kullanabilirsin!`, inline: false },
           //{ name: `**»** Sayaç Çubuğu \`/ileri-sar\``, value: "**•** " + queue.createProgressBar({ timecodes: true }), inline: false }
           //{ name: '**»** Kanal', value: "**•** " + track.author, inline: true },

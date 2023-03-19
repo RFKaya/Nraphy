@@ -140,111 +140,77 @@ module.exports = {
       }
     }
 
-    const yasaklog = {
-      color: client.settings.embedColors.green,
-      author: {
-        name: '» Bir üye yasaklandı!',
-        icon_url: client.settings.icon,
-      },
-      description:
-        `**•** **Yasaklanan Üye:** ${toBan} (**${toBan.id}**)\n` +
-        `**•** **Sebep:** ${sebep}\n` +
-        `**•** **Yetkili:** ${message.author}`,
-      thumbnail: {
-        url: toBan.displayAvatarURL({ size: 1024 }),
-      },
-      timestamp: new Date(),
-      footer: {
-        text: `${message.author.username} tarafından yasaklandı.`,
-        icon_url: message.author.displayAvatarURL(),
-      },
-    };
-
-    let confirmButton = new ButtonBuilder().setLabel('Onayla').setCustomId("confirmButton").setStyle('Success');
-    let denyButton = new ButtonBuilder().setLabel('İptal Et').setCustomId("denyButton").setStyle('Danger');
-
-    message.channel.send({
-      embeds: [{
-        color: client.settings.embedColors.default,
-        author: {
-          name: `${toBan.username} kullanıcısını sunucudan yasaklamak istiyor musun?`,
-          icon_url: toBan.displayAvatarURL(),
-        },
-      }],
-      components: [
+    const { buttonConfirmation } = require("../../modules/Functions");
+    const buttonConfirmationResult = await buttonConfirmation(
+      message,
+      [
         {
-          type: 1, components: [
-            confirmButton, denyButton
-          ]
+          color: client.settings.embedColors.default,
+          author: {
+            name: `${toBan.username} kullanıcısını sunucudan yasaklamak istiyor musun?`,
+            icon_url: toBan.displayAvatarURL(),
+          },
         }
       ]
-    }).then(msg => {
+    );
 
-      const filter = i => {
-        i.deferUpdate();
-        return i.user.id === message.author.id;
-      };
-
-      msg.awaitMessageComponent({ filter, time: 600000 })
-        .then(async btn => {
-
-          if (btn.customId === "confirmButton") {
-
-            msg.edit({
-              embeds: [yasaklog],
-              components: []
-            });
-
-            message.guild.members.ban(toBan, { reason: reason })
-              .catch(err => {
-                if (err) return msg.edit({
-                  embeds: [
-                    {
-                      color: client.settings.embedColors.red,
-                      title: '**»** Bir Hata Oluştu!',
-                      description: `**•** Nedenini ben de bilmiyorum ki.`
-                    }
-                  ],
-                  components: []
-                });
-              });
-
-            var userData = await client.database.fetchUser(message.author.id);
-            userData.statistics.bannedUsers += 1;
-            await userData.save();
-
-          } else if (btn.customId === "denyButton") {
-
-            msg.edit({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  author: {
-                    name: `${toBan.username} kullanıcısının yasaklama işlemi iptal edildi.`,
-                    icon_url: toBan.displayAvatarURL(),
-                  },
-                }
-              ],
-              components: []
-            });
-
+    if (!buttonConfirmationResult.status)
+      return buttonConfirmationResult.reply.edit({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            author: {
+              name: `${toBan.username} kullanıcısının yasaklama işlemi iptal edildi.`,
+              icon_url: toBan.displayAvatarURL(),
+            },
           }
-        }).catch(err => {
+        ],
+        components: []
+      });
 
-          return msg.edit({
-            embeds: [
-              {
-                color: client.settings.embedColors.red,
-                author: {
-                  name: `${toBan.username} kullanıcısının yasaklama işlemi iptal edildi.`,
-                  icon_url: toBan.displayAvatarURL(),
-                },
-              }
-            ],
-            components: []
-          });
-
+    await message.guild.members.ban(toBan, { reason: reason })
+      .catch(err => {
+        client.logger.error(err);
+        return buttonConfirmationResult.reply.edit({
+          embeds: [
+            {
+              color: client.settings.embedColors.red,
+              title: '**»** Bir Hata Oluştu!',
+              description: `**•** Nedenini ben de bilmiyorum ki.`
+            }
+          ],
+          components: []
         });
+      });
+
+    await buttonConfirmationResult.reply.edit({
+      embeds: [
+        {
+          color: client.settings.embedColors.green,
+          author: {
+            name: '» Bir üye yasaklandı!',
+            icon_url: client.settings.icon,
+          },
+          description:
+            `**•** **Yasaklanan Üye:** ${toBan} (**${toBan.id}**)\n` +
+            `**•** **Sebep:** ${sebep}\n` +
+            `**•** **Yetkili:** ${message.author}`,
+          thumbnail: {
+            url: toBan.displayAvatarURL(),
+          },
+          timestamp: new Date(),
+          footer: {
+            text: `${message.author.username} tarafından yasaklandı.`,
+            icon_url: message.author.displayAvatarURL(),
+          },
+        }
+      ],
+      components: []
     });
+
+    var userData = await client.database.fetchUser(message.author.id);
+    userData.statistics.bannedUsers += 1;
+    await userData.save();
+
   }
 };

@@ -1,33 +1,57 @@
 const { WebhookClient } = require('discord.js');
-const db = require("quick.db");
 
 module.exports = async (client, guildData, logMessageContent) => {
 
-  try {
+  if (!guildData.logger?.webhook) return;
 
-    //Eski log sistemini yeniye geçirme kodları
-    let eskiLogger = db.fetch(`guilds.${guildData.guildId}.logger`);
-    if (eskiLogger) {
-      guildData.logger.webhook = eskiLogger.webhook;
-      guildData.markModified('logger.webhook');
-      await guildData.save();
-      db.delete(`guilds.${guildData.guildId}.logger`);
-      console.log("eski log sistemi yeniye geçirildi");
-    }
+  try {
 
     //Logging
     let webhookClient = new WebhookClient({ url: guildData.logger.webhook });
     webhookClient.send(logMessageContent)
       .catch(async error => {
         if (error.code == 10015) {
-          client.logger.log(`Log sisteminde Webhook silinmiş. Log sıfırlanıyor... • ${guildData.guildId}`);
           guildData.logger.webhook = null;
           guildData.markModified('logger.webhook');
           await guildData.save();
         } else {
-          console.log(error);
+          client.logger.error(error);
         }
       });
+
+  } catch (err) { client.logger.error(err); };
+};
+
+module.exports.errors = async (client, guildData, error) => {
+
+  try {
+
+    if (error.code === 50013) {
+
+      if (guildData.logger?.webhook) {
+
+        let webhookClient = new WebhookClient({ url: guildData.logger.webhook });
+        webhookClient.send({
+          embeds: [
+            {
+              color: client.settings.embedColors.red,
+              title: `**»** Yetkilerim Yetersiz Olduğu İçin Hata Oluştu!`,
+              description:
+                '**•** Bu nedenle log sistemini kapattım.\n' +
+                '**•** Yetkilerimi düzenledikten sonra tekrar ayarlayabilirsin.'
+            }
+          ]
+        }).catch(e => { });
+
+        guildData.logger.webhook = null;
+        guildData.markModified('logger.webhook');
+        await guildData.save();
+
+      }
+
+    } else {
+      client.logger.error(error);
+    }
 
   } catch (err) { client.logger.error(err); };
 };

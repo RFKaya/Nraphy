@@ -1,3 +1,5 @@
+const { ButtonBuilder } = require('discord.js');
+
 module.exports = {
   interaction: {
     name: "bağış",
@@ -14,7 +16,7 @@ module.exports = {
 
   async execute(client, interaction, data) {
 
-    interaction.reply({
+    return interaction.reply({
       embeds: [
         {
           color: client.settings.embedColors.default,
@@ -22,7 +24,14 @@ module.exports = {
           description: '**•** Valla ihtiyaç yok, düşünmen yeterli 😇',
         }
       ],
-    })
+      components: [
+        {
+          data: { type: 1 }, components: [
+            new ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/QvaDHvuYVm`).setStyle('Link')
+          ]
+        },
+      ]
+    });
 
   }
 };

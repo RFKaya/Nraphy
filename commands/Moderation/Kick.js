@@ -119,112 +119,77 @@ module.exports = {
       });
     }
 
-    const yasaklog = {
-      color: client.settings.embedColors.green,
-      author: {
-        name: '» Bir üye tekmelendi!',
-        icon_url: client.settings.icon,
-      },
-      description:
-        `**•** **Tekmelenen Üye:** ${toKick} (**${toKick.id}**)\n` +
-        `**•** **Sebep:** ${sebep}\n` +
-        `**•** **Yetkili:** ${message.author}`,
-      thumbnail: {
-        url: toKick.displayAvatarURL({ size: 1024 }),
-      },
-      timestamp: new Date(),
-      footer: {
-        text: `${message.author.username} tarafından tekmelendi.`,
-        icon_url: message.author.displayAvatarURL(),
-      },
-    };
-
-    let confirmButton = new ButtonBuilder().setLabel('Onayla').setCustomId("confirmButton").setStyle('Success');
-    let denyButton = new ButtonBuilder().setLabel('İptal Et').setCustomId("denyButton").setStyle('Danger');
-
-    message.channel.send({
-      embeds: [{
-        color: client.settings.embedColors.default,
-        author: {
-          name: `${toKick.user.username} kullanıcısını sunucudan atmak istiyor musun?`,
-          icon_url: toKick.displayAvatarURL(),
-        },
-      }],
-      components: [
+    const { buttonConfirmation } = require("../../modules/Functions");
+    const buttonConfirmationResult = await buttonConfirmation(
+      message,
+      [
         {
-          type: 1, components: [
-            confirmButton, denyButton
-          ]
+          color: client.settings.embedColors.default,
+          author: {
+            name: `${toKick.user.username} kullanıcısını sunucudan atmak istiyor musun?`,
+            icon_url: toKick.displayAvatarURL(),
+          },
         }
       ]
-    }).then(msg => {
+    );
 
-      const filter = i => {
-        i.deferUpdate();
-        return i.user.id === message.author.id;
-      };
-
-      msg.awaitMessageComponent({ filter, time: 600000 })
-        .then(async btn => {
-
-          if (btn.customId === "confirmButton") {
-
-            msg.edit({
-              embeds: [yasaklog],
-              components: []
-            });
-
-            message.guild.members.kick(toKick)//, { reason: reason })
-              .catch(err => {
-                if (err) return msg.edit({
-                  embeds: [
-                    {
-                      color: client.settings.embedColors.red,
-                      title: '**»** Bir Hata Oluştu!',
-                      description: `**•** Nedenini ben de bilmiyorum ki.`
-                    }
-                  ],
-                  components: []
-                });
-              });
-
-            var userData = await client.database.fetchUser(message.author.id);
-            userData.statistics.kickedUsers += 1;
-            await userData.save();
-
-          } else if (btn.customId === "denyButton") {
-
-            msg.edit({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  author: {
-                    name: `${toKick.user.username} kullanıcısının tekmeleme işlemi iptal edildi.`,
-                    icon_url: toKick.displayAvatarURL(),
-                  },
-                }
-              ],
-              components: []
-            });
-
+    if (!buttonConfirmationResult.status)
+      return buttonConfirmationResult.reply.edit({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            author: {
+              name: `${toKick.user.username} kullanıcısının tekmeleme işlemi iptal edildi.`,
+              icon_url: toKick.displayAvatarURL(),
+            },
           }
+        ],
+        components: []
+      });
 
-        }).catch(err => {
-
-          return msg.edit({
-            embeds: [
-              {
-                color: client.settings.embedColors.red,
-                author: {
-                  name: `${toKick.username} kullanıcısının tekmeleme işlemi iptal edildi.`,
-                  icon_url: toKick.displayAvatarURL(),
-                },
-              }
-            ],
-            components: []
-          });
-
+    await message.guild.members.kick(toKick)//, { reason: reason })
+      .catch(err => {
+        client.logger.error(err);
+        return buttonConfirmationResult.reply.edit({
+          embeds: [
+            {
+              color: client.settings.embedColors.red,
+              title: '**»** Bir Hata Oluştu!',
+              description: `**•** Nedenini ben de bilmiyorum ki.`
+            }
+          ],
+          components: []
         });
+      });
+
+    await buttonConfirmationResult.reply.edit({
+      embeds: [
+        {
+          color: client.settings.embedColors.green,
+          author: {
+            name: '» Bir üye tekmelendi!',
+            icon_url: client.settings.icon,
+          },
+          description:
+            `**•** **Tekmelenen Üye:** ${toKick} (**${toKick.id}**)\n` +
+            `**•** **Sebep:** ${sebep}\n` +
+            `**•** **Yetkili:** ${message.author}`,
+          thumbnail: {
+            url: toKick.displayAvatarURL(),
+          },
+          timestamp: new Date(),
+          footer: {
+            text: `${message.author.username} tarafından tekmelendi.`,
+            icon_url: message.author.displayAvatarURL(),
+          },
+        }
+      ],
+      components: []
     });
+
+    var userData = await client.database.fetchUser(message.author.id);
+    userData.statistics.kickedUsers += 1;
+    await userData.save();
+
   }
 };
