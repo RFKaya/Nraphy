@@ -106,7 +106,7 @@ module.exports = {
   aliases: ["kelimeoyunu", "wordgame", "word-game", "kelime"],
   category: "Games",
   memberPermissions: ["ManageChannels"],
-  botPermissions: ["SendMessages", "EmbedLinks", "ManageMessages"],
+  botPermissions: ["SendMessages", "EmbedLinks", "ManageMessages", "AddReactions"],
   nsfw: false,
   cooldown: false,
   ownerOnly: false,
@@ -116,7 +116,7 @@ module.exports = {
     const getSubcommand = interaction.options.getSubcommandGroup(false);
     const getCommand = interaction.options.getSubcommand();
 
-    const wordGame = data.guild.wordGame;//db.fetch(`guilds.${interaction.guild.id}.wordGame`);
+    const wordGame = data.guild.wordGame;
 
     if (getCommand == "bilgi") {
 
@@ -331,8 +331,6 @@ module.exports = {
 
       if (getCommand == "istatistikler") {
 
-        //let wordGame = await db.fetch(`guilds.${interaction.guild.id}.wordGame`);
-
         if (!wordGame?.stats)
           return interaction.reply({
             embeds: [
@@ -378,7 +376,7 @@ module.exports = {
 
         //Sıralama
         let wordGameLeaderboard = [];
-        if (wordGame?.stats)
+        if (wordGame.stats)
           for await (let user of Object.keys(wordGame.stats || {})) {
             let statUser = wordGame.stats[user];
             wordGameLeaderboard.push({ ID: user, wordLengths: statUser.wordLength, words: statUser.wordCount, point: ((statUser.wordLength ? statUser.wordCount : 0) / 2 + statUser.wordCount).toFixed(0) });
@@ -389,7 +387,7 @@ module.exports = {
 
         //İstatistikler
         let wordGameStats = { totalWordLengths: 0, totalWords: 0 };
-        if (wordGame?.stats) for await (let user of Object.keys(wordGame.stats || {})) {
+        if (wordGame.stats) for await (let user of Object.keys(wordGame.stats || {})) {
           let statUser = await wordGame.stats[user];
           wordGameStats = {
             totalWordLengths: wordGameStats.totalWordLengths + (statUser.wordLength ? statUser.wordLength : 0),
@@ -437,7 +435,7 @@ module.exports = {
 
     } else if (getCommand == "kapat") {
 
-      if (!wordGame || !wordGame.channel) {
+      if (!wordGame?.channel) {
         return interaction.reply({
           embeds: [
             {

@@ -47,7 +47,7 @@ module.exports = {
           },
         ],
         image: {
-          url: user.displayAvatarURL({ size: 1024 }),
+          url: user.displayAvatarURL(),
         },
       }]
     });

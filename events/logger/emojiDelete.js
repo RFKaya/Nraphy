@@ -10,18 +10,12 @@ module.exports = async (client, emoji) => {
   try {
 
     //Log Executor
-    let logExecutor;
     let fetchedLogs = await emoji.guild.fetchAuditLogs({
       limit: 1,
       type: 62,
     });
-    let deletionLog = fetchedLogs.entries.first();
-    if (!deletionLog) {
-      logExecutor = null;
-    } else {
-      var { executor, target } = deletionLog;
-      logExecutor = executor;
-    }
+    let log = fetchedLogs.entries.first();
+    let logExecutor = log.executor;
 
     let embed = {
       color: client.settings.embedColors.red,
@@ -44,12 +38,12 @@ module.exports = async (client, emoji) => {
       timestamp: new Date(),
       footer: {
         text: `${logExecutor.tag} tarafından silindi.`,
-        icon_url: logExecutor.displayAvatarURL({ size: 1024 }),
+        icon_url: logExecutor.displayAvatarURL(),
       },
     };
 
     //Logging
     require('../functions/logManager')(client, guildData, { embeds: [embed] });
 
-  } catch (err) { client.logger.error(err); };
+  } catch (err) { require('../functions/logManager').errors(client, guildData, err); };
 };

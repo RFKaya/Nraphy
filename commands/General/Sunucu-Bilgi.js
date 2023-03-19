@@ -50,7 +50,7 @@ module.exports = {
           },
           title: `**»** ${interaction.guild.name}`,
           thumbnail: {
-            url: interaction.guild.iconURL(),
+            url: interaction.guild.iconURL({ size: 512 }),
           },
           fields: [
             {
@@ -77,11 +77,14 @@ module.exports = {
             },
             {
               name: '**»** Emojiler',
-              value: `**•** ${emojis}... \n**•** \`${data.prefix}emojiler\``,
+              value:
+                emojis
+                  ? `**•** ${emojis}... \n**•** \`${data.prefix}emojiler\``
+                  : `**•** \`Bu sunucuda hiç emoji yok.\``,
             },
             {
               name: '**»** Uyarılar',
-              value: `**•** ${warns_warns ? `\`${warns_users} Kullanıcı, ${warns_warns} Uyarı\`` : `Bu sunucuda hiçbir kullanıcı uyarılmamış.`}`,
+              value: `**•** \`${warns_warns ? `${warns_users} Kullanıcı, ${warns_warns} Uyarı` : `Bu sunucuda hiçbir kullanıcı uyarılmamış.`}\``,
             },
           ]
         }

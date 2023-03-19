@@ -11,18 +11,14 @@ module.exports = async (client, message) => {
   try {
 
     //Message Executor
-    let messageExecutor;
     let fetchedLogs = await message.guild.fetchAuditLogs({
       limit: 1,
       type: 72,
     });
-    let deletionLog = fetchedLogs.entries.first();
-    if (!deletionLog) {
-      messageExecutor = message.author;
-    } else {
-      var { executor, target } = deletionLog;
-      if (target?.id === message.author.id) messageExecutor = executor; else messageExecutor = message.author;
-    }
+    let log = ((Date.now() - fetchedLogs.entries.first()?.createdAt.getTime()) < 5000)
+      ? fetchedLogs.entries.first()
+      : null;
+    let messageExecutor = log?.executor || message.author;
 
     //Attachments
     let attachments = [];
@@ -37,14 +33,14 @@ module.exports = async (client, message) => {
       color: client.settings.embedColors.red,
       author: {
         name: `${message.author.tag} (ID: ${message.author.id})`,
-        icon_url: message.author.displayAvatarURL({ size: 1024 })
+        icon_url: message.author.displayAvatarURL()
       },
       title: `**»** \`#${message.guild.channels.cache.get(message.channelId).name}\` kanalında bir mesaj silindi!`,
       description: message.content,
       timestamp: new Date(),
       footer: {
         text: `${messageExecutor.tag} tarafından silindi.`,
-        icon_url: messageExecutor.displayAvatarURL({ size: 1024 }),
+        icon_url: messageExecutor.displayAvatarURL(),
       },
     };
     if (attachments.length > 0) embed.fields = [
@@ -57,5 +53,5 @@ module.exports = async (client, message) => {
     //Logging
     require('../functions/logManager')(client, guildData, { embeds: [embed] });
 
-  } catch (err) { client.logger.error(err); };
+  } catch (err) { require('../functions/logManager').errors(client, guildData, err); };
 };

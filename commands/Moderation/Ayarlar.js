@@ -21,20 +21,20 @@ module.exports = {
 
     await interaction.deferReply();
 
-    var caughtProblems = [];
-
     const autoReply = data.guild.autoReply;
     const autoRole = data.guild.autoRole;
     const campaignNews = data.guild.campaignNews;
     const countingGame = data.guild.countingGame;
+    const inviteManager = data.guild.inviteManager;
     const linkBlock = data.guild.linkBlock;
+    const memberCounter = data.guild.memberCounter;
     const upperCaseBlock = data.guild.upperCaseBlock;
     const spamProtection = data.guild.spamProtection;
     const prefix = data.guild.prefix || client.settings.prefix;
     const wordGame = data.guild.wordGame;
-    const inviteManager = db.fetch(`guilds.${interaction.guild.id}.inviteManager`);
-    const memberCounter = db.fetch(`guilds.${interaction.guild.id}.memberCounter`);
     const isimTemizleme = db.fetch(`isim-temizle.${interaction.guild.id}`);
+
+    var caughtProblems = [];
 
     //ButtonRole
     let amountOfButtonsWithError = 0;
@@ -116,7 +116,7 @@ module.exports = {
       fields: [
         {
           name: '**»** Davet Sistemi',
-          value: `**•** ${inviteManager ? `Kanal: ${interaction.guild.channels.cache.get(inviteManager.channel)}` : `\`Kapalı\``}`,
+          value: `**•** ${inviteManager.channel ? `Kanal: ${interaction.guild.channels.cache.get(inviteManager.channel)}` : `\`Kapalı\``}`,
         },
         {
           name: '**»** Oto-Cevap',
@@ -128,7 +128,7 @@ module.exports = {
         },
         {
           name: '**»** Sayaç',
-          value: `**•** ${memberCounter ? `Kanal: ${interaction.guild.channels.cache.get(memberCounter.channel)}\n**•** Hedef: \`${memberCounter.target}\`` : `\`Kapalı\``}`,
+          value: `**•** ${memberCounter.channel ? `Kanal: ${interaction.guild.channels.cache.get(memberCounter.channel)}\n**•** Hedef: \`${memberCounter.target}\`` : `\`Kapalı\``}`,
         },
         {
           name: '**»** Kampanya Haber',
@@ -218,8 +218,7 @@ module.exports = {
 
     const reply = await interaction.fetchReply();
     const filter = i => {
-      i.deferUpdate();
-      return i.user.id === interaction.user.id && i.message.id === reply.id;
+      return i.message.id === reply.id && i.deferUpdate() && i.user.id === interaction.user.id;
     };
 
     const collector = reply.createMessageComponentCollector({ filter, time: 600000 });

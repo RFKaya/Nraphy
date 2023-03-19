@@ -17,10 +17,13 @@ module.exports = {
   memberPermissions: [],
   botPermissions: ["SendMessages", "EmbedLinks", "ReadMessageHistory"],
   nsfw: false,
-  cooldown: 60000,
+  cooldown: 30000,
   ownerOnly: false,
+  voteRequired: true,
 
   async execute(client, interaction, data) {
+
+    return interaction.reply({ content: "Bu komut Nraphy client'ına özeldir. Kendi client'ınız üzerinde kullanmak için düzenleme yapmanız gerekir." });
 
     await interaction.deferReply();
 
@@ -39,6 +42,7 @@ module.exports = {
       let usageStatsPageButton = new ButtonBuilder().setLabel('Kullanım/Sistem İstatistikleri').setCustomId("usageStatsPageButton").setStyle('Primary');
       let healthCheckPageButton = new ButtonBuilder().setLabel('Durum Kontrol').setCustomId("healthCheckPageButton").setStyle('Primary');//.setDisabled(true);
 
+      if (interaction.user.id !== client.settings.owner) usageStatsPageButton.setStyle('Danger');
       if (interaction.user.id !== client.settings.owner) healthCheckPageButton.setStyle('Danger');
 
       //------------------------------Butonlar------------------------------//
@@ -46,7 +50,7 @@ module.exports = {
       //------------------------------Ana Sayfa------------------------------//
 
       //---------------Botun Sahibi---------------//
-      let sahip = client.users.cache.get(client.settings.owner);
+      let sahip = (await client.shard.broadcastEval((c, ownerId) => c.users.cache.get(ownerId), { context: client.settings.owner })).find(res => res);
 
       //---------------Bot Anlık İstatistikleri---------------//
       let results = await Promise.all([
@@ -75,10 +79,11 @@ module.exports = {
       let ortalamaErrorFark = errorCount - ortalamaError;
 
       //---------------Komutlar Hakkında---------------//
+      let clientCommands = client.commands.filter(command => command.category);
       let commandsInteractionSupport = 0;
       let commandsInteractionOnly = 0;
       let commandsVoteRequired = 0;
-      client.commands.forEach(command => {
+      clientCommands.forEach(command => {
         if (command.interaction) commandsInteractionSupport++;
         if (command.interactionOnly) commandsInteractionOnly++;
         if (command.voteRequired) commandsVoteRequired++;
@@ -130,13 +135,13 @@ module.exports = {
           {
             name: `**»** Komutlar Hakkında`,
             value:
-              `**•** Komut Sayısı: \`${client.commands.size}\`\n` +
-              `**•** Slash Destekleme Oranı: \`%${(commandsInteractionSupport / client.commands.size * 100).toFixed()}\`\n` +
-              `**•** Klasik Giriş Destekleme Oranı: \`%${((client.commands.size - commandsInteractionOnly) / client.commands.size * 100).toFixed()}\`\n` +
-              `**•** Her İkisini Destekleme Oranı: \`%${((commandsInteractionSupport - commandsInteractionOnly) / client.commands.size * 100).toFixed()}\`\n\n` +
+              `**•** Komut Sayısı: \`${clientCommands.size}\`\n` +
+              `**•** Slash Destekleme Oranı: \`%${(commandsInteractionSupport / clientCommands.size * 100).toFixed()}\`\n` +
+              `**•** Klasik Giriş Destekleme Oranı: \`%${((clientCommands.size - commandsInteractionOnly) / clientCommands.size * 100).toFixed()}\`\n` +
+              `**•** Her İkisini Destekleme Oranı: \`%${((commandsInteractionSupport - commandsInteractionOnly) / clientCommands.size * 100).toFixed()}\`\n\n` +
 
-              `**•** __Oy (Vote) Zorunlu Komutlar__ \`(%${(commandsVoteRequired / client.commands.size * 100).toFixed()})\`\n` +
-              `**•** \`${client.commands
+              `**•** __Oy (Vote) Zorunlu Komutlar__ \`(%${(commandsVoteRequired / clientCommands.size * 100).toFixed()})\`\n` +
+              `**•** \`${clientCommands
                 .filter(command => command.voteRequired)
                 .map(command => (command.interaction || command).name)
                 .map(command => command.replace(/-/g, " ").toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
@@ -182,8 +187,7 @@ module.exports = {
 
       const reply = await interaction.fetchReply();
       const filter = i => {
-        i.deferUpdate();
-        return i.user.id === interaction.user.id && i.message.id === reply.id;
+        return i.message.id === reply.id && i.deferUpdate() && i.user.id === interaction.user.id;
       };
 
       const collector = reply.createMessageComponentCollector({ filter, time: 900000 });
@@ -213,6 +217,31 @@ module.exports = {
 
           //------------------------------Kullanım/Sistem İstatistikleri------------------------------//
           case "usageStatsPageButton":
+
+            //---------------Owner Only---------------//
+            if (interaction.user.id !== client.settings.owner)
+              return interaction.editReply({
+                embeds: [
+                  {
+                    color: client.settings.embedColors.red,
+                    description: "🔒 Burası Rauqq abime özeldir!"
+                  }
+                ],
+                components: [
+                  {
+                    data: { type: 1 },
+                    components: [destekSunucusuButon, davetBağlantısıButon, sponsorButon]
+                  },
+                  {
+                    data: { type: 1 },
+                    components: [
+                      mainPageButton.setDisabled(false),
+                      usageStatsPageButton.setDisabled(true),
+                      healthCheckPageButton.setDisabled(false)
+                    ]
+                  },
+                ]
+              });
 
             if (usageStatsPageEmbed) return interaction.editReply({
               embeds: [usageStatsPageEmbed],
@@ -259,25 +288,32 @@ module.exports = {
             };
 
             //---------------Sistemlerin Kullanım İstatistikleri---------------//
-            let userDatas = await client.database.users.find().exec();
-            let guildDatas = await client.database.guilds.find().exec();
+            let userDatas = await client.database.users.find().exec(),
+              guildDatas = await client.database.guilds.find().exec();
 
-            let linkBlock_guilds = 0;
-            let buttonRole_messages = 0;
-            let inviteManager_guilds = 0;
-            let gallery_channels = 0;
-            let logger_guilds = 0;
-            let campaignNews_guilds = 0;
-            let autoReply_guilds = 0;
-            let autoRole_guilds = 0;
-            let memberCounter_guilds = 0;
-            let spamProtection_guilds = 0;
-            let upperCaseBlock_guilds = 0;
-            let warns_users = 0;
-            let warns_warns = 0;
-            let wordGame_guilds = 0;
-            let countingGame_guilds = 0;
+            let linkBlock_guilds = 0,
+              buttonRole_messages = 0,
+              inviteManager_guilds = 0,
+              gallery_channels = 0,
+              tempChannels_guilds = 0,
+              logger_guilds = 0,
+              campaignNews_guilds = 0,
+              autoReply_guilds = 0,
+              autoRole_guilds = 0,
+              memberCounter_guilds = 0,
+              spamProtection_guilds = 0,
+              upperCaseBlock_guilds = 0,
+              warns_users = 0,
+              warns_warns = 0,
+              wordGame_guilds = 0,
+              countingGame_guilds = 0;
             for await (let guildData of guildDatas) {
+
+              //Davet-Sistemi
+              if (guildData.inviteManager?.channel && guildData.inviteManager.channel !== "false") inviteManager_guilds++;
+
+              //Sayaç
+              if (guildData.memberCounter?.channel) memberCounter_guilds++;
 
               //Oto-Cevap
               if (guildData.autoReply) autoReply_guilds++;
@@ -296,6 +332,9 @@ module.exports = {
 
               //Gallery
               if (guildData.gallery) gallery_channels++;
+
+              //Geçici Odalar
+              if (guildData.tempChannels) tempChannels_guilds++;
 
               //Log
               if (guildData.logger?.webhook) logger_guilds++;
@@ -328,20 +367,7 @@ module.exports = {
 
             await client.wait(1000);
 
-            let quickDBGuildDatas = await db.fetch(`guilds`);
-            for await (let guildDataId of Object.keys(quickDBGuildDatas)) {
-              let guildData = quickDBGuildDatas[guildDataId];
-
-              //Davet-Sistemi
-              if (guildData.inviteManager?.channel) inviteManager_guilds++;
-
-              //Sayaç
-              if (guildData.memberCounter) memberCounter_guilds++;
-
-            }
             //Çekilişler
-            var availableGiveaways = await client.database.giveaways.find().lean().exec()
-              .then(g => g.filter(giveaway => !giveaway.ended));
             var availableBetaGiveaways = await client.database.betaGiveaways.find().lean().exec()
               .then(g => g.filter(giveaway => !giveaway.isEnded));
 
@@ -367,15 +393,15 @@ module.exports = {
 
             sortable = sortable.sort(function (a, b) {
               return b[1] - a[1];
-            }).slice(0, 15);
+            }).slice(0, 20);
 
             let commandUsesList = await sortable.map(([commandName, uses]) => {
               return `**#${sortable.indexOf(sortable.find(qurve => qurve[0] == commandName)) + 1}** - **${client.capitalizeFirstLetter(commandName, "tr")}** • \`${new Intl.NumberFormat().format(uses >= 10 ? Math.floor(uses / 10) * 10 : uses)}+ Kullanım\``;
             });
 
             //---------------Diğer Bilgiler---------------//
-            let yeniliklerinOkunması = 0;
-            let premiumUsers = 0;
+            let yeniliklerinOkunması = 0,
+              premiumUsers = 0;
             for await (let userData of userDatas) {
               if (userData.readDateOfChanges > client.settings.updateDate) yeniliklerinOkunması++;
               if (userData.NraphyPremium && (userData.NraphyPremium > Date.now())) premiumUsers++;
@@ -390,14 +416,22 @@ module.exports = {
               title: `**»** Kullanım/Sistem İstatistikleri!`,
               fields: [
                 {
+                  name: '**»** Kullanılan Komutlar (14 günlük)',
+                  value:
+                    commandUsesList/*.slice(0, 17)*/.join('\n').substring(0, 950),
+                  //`Toplam Kullanım: \`${clientData.cmd + clientData.interactionCmd} (${clientData.interactionCmd} Interaction)\`\n` +,
+                  inline: true
+                },
+                {
                   name: '**»** Sistemlerin Kullanım İstatistikleri (Anlık)',
                   value:
                     `**•** Bağlantı-Engel: \`${linkBlock_guilds} Sunucu\`\n` +
                     `**•** Buton-Rol: \`${buttonRole_messages} Mesaj\`\n` +
                     `**•** Büyük-Harf-Engel: \`${upperCaseBlock_guilds} Sunucu\`\n` +
-                    `**•** Davet Sistemi: \`${inviteManager_guilds} Sunucu\`\n` +
-                    `**•** Çekilişler: \`${availableGiveaways.length + availableBetaGiveaways.length} (${availableBetaGiveaways.length} Beta) (Devam Eden)\`\n` +
+                    `**•** Davet-Sistemi: \`${inviteManager_guilds} Sunucu\`\n` +
+                    `**•** Çekilişler: \`${availableBetaGiveaways.length} (Devam Eden)\`\n` +
                     `**•** Galeri: \`${gallery_channels} Kanal\`\n` +
+                    `**•** Geçici-Odalar: \`${tempChannels_guilds} Sunucu\`\n` +
                     `**•** İsim-Temizleme: \`${Object.keys(db.fetch(`isim-temizle`)).length} Sunucu\`\n` +
                     `**•** Kampanya-Haber: \`${campaignNews_guilds} Sunucu\`\n` +
                     `**•** Log: \`${logger_guilds} Sunucu\`\n` +
@@ -408,14 +442,6 @@ module.exports = {
                     `**•** Uyarılar: \`${warns_users} Kullanıcı, ${warns_warns} Uyarı\`\n` +
                     `**•** Kelime-Oyunu: \`${wordGame_guilds} Sunucu\`\n` +
                     `**•** Sayı-Saymaca: \`${countingGame_guilds} Sunucu\``,
-                  inline: true
-                },
-                {
-                  name: '**»** Kullanılan Komutlar (14 günlük)',
-                  value:
-                    commandUsesList.slice(0, 15).join('\n').substring(0, 950) + `\n` +
-                    //`Toplam Kullanım: \`${clientData.cmd + clientData.interactionCmd} (${clientData.interactionCmd} Interaction)\`\n` +
-                    `**Not:** İstatistikler anonimdir`,
                   inline: true
                 },
                 {
@@ -566,7 +592,10 @@ module.exports = {
 
       client.logger.error(err);
 
-      await interaction.editReply({ content: "Elimde olmayan sebeplerden dolayı verileri alamadım :/" });
+      await interaction.editReply({
+        content: "Elimde olmayan sebeplerden dolayı verileri alamadım :/",
+        components: []
+      });
 
     }
 

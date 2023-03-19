@@ -48,6 +48,9 @@ module.exports = {
       });
     }
 
+    if (interaction.type == 2)
+      await interaction.deferReply();
+
     member.presence.activities.forEach(activity => {
       if (activity.type === 2 && activity.name === "Spotify") {
 
@@ -99,7 +102,12 @@ module.exports = {
               url: 'attachment://SpotifyCardCreatedByNraphy.png',
             },
           };
-          return interaction.reply({ embeds: [exampleEmbed], files: [file] });
+
+          if (interaction.type == 2)
+            return interaction.editReply({ embeds: [exampleEmbed], files: [file] });
+          else return interaction.reply({ embeds: [exampleEmbed], files: [file] });
+
+
 
           //new Discord.MessageAttachment(Card, "SpotifyCard.png"));
         });

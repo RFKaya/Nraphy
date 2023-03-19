@@ -250,7 +250,7 @@ module.exports = {
         } else {
           if (command.interaction.type && command.interaction.type == 3) {
             commandsGiveaway.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
-          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0]?.type == 2)) {
+          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2)) {
             command.interaction.options.forEach(subCommand => {
               commandsGiveaway.push(`**•** \`/${command.interaction.name + " " + subCommand.name}\` - ${subCommand.description}\n`);
             });
@@ -488,8 +488,8 @@ module.exports = {
               emoji: '🎉',
               //description: 'Çekiliş yapmanıza yarayan komutlar.',
               value: 'giveawayOption',
-            },*/
-            /*{
+            },
+            {
               label: 'NraphyCoin Komutları',
               emoji: '💰',
               //description: 'NraphyCoin ile ilgili tüm komutlar.',

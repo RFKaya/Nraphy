@@ -11,6 +11,12 @@ module.exports = {
         type: 3,
         required: true
       },
+      {
+        name: "dosya",
+        description: "Bildirine bir dosya ekle (İsteğe bağlı).",
+        type: 11,
+        required: false
+      },
     ]
   },
   interactionOnly: true,
@@ -25,6 +31,7 @@ module.exports = {
   async execute(client, interaction, data) {
 
     var öneri = interaction.options.getString("bildiri");
+    var dosya = interaction.options.getAttachment("dosya");
 
     if (öneri.length < 1) {
       return interaction.reply({
@@ -103,6 +110,19 @@ module.exports = {
       },
     };
 
+    if (dosya) {
+      if (dosya.name.endsWith(".jpg") || dosya.name.endsWith(".png"))
+        embed.image = {
+          url: dosya.url,
+        };
+      else embed.fields.push(
+        {
+          name: '**»** Dosya',
+          value: `**•** [${dosya.name}](${dosya.url})`,
+        }
+      );
+    }
+
     webhookClient/*client.guilds.cache.get(guildID).channels.cache.get(channelID)*/.send({ embeds: [embed] });
     //.then(mesaj => { mesaj.react('👍').then(mesaj.react('👎')) });
 
@@ -111,8 +131,11 @@ module.exports = {
         embeds: [
           {
             color: client.settings.embedColors.green,
-            title: '**»** Teşekkürler, Bildirini #Bildiriler Kanalına İlettim!',
-            description: `**•** Bildirine cevabımızı görmek istersen <#716503010301444197> kanalına bakabilirsin. 👻`
+            title: '**»** Bildirin İçin Teşekkürler!',
+            description: `**•** Bildirine cevabımızı görmek istersen <#716503010301444197> kanalına bakabilirsin. 👻`,
+            image: {
+              url: "https://media.discordapp.net/attachments/716503010301444197/1039857246705819658/Screenshot_20221109-140109_Twitter.jpg"
+            }
           }
         ],
         components: []
@@ -123,11 +146,20 @@ module.exports = {
         embeds: [
           {
             color: client.settings.embedColors.green,
-            title: '**»** Teşekkürler, Bildirini Destek Sunucuma İlettim!',
-            description: `**•** Bildirine cevabımızı görmek istersen [Destek Sunucumuza](https://discord.gg/VppTU9h) katılabilirsin. 👻`
+            title: '**»** Bildirin İçin Teşekkürler!',
+            description: `**•** Bildirine cevabımızı görmek istersen [destek sunucumuza](https://discord.gg/VppTU9h) katılabilirsin. 👻`,
+            image: {
+              url: "https://media.discordapp.net/attachments/716503010301444197/1039857246705819658/Screenshot_20221109-140109_Twitter.jpg"
+            }
           }
         ],
-        components: []
+        components: [
+          {
+            data: { type: 1 }, components: [
+              new ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/QvaDHvuYVm`).setStyle('Link')
+            ]
+          },
+        ]
       });
     }
 

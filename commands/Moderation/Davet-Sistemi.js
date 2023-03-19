@@ -1,10 +1,49 @@
-const Discord = require("discord.js");
-const db = require("quick.db");
-
 module.exports = {
-  name: "davet-sistemi",
-  description: "Kimin, kimi davet ettiğini gösteren sistem.",
-  usage: "davet-sistemi",
+  interaction: {
+    name: "davet-sistemi",
+    description: "Kimin, kimi davet ettiğini gösteren sistem.",
+    options: [
+      {
+        name: "bilgi",
+        description: "Davet sistemi hakkında tüm bilgileri sağlar.",
+        type: 1,
+        options: []
+      },
+      {
+        name: "ayarla",
+        description: "Davet sisteminini ayarlar.",
+        type: 1,
+        options: [
+          {
+            name: "kanal",
+            description: "Davet mesajlarının gönderileceği kanalı seç.",
+            type: 7,
+            required: true
+          },
+        ]
+      },
+      {
+        name: "sıfırla",
+        description: "Davet sistemi ayarlarını sıfırlar.",
+        type: 2,
+        options: [
+          {
+            name: "istatistikler",
+            description: "Davet sistemini kapatmadan istatistikleri sıfırlar.",
+            type: 1,
+            options: []
+          },
+        ]
+      },
+      {
+        name: "kapat",
+        description: "Davet sistemini kapatır.",
+        type: 1,
+        options: []
+      }
+    ],
+  },
+  interactionOnly: true,
   aliases: ["gelengiden", 'gelen-giden', 'davetsistemi'],
   category: "Moderation",
   memberPermissions: ["ManageChannels"],
@@ -12,16 +51,15 @@ module.exports = {
   nsfw: false,
   cooldown: false,
   ownerOnly: false,
+  voteRequired: true,
 
-  async execute(client, message, args, data) {
+  async execute(client, interaction, data) {
 
-    let ar = [
-      "sıfırla",
-      "kapat"
-    ];
+    const getCommand = interaction.options.getSubcommand();
 
-    if (!args[0] || !ar.includes(args[0].toLocaleLowerCase('tr-TR')) && !message.mentions.channels.first())
-      return message.channel.send({
+    if (getCommand == "bilgi") {
+
+      return interaction.reply({
         embeds: [
           {
             color: client.settings.embedColors.default,
@@ -44,15 +82,11 @@ module.exports = {
               },
               {
                 name: '**»** Davet Kanalı Nasıl Ayarlanır?',
-                value: `**•** \`${data.prefix}davet-sistemi #Kanal\` yazarak davet sistemini açabilirsiniz.`,
+                value: `**•** \`/davet-sistemi Ayarla\` yazarak davet sistemini açabilirsiniz.`,
               },
               {
                 name: '**»** Davet Kanalı Nasıl Sıfırlanır?',
-                value: `**•** \`${data.prefix}davet-sistemi Sıfırla\` yazarak davet sistemini kapatabilirsiniz.`,
-              },
-              {
-                name: '**»** Nraphy, Hangi İzinlere İhtiyaç Duyuyor?',
-                value: `**•** Nraphy'e **Sunucuyu Yönet** yetkisini, ayarlayacağınız kanala ise **Mesaj Gönder** yetkisini vermeniz yeterli olacaktır.`,
+                value: `**•** \`/davet-sistemi Kapat\` yazarak davet sistemini kapatabilirsiniz.`,
               },
               {
                 name: '**»** Ek Bilgiler',
@@ -68,161 +102,107 @@ module.exports = {
         ]
       });
 
-    /*if (args[0] === "davet-eden" || args[0] === "daveteden") {
-      if (!args[1]) return message.channel.send(new Discord.EmbedBuilder()
-        .setColor(client.settings.embedColors.default)
-        .setDescription('**»** Birisini etiketlemelisin. `n!davet davet-eden @Enes3078`'));
-  
-      let mention = message.mentions.users.first();
-    if(!mention) return message.channel.send(new Discord.EmbedBuilder()
-        .setColor(client.settings.embedColors.default)
-        .setDescription('**»** Etiketlediğin kişiyi bulamıyorum.'));
-    const asd = await db.fetch(`seni_kim_davet_etti?.${mention.id}.${message.guild.id}`)
-    if(!asd) return message.channel.send(new Discord.EmbedBuilder()
-        .setColor(client.settings.embedColors.default)
-        .setDescription('**»** Davet eden kişiyi bulamadım.'));
-  
-      const embed = new Discord.EmbedBuilder()
-        //.setAuthor(client.user.username, client.user.avatarURL)
-        .setAuthor(`${mention.tag}`, mention.avatarURL({dynamic: true}))
-        .setDescription(`${client.users.get(asd)} tarafından davet edildi.`)
-        .setColor(client.settings.embedColors.default)
-        //.setTimestamp()
-        //.setFooter(message.author.username + ` tarafından istendi.`, message.author.avatarURL)
-      message.channel.send(embed);
-    }*/
+    } else if (getCommand == "ayarla") {
 
-    var inviteManager = await db.fetch(`guilds.${message.guild.id}.inviteManager`)
-    var mentionedChannel = message.mentions.channels.first();
+      const { channelChecker } = require("../../modules/Functions");
+      const channel = interaction.options.getChannel("kanal");
 
-    if (args[0].toLocaleLowerCase('tr-TR') == "sıfırla" || args[0].toLocaleLowerCase('tr-TR') == "kapat") {
+      //Kanal Kontrol
+      if (await channelChecker(interaction, channel, ["ViewChannel", "SendMessages", "EmbedLinks"], false)) return;
 
-      if (!inviteManager) {
-        return message.channel.send({
-          embeds: [
-            {
-              color: client.settings.embedColors.red,
-              title: '**»** Davet Sistemi Zaten Kapalı!',
-              description: `**•** Açmak için \`${data.prefix}otomatik-cevap #Kanal\` yazabilirsin.`
-            }
-          ]
-        })
-
-      } else {
-
-        db.delete(`guilds.${message.guild.id}.inviteManager.channel`);
-
-        return message.channel.send({
-          embeds: [
-            {
-              color: client.settings.embedColors.green,
-              title: '**»** Davet Sistemi Başarıyla Kapatıldı!',
-              description: `**•** Tekrar açmak istersen \`${data.prefix}otomatik-cevap #Kanal\` yazabilirsin.`
-            }
-          ]
-        })
-      }
-    }
-
-    if (!mentionedChannel) return message.channel.send({
-      embeds: [
-        {
-          color: client.settings.embedColors.red,
-          title: '**»** Geçerli Bir Kanal Belirtmelisin!',
-          description: `**•** Örnek kullanım: \`${data.prefix}davet-sistemi #gelen-giden\``
-        }
-      ]
-    })
-
-    if (!message.guild.channels.cache.has(mentionedChannel.id)) return message.channel.send({
-      embeds: [
-        {
-          color: client.settings.embedColors.red,
-          title: '**»** Bu Sunucuda Olmayan Bir Kanalı Etiketleyemezsin!',
-          description: `**•** Yapma işte. Yapma. Hoşlanmıyorum diyorum bu şakalardan. Hıh.`
-        }
-      ]
-    })
-
-    if (!mentionedChannel.permissionsFor(message.guild.members.me).has("ViewChannel")) return message.channel.send({
-      embeds: [
-        {
-          color: client.settings.embedColors.red,
-          title: '**»** Etiketlediğin Kanalı Görme Yetkim Bulunmuyor!',
-          description: `**•** İzinlerimi kontrol et ve tekrar dene.`
-        }
-      ]
-    })
-
-    if (!mentionedChannel.permissionsFor(message.guild.members.me).has("SendMessages")) return message.channel.send({
-      embeds: [
-        {
-          color: client.settings.embedColors.red,
-          title: '**»** Etiketlediğin Kanalda **Mesaj Gönder** Yetkim Bulunmuyor!',
-          description: `**•** İzinlerimi kontrol et ve tekrar dene.`
-        }
-      ]
-    })
-
-    if (!mentionedChannel.permissionsFor(message.guild.members.me).has("EmbedLinks")) return message.channel.send({
-      embeds: [
-        {
-          color: client.settings.embedColors.red,
-          title: '**»** Etiketlediğin Kanalda **Bağlantı Yerleştir** Yetkim Bulunmuyor!',
-          description: `**•** İzinlerimi kontrol et ve tekrar dene.`
-        }
-      ]
-    })
-
-    if (inviteManager) {
-      if (inviteManager.channel == mentionedChannel.id) {
-        return message.channel.send({
+      if (data.guild.inviteManager?.channel === channel.id)
+        return interaction.reply({
           embeds: [
             {
               color: client.settings.embedColors.red,
               title: '**»** Davet Kanalı Zaten Aynı!',
-              description: `**•** Sıfırlamak için \`${data.prefix}davet-sistemi Sıfırla\` yazabilirsin.`
+              description: `**•** Sıfırlamak için \`/davet-sistemi Sıfırla\` yazabilirsin.`
             }
           ]
-        })
-        
-      } else {
+        });
 
-        db.set(`guilds.${message.guild.id}.inviteManager`, { channel: mentionedChannel.id, setupInChannel: message.channel.id })
+      if (data.guild.inviteManager?.channel && data.guild.inviteManager.channel !== channel.id) {
 
-        return message.channel.send({
+        data.guild.inviteManager.channel = channel.id;
+        data.guild.inviteManager.setupChannel = interaction.channel.id;
+        await data.guild.save();
+
+        return interaction.reply({
           embeds: [
             {
               color: client.settings.embedColors.green,
               title: '**»** Davet Kanalı Değiştirildi!',
-              description: `**•** Kanal, ${mentionedChannel} olarak değiştirildi.`
+              description: `**•** Kanal ${channel} olarak değiştirildi.`
             }
           ]
-        })
+        });
 
       }
-    }
 
-    db.set(`guilds.${message.guild.id}.inviteManager`, { channel: mentionedChannel.id, setupInChannel: message.channel.id })
+      data.guild.inviteManager.channel = channel.id;
+      data.guild.inviteManager.setupChannel = interaction.channel.id;
+      await data.guild.save();
 
-    message.reply({
-      embeds: [
-        {
-          color: client.settings.embedColors.green,
-          title: '**»** Davet Sistemi Başarıyla Ayarlandı!',
-          author: {
-            name: `${client.user.username} • Davet Sistemi`,
-            icon_url: client.settings.icon,
-          },
-          fields: [
-            {
-              name: '**»** Kanal',
-              value: `**•** ${mentionedChannel}`,
+      return interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.green,
+            title: '**»** Davet Sistemi Başarıyla Ayarlandı!',
+            author: {
+              name: `${client.user.username} • Davet Sistemi`,
+              icon_url: client.settings.icon,
             },
-          ],
-        }
-      ]
-    });
+            fields: [
+              {
+                name: '**»** Kanal',
+                value: `**•** ${channel}`,
+              },
+            ],
+          }
+        ]
+      });
+
+    } else if (getCommand == "sıfırla") {
+
+      return interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            title: '**»** Sıfırlama Şu Anlık Mevcut Değil!',
+            description: `**•** Çok yakında güncelleme ile sıfırlama da gelecektir!`
+          }
+        ]
+      });
+
+    } else if (getCommand == "kapat") {
+
+      if (!data.guild.inviteManager?.channel) {
+        return interaction.reply({
+          embeds: [
+            {
+              color: client.settings.embedColors.red,
+              title: '**»** Davet Sistemi Zaten Kapalı!',
+              description: `**•** Açmak için \`/davet-sistemi Ayarla\` yazabilirsin.`
+            }
+          ]
+        });
+
+      }
+
+      data.guild.inviteManager = undefined;
+      await data.guild.save();
+
+      return interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.green,
+            title: '**»** Davet Sistemi Başarıyla Kapatıldı!',
+            description: `**•** Tekrar açmak istersen \`/davet-sistemi Ayarla\` yazabilirsin.`
+          }
+        ]
+      });
+
+    }
 
   }
 };

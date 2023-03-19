@@ -70,7 +70,7 @@ module.exports = {
         }]
       });
 
-    let targetTime = Math.floor(queue.currentTime) + saniye;
+    let targetTime = Math.floor(queue.currentTime) + Math.floor(saniye);
 
     await queue.seek(targetTime);
 

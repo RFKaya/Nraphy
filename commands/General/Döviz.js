@@ -16,7 +16,7 @@ module.exports = {
 
   async execute(client, message, args, data) {
 
-    return message.reply({ content: "Hata! TCMB API kaynaklı bir problemimiz mevcut. İlgili sorun giderilene kadar Döviz sistemleri bakımdadır.\n\nTahmini tarih: **Şubat, 2023**" });
+    return message.reply({ content: "Hata! TCMB API kaynaklı bir problemimiz mevcut. İlgili sorun giderilene kadar Döviz sistemleri bakımdadır.\n\nTahmini tarih: **Nisan, 2023**" });
 
     const birimler = ["USD", "EUR", "AUD", "DKK", "GBP", "CHF", "SEK", "CAD", "KWD", "NOK", "JPY", "SAR", "BGN", "RON", "RUB", "IRR", "CNY", "PKR", "QAR"];
 

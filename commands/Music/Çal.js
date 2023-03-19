@@ -13,10 +13,10 @@ module.exports = {
       },
     ]
   },
-  aliases: ["play", "p", "oynat", "ç", "oynat"],
+  aliases: ["play", "p", "oynat", "ç", "oynat", "şarkı"],
   category: "Music",
   memberPermissions: [],
-  botPermissions: ["SendMessages", "EmbedLinks"],
+  botPermissions: ["SendMessages", "EmbedLinks", "AddReactions"],
   nsfw: false,
   cooldown: 3000,
   ownerOnly: false,
@@ -41,9 +41,17 @@ module.exports = {
 
     const music = interaction.type == 2 ? interaction.options.getString("şarkı") : args.join(' ');
 
+    if (!music)
+      return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          description: `**»** Bir şarkı adı/bağlantısı girmelisin! \`/çal Faded\``
+        }]
+      });
+
     if (interaction.type == 2)
       await interaction.deferReply();
-    else await interaction.react('✅');
+    else await interaction.react('✅').catch(e => { });
 
     try {
 
@@ -58,46 +66,7 @@ module.exports = {
 
     } catch (error) {
 
-      if (error.errorCode === "NON_NSFW") {
-
-        let messageContent = {
-          embeds: [{
-            color: client.settings.embedColors.red,
-            description: "**»** Yaş kısıtlamalı içerikleri maalesef oynatamıyoruz :/"
-          }]
-        };
-
-        if (interaction.type == 2)
-          return interaction.editReply(messageContent);
-        else return interaction.reply(messageContent);
-
-      } else {
-
-        client.logger.error(error);
-
-        let messageContent = {
-          embeds: [
-            {
-              color: client.settings.embedColors.red,
-              title: "**»** Bir Hata Oluştu!",
-              description:
-                `**•** Hatayla ilgili geliştirici ekip bilgilendirildi.\n` +
-                `**•** En kısa sürede çözülecektir`
-            }
-          ],
-          components: [
-            {
-              type: 1, components: [
-                new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link')
-              ]
-            },
-          ]
-        };
-        if (interaction.type == 2)
-          return interaction.editReply(messageContent);
-        else return interaction.reply(messageContent);
-
-      }
+      require('../../events/distube/functions/errorHandler.js')(client, error, interaction.channel, interaction);
 
     }
 

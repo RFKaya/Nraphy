@@ -1,4 +1,3 @@
-const { IntegrationExpireBehavior } = require("discord.js");
 const mongoose = require("mongoose");
 
 const schema = new mongoose.Schema({
@@ -8,7 +7,9 @@ const schema = new mongoose.Schema({
 
   //Nraphy Verileri
   prefix: { type: String, default: "n!" },
-  NraphyBoost: Date,
+  NraphyBoost: {
+    users: Array
+  },
   NraphyLogs: {
     type: [Object]
   },
@@ -31,7 +32,7 @@ const schema = new mongoose.Schema({
   inviteManager: {
     channel: String,
     setupChannel: String,
-    invites: [String]
+    invites: Object
   },
 
   linkBlock: {

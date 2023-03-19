@@ -17,8 +17,8 @@ module.exports = async (client, messages) => {
       limit: 1,
       type: 73,
     });
-    let deletionLog = fetchedLogs.entries.first();
-    if (deletionLog) messageExecutor = deletionLog.executor;
+    let log = fetchedLogs.entries.first();
+    if (log) messageExecutor = log.executor;
 
     //Mesaj içerikleri
     let messageContents = [];
@@ -42,7 +42,7 @@ module.exports = async (client, messages) => {
         timestamp: new Date(),
         footer: {
           text: `${messageExecutor ? `${messageExecutor.tag} tarafından silindi. • Sayfa ${page + 1}/${maxPage}` : `Silen kullanıcı bulunamadı.`}`,
-          icon_url: messageExecutor ? messageExecutor.displayAvatarURL({ size: 1024 }) : client.settings.icon,
+          icon_url: messageExecutor ? messageExecutor.displayAvatarURL() : client.settings.icon,
         },
       });
     }
@@ -50,5 +50,5 @@ module.exports = async (client, messages) => {
     //Logging
     require('../functions/logManager')(client, guildData, { embeds: embeds });
 
-  } catch (err) { client.logger.error(err); };
+  } catch (err) { require('../functions/logManager').errors(client, guildData, err); };
 };

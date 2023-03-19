@@ -109,7 +109,7 @@ module.exports = {
             ],
           }
         ]
-      })
+      });
 
     } else if (getSubcommand == "ayarla") {
 
@@ -122,7 +122,7 @@ module.exports = {
 
         data.guild.autoRole.role = getRole.id;
         data.guild.markModified('autoRole.role');
-        await data.guild.save()
+        await data.guild.save();
 
         return interaction.reply({
           embeds: [
@@ -160,9 +160,9 @@ module.exports = {
                 description: `**•** Rolü belirlemek için \`/oto-rol Ayarla Rol\` yazabilirsin.`
               }
             ]
-          })
+          });
 
-        if (!getChannel.type == 0)
+        if (getChannel.type !== 0)
           return interaction.reply({
             embeds: [
               {
@@ -195,7 +195,7 @@ module.exports = {
                 },
               ]
             }]
-          })
+          });
         }
 
         if (getChannel.id == data.guild.autoRole.channel)
@@ -207,34 +207,34 @@ module.exports = {
                 description: `**•** Sıfırlamak için \`/oto-rol Sıfırla Kanal\` yazabilirsin.`
               }
             ]
-          })
-
-          data.guild.autoRole.channel = getChannel.id;
-          data.guild.markModified('autoRole.channel');
-          await data.guild.save()
-
-          return interaction.reply({
-            embeds: [
-              {
-                color: client.settings.embedColors.green,
-                author: {
-                  name: `${client.user.username} • Oto-Rol Sistemi`,
-                  icon_url: client.settings.icon,
-                },
-                title: '**»** Oto-Rol Kanalı Başarıyla Ayarlandı!',
-                fields: [
-                  {
-                    name: '**»** Rol',
-                    value: `**•** ${interaction.guild.roles.cache.get(data.guild.autoRole.role)}`,
-                  },
-                  {
-                    name: '**»** Kanal',
-                    value: `**•** ${getChannel}`,
-                  },
-                ],
-              }
-            ]
           });
+
+        data.guild.autoRole.channel = getChannel.id;
+        data.guild.markModified('autoRole.channel');
+        await data.guild.save();
+
+        return interaction.reply({
+          embeds: [
+            {
+              color: client.settings.embedColors.green,
+              author: {
+                name: `${client.user.username} • Oto-Rol Sistemi`,
+                icon_url: client.settings.icon,
+              },
+              title: '**»** Oto-Rol Kanalı Başarıyla Ayarlandı!',
+              fields: [
+                {
+                  name: '**»** Rol',
+                  value: `**•** ${interaction.guild.roles.cache.get(data.guild.autoRole.role)}`,
+                },
+                {
+                  name: '**»** Kanal',
+                  value: `**•** ${getChannel}`,
+                },
+              ],
+            }
+          ]
+        });
 
       }
 
@@ -253,11 +253,11 @@ module.exports = {
                 description: `**•** Her şeyi anladım ama kapalı sistemi kapatmaya çalışanları anlayamadım.`
               }
             ]
-          })
+          });
 
         data.guild.autoRole = { role: null, channel: null, setupChannel: null };
         data.guild.markModified('autoRole');
-        await data.guild.save()
+        await data.guild.save();
 
         return interaction.reply({
           embeds: [
@@ -267,7 +267,7 @@ module.exports = {
               description: `**•** Artık sunucuya yeni katılan üyelere rol vermeyeceğim.`
             }
           ]
-        })
+        });
 
       } else if (getOperation == "kanal") {
 
@@ -280,11 +280,11 @@ module.exports = {
                 description: `**•** Yahu yok. Yok arkadaş yok! Belirlememiş kimse.`
               }
             ]
-          })
+          });
 
         data.guild.autoRole.channel = null;
         data.guild.markModified('autoRole.channel');
-        await data.guild.save()
+        await data.guild.save();
 
         return interaction.reply({
           embeds: [
@@ -294,7 +294,7 @@ module.exports = {
               description: `**•** Artık rol verdiğimde kanala mesaj atmayacağım.`
             }
           ]
-        })
+        });
 
       }
 

@@ -52,7 +52,7 @@ module.exports = async (client, message, spamProtection) => {
                       color: client.settings.embedColors.red,
                       author: {
                         name: `${message.author.username}, spam yapmayı kes!`,
-                        icon_url: message.author.displayAvatarURL({ size: 1024 }),
+                        icon_url: message.author.displayAvatarURL(),
                       },
                       footer: {
                         text: 'Spam yapmaya devam edersen susturulacaksın.',
@@ -83,7 +83,7 @@ module.exports = async (client, message, spamProtection) => {
                       color: client.settings.embedColors.red,
                       author: {
                         name: `${message.author.username}, spam yaptığın için susturuldun! 🛡️`,
-                        icon_url: message.author.displayAvatarURL({ size: 1024 }),
+                        icon_url: message.author.displayAvatarURL(),
                       }
                     }
                   ]

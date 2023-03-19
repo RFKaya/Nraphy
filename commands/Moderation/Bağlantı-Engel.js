@@ -155,7 +155,7 @@ module.exports = {
 
     const getSubcommand = interaction.options.getSubcommandGroup(false);
     const getCommand = interaction.options.getSubcommand();
-    const linkBlock = data.guild.linkBlock;//db.fetch(`guilds.${interaction.guild.id}.linkBlock`)
+    const linkBlock = data.guild.linkBlock;
 
     //------------------------------Bilgi------------------------------//
     if (getCommand == "bilgi") {

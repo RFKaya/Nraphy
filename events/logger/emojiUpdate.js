@@ -10,18 +10,12 @@ module.exports = async (client, oldEmoji, newEmoji) => {
   try {
 
     //Log Executor
-    let logExecutor;
     let fetchedLogs = await newEmoji.guild.fetchAuditLogs({
       limit: 1,
       type: 61,
     });
-    let deletionLog = fetchedLogs.entries.first();
-    if (!deletionLog) {
-      logExecutor = null;
-    } else {
-      var { executor, target } = deletionLog;
-      logExecutor = executor;
-    }
+    let log = fetchedLogs.entries.first();
+    let logExecutor = log.executor;
 
     let embed = {
       color: client.settings.embedColors.blue,
@@ -49,12 +43,12 @@ module.exports = async (client, oldEmoji, newEmoji) => {
       timestamp: new Date(),
       footer: {
         text: `${logExecutor.tag} tarafından düzenlendi.`,
-        icon_url: logExecutor.displayAvatarURL({ size: 1024 }),
+        icon_url: logExecutor.displayAvatarURL(),
       },
     };
 
     //Logging
     require('../functions/logManager')(client, guildData, { embeds: [embed] });
 
-  } catch (err) { client.logger.error(err); };
+  } catch (err) { require('../functions/logManager').errors(client, guildData, err); };
 };

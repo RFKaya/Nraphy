@@ -5,7 +5,7 @@ module.exports = {
     options: [
       {
         name: "ses",
-        description: "Müziğin sesini ayarlamanıza yarar. 1-100 arası bir seviye gir.",
+        description: "1-200 arası bir seviye gir. (%100'den fazlası ses kalitesini düşürebilir)",
         type: 4,
         required: true
       },
@@ -68,7 +68,7 @@ module.exports = {
         }]
       });
 
-    await queue.setVolume(ses);
+    await queue.setVolume(parseInt(ses));
 
     interaction.reply({
       embeds: [{

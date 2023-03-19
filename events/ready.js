@@ -14,7 +14,10 @@ module.exports = async (client) => {
 
     //------------------------------Mongoose------------------------------//
 
-    await require('../Mongoose/Mongoose').prepareMongoose(client);
+    //Database Queue
+    setInterval(() => {
+      require('../Mongoose/Mongoose').pushDatabaseQueue(client);
+    }, 45000);
 
     //------------------------------Mongoose------------------------------//
 
@@ -35,6 +38,8 @@ module.exports = async (client) => {
 
     setInterval(async function () {
 
+      client.logger.client(`Nraphy Client by RFKaya - [https://github.com/RFKaya/Nraphy]`);
+
       //Otomatik Yeniden Başlatma (Bağlantı Problemine Göre)
       if (
         !client.ws.shards.values().next().value.sessionId ||
@@ -42,16 +47,16 @@ module.exports = async (client) => {
         client.ws.shards.values().next().value.sequence === null
       ) {
         client.logger.warn("SHARD ÜZERİNDE BAĞLANTI HATASI OLUŞTUĞU İÇİN YENİDEN BAŞLATILIYOR!");
-        process.exit();
+        process.exit(0);
       }
 
       //Otomatik Yeniden Başlatma (RAM Kullanımına Göre)
       let dateHours = new Date().getHours();
       if (dateHours >= 4 && dateHours <= 6
-        && process.memoryUsage().rss > 2500000000
+        && process.memoryUsage().rss > (2048 * (1024 ** 2))
         && (!client.voice.adapters.size || !client.distube.queues.size)
       ) {
-        await client.logger.warn(`SHARD BAŞINA RAM KULLANIMI 2,5 GB'ı AŞTIĞI İÇİN SHARD YENİDEN BAŞLATILIYOR!\n\n` +
+        await client.logger.warn(`SHARD BAŞINA RAM KULLANIMI 2 GB'ı AŞTIĞI İÇİN SHARD YENİDEN BAŞLATILIYOR!\n\n` +
           `client.voice.adapters.size: ${client.voice.adapters.size}\n` +
           `client.distube.queues.size: ${client.distube.queues.size}`
         );
@@ -68,7 +73,7 @@ module.exports = async (client) => {
         //status: "online", //online, idle, dnd
       });//.catch(console.error);
 
-    }, 600000);
+    }, 6000);
 
     setTimeout(function () {
       if (!client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)) {
@@ -90,24 +95,27 @@ module.exports = async (client) => {
 
     //------------------------------Davet Sistemi------------------------------//
 
-    client.guilds.cache.forEach(guild => {
+    setTimeout(function () {
+      client.guilds.cache.forEach(function (guild, index) {
+        setTimeout(async function () {
 
-      //Davet Sistemi açıksa && "ManageGuild" yetkim varsa
-      const inviteManager = db.fetch(`guilds.${guild.id}.inviteManager`);
-      if (inviteManager && inviteManager.channel && guild.members.cache.get(client.user.id).permissions.has("ManageGuild")) {
+          //Davet Sistemi açıksa && "ManageGuild" yetkim varsa
+          const guildData = await client.database.fetchGuild(guild.id);
+          if (guildData.inviteManager?.channel && guild.members.cache.get(client.user.id).permissions.has("ManageGuild")) {
 
-        guild.invites.fetch().then(invites => {
-          const codeUses = new Map();
-          invites.each(inv => codeUses.set(inv.code, inv.uses));
-          client.guildInvites.set(guild.id, codeUses);
+            guild.invites.fetch().then(invites => {
+              const codeUses = new Map();
+              invites.each(inv => codeUses.set(inv.code, inv.uses));
+              client.guildInvites.set(guild.id, codeUses);
 
-        }).catch(err => {
-          client.logger.error("OnReady Error:", err);
-        });
+            }).catch(err => {
+              client.logger.error("OnReady Error:", err);
+            });
 
-      }
-
-    });
+          }
+        }, Math.random() * 45000);
+      });
+    }, 45000);
 
     //------------------------------Davet Sistemi------------------------------//
 

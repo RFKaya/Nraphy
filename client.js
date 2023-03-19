@@ -1,7 +1,6 @@
 const { Client, GatewayIntentBits, Options } = require('discord.js');
 const Discord = require('discord.js');
 const fs = require("fs");
-const db = require("quick.db");
 const util = require("util");
 const readdir = util.promisify(fs.readdir);
 
@@ -60,8 +59,8 @@ client.warnsMap = new Map();
 
 client.settings = {
   presences: [
-    "🙏 /komutlar • Geçmiş olsun",
-    "🙏 Geçmiş olsun Türkiye • /komutlar"
+    "📌 /komutlar",
+    "📂 /log"
   ],
   prefix: "n!",
   owner: "700385307077509180",
@@ -72,6 +71,7 @@ client.settings = {
     red: 0xE74C3C,
     yellow: 0xFEE75C,
     blue: 0x3498DB,
+    darkGrey: 0x979C9F
   },
   language: "tr",
   invite: "https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code"
@@ -272,22 +272,11 @@ client.distube
     if (playlist.metadata.commandMessage.type === 2)
       playlist.metadata.commandMessage.editReply({ embeds: [embed] });
     else queue.textChannel.send({ embeds: [embed] });
-  }
+  })
+  .on('error', (channel, error) => {
 
-  )
-  .on('error', (channel, e) => {
-    console.log(channel);
-    console.log(e);
-    client.logger.error(e);
-    channel?.send({
-      embeds: [
-        {
-          color: client.settings.embedColors.red,
-          title: '**»** Bir Hata Oluştu!',
-          description: `**•** Sorunu geliştirici ekibe ilettim, en kısa sürede çözülecektir.`
-        }
-      ]
-    });
+    require('./events/distube/functions/errorHandler.js')(client, error, channel);
+
   })
   .on('empty', queue => {
     queue.textChannel.send({
@@ -343,9 +332,9 @@ for (const file of eventFiles) {
 
 client.on('inviteCreate', async invite => {
 
-  const inviteManager = db.fetch(`guilds.${invite.guild.id}.inviteManager`);
+  const guildData = await client.database.fetchGuild(invite.guild.id);
 
-  if (inviteManager?.channel && invite.guild.members.cache.get(client.user.id).permissions.has("ManageGuild")) {
+  if (guildData.inviteManager?.channel && invite.guild.members.cache.get(client.user.id).permissions.has("ManageGuild")) {
 
     const invites = await invite.guild.invites.fetch();
     const codeUses = new Map();

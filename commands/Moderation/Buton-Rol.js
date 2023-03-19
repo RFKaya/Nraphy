@@ -183,7 +183,7 @@ module.exports = {
       const getTitle = interaction.options.getString("başlık");
       const getChannel = interaction.options.getChannel("kanal") || interaction.channel;
 
-      if (!getChannel.type == 0)
+      if (getChannel.type !== 0)
         return interaction.reply({
           embeds: [
             {
