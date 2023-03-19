@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
 const { ButtonBuilder } = require('discord.js');
-//const db = require('quick.db');
 
 module.exports = {
   interaction: {
@@ -395,7 +394,7 @@ module.exports = {
           };
         }
         let longestWordUser;
-        if (wordGame?.longestWord) await client.users.fetch(wordGame.longestWord.author).then(async user => { longestWordUser = user; });
+        if (wordGame.longestWord) await client.users.fetch(wordGame.longestWord.author).then(async user => { longestWordUser = user; });
 
         //TXT Oluşturma
         let attachment = new Discord.AttachmentBuilder(
