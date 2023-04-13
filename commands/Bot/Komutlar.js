@@ -433,7 +433,7 @@ module.exports = {
         `🤖 • Botla İlgili Komutlar (**${commandsBot.length}**)\n\n` +
 
         `Hata bildirimi veya öneriler için: \`/bildiri\`\n` +
-        `**[BİLGİ!]** Nraphy bot, Türkiye'deki en iyi bottur!`
+        `Bu bot [Nraphy Açık Kaynak Projesi](https://discord.gg/VppTU9h) ile oluşturulmuştur.`
         /*`${(userData.readDateOfChanges < client.settings.updateDate) ?
           `✉️ Okunmamış yenilikler mevcut! \`/yenilikler\` yazarak okuyabilirsin!` :
           `Gelişmelerden haberdar olmak için destek sunucumuza katılabilirsiniz!`}`*/,
