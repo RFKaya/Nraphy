@@ -51,10 +51,9 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
     * **topggToken:** Top.gg oy kontrolü vb. için kullanılır. Doldurulması zorunlu değildir. <br>
     * **mongooseToken:** [MongoDB Cloud](https://cloud.mongodb.com) üzerinden edinebilirsin.
 		> Nasıl edineceği bilmiyorsan [MongoDB Atlas connection bağlantısı alma](https://medium.com/@thearkxd/node-js-projeleri-i%C3%A7in-mongodb-atlas-connection-linki-alma-5d955bbe5ae6) rehberine göz atabilirsin. 
-	*(Medium'daki **@thearkxd** kullanıcısına aittir. Bağlantım yoktur.)*
+	*(Medium'daki **@thearkxd** kullanıcısına aittir. Kendisiyle bağlantım yoktur.)*
 2. `client.js` dosyasındaki `client.settings` objesinin verilerini botuna göre özelleştir.
-3. Konsola `npm i` çekerek node modülleri kur.
-4. Dosyaların bulunduğu dizine `Logs` adında boş bir klasör oluştur. <br>
+3. Konsola `npm i` çekerek node modülleri kur. <br>
 
 > 🎉 Tebrikler, kurulumu tamamladın! Botu çalıştırmak için konsola `npm start` yazabilirsin.
 
