@@ -53,9 +53,10 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
 		> Nasıl edineceği bilmiyorsan [MongoDB Atlas connection bağlantısı alma](https://medium.com/@thearkxd/node-js-projeleri-i%C3%A7in-mongodb-atlas-connection-linki-alma-5d955bbe5ae6) rehberine göz atabilirsin. 
 	*(Medium'daki **@thearkxd** kullanıcısına aittir. Kendisiyle bağlantım yoktur.)*
 2. `client.js` dosyasındaki `client.settings` objesinin verilerini botuna göre özelleştir.
-3. Konsola `npm i` çekerek node modülleri kur. <br>
+3. Eğer yoksa botun dizinine `logs` adında bir klasör oluştur.
+4. Konsola `npm i` çekerek node modülleri kur. <br>
 
-> 🎉 Tebrikler, kurulumu tamamladın! Botu çalıştırmak için konsola `npm start` yazabilirsin.
+> 🎉 Tebrikler, kurulumu tamamladın! Botu çalıştırmak istediğinde konsola `npm start` yazabilirsin.
 
 ## 🔔 Güncelleme Desteği
 Eğer bu yazıyı okuyorsanız güncelleme desteği devam etmektedir. Güncellemeyi keseceksem de tam burada bildiririm. Her güncelleme için birkaç ayda bir yoklamakta fayda var. Projeyi yıldızlayarak katkıda bulunabilirsiniz!
