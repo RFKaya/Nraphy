@@ -54,7 +54,7 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
 	*(Medium'daki **@thearkxd** kullanıcısına aittir. Kendisiyle bağlantım yoktur.)*
 2. `client.js` dosyasındaki `client.settings` objesinin verilerini botuna göre özelleştir.
 3. Eğer yoksa botun dizinine `logs` adında bir klasör oluştur.
-4. Konsola `npm i` çekerek node modülleri kur. <br>
+4. Konsola `npm i` çekerek node modüllerini kur. <br>
 
 > 🎉 Tebrikler, kurulumu tamamladın! Botu çalıştırmak istediğinde konsola `npm start` yazabilirsin.
 
