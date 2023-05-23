@@ -43,14 +43,14 @@ module.exports = async (client) => {
       client.logger.client(`Nraphy Client by RFKaya - [https://github.com/RFKaya/Nraphy]`);
 
       //Otomatik Yeniden Başlatma (Bağlantı Problemine Göre)
-      if (
+      /*if (
         !client.ws.shards.values().next().value.sessionId ||
         client.ws.shards.values().next().value.sequence === -1 ||
         client.ws.shards.values().next().value.sequence === null
       ) {
         client.logger.warn("SHARD ÜZERİNDE BAĞLANTI HATASI OLUŞTUĞU İÇİN YENİDEN BAŞLATILIYOR!");
         process.exit(0);
-      }
+      }*/
 
       //Otomatik Yeniden Başlatma (RAM Kullanımına Göre)
       let dateHours = new Date().getHours();
