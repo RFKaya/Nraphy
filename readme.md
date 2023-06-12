@@ -4,7 +4,7 @@
 </p>
 
 # Nraphy - Discord Bot Altyapısı (Discord js v14)
-Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte. Güncel Discord.js sürümünü (v14) kullanmaktadır ve slash komutları desteklemektedir. Botu kurmakla falan uğraşmak istemezseniz ve güncel halini kullanmak isterseniz [Davet bağlantısı](https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code) ile nraphyi davet edebilirsiniz.
+Nraphy botunu kendi clientinizle kullanmak isterseniz diye kaynak kodları işte. Güncel Discord.js sürümünü (v14) kullanmaktadır ve slash komutları desteklemektedir. Botu kurmakla falan uğraşmak istemezseniz ve güncel halini kullanmak isterseniz [Davet bağlantısı](https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code) ile Nraphy'i davet edebilirsiniz.
 
 ## ❤️‍🔥 Özellikler
 Bu projede tüm Nraphy kodları açık olarak paylaşılmamıştır. Botun güncel hâli saklıdır, güncel hâli ileri zamanlarda paylaşılacaktır, takipte kalabilirsin. Bu projede, Nraphy'de bulunan sistemlerle ilgili durumlar aşağıdaki gibidir:
@@ -14,20 +14,14 @@ Bu projede tüm Nraphy kodları açık olarak paylaşılmamıştır. Botun günc
 > ✅ Büyük Harf Engel <br>
 > ✅ Davet Sistemi <br>
 > ✅ Galeri <br>
-> ✅ İsim Temizleme <br>
 > ✅ Log <br>
 > ✅ Müzik Sistemi <br>
 > ✅ Oto Rol <br>
 > ✅ Sayaç <br>
 > ✅ Spam Koruması <br>
-> ❌ Çekiliş/Drop <br>
-> ❌ Oto Cevap <br>
-> ❌ Sunucu Kur <br>
-> ❌ Uyarı <br>
 
 ### Oyun Sistemleri
 > ✅ Kelime Oyunu <br>
-> ❌ Sayı Saymaca <br>
 
 ### Komutlar
 > ✅ Müzik Komutları <br>
@@ -35,9 +29,7 @@ Bu projede tüm Nraphy kodları açık olarak paylaşılmamıştır. Botun günc
 > ✅ Yetkili Komutları <br>
 > ✅ Eğlence Komutları <br>
 > ✅ Genel Komutlar <br>
-> 🟠 Oyunlar <br>
-> ❌ Çekiliş <br>
-> ❌ NraphyCoin <br>
+> ✅ Oyunlar <br>
 
 ### Diğer
 > ✅ Kendi slash komutlarınızı ekleyip kullanabilmen için optimize bir altyapı <br>
@@ -52,6 +44,7 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
     * **mongooseToken:** [MongoDB Cloud](https://cloud.mongodb.com) üzerinden edinebilirsin.
 		> Nasıl edineceği bilmiyorsan [MongoDB Atlas connection bağlantısı alma](https://medium.com/@thearkxd/node-js-projeleri-i%C3%A7in-mongodb-atlas-connection-linki-alma-5d955bbe5ae6) rehberine göz atabilirsin. 
 	*(Medium'daki **@thearkxd** kullanıcısına aittir. Kendisiyle bağlantım yoktur.)*
+    * **clientLogsWebhookURL:** Client Log'ları için Webhook bağlantısı. Doldurulması tavsiye edilir. <br>
 2. `client.js` dosyasındaki `client.settings` objesinin verilerini botuna göre özelleştir.
 3. Eğer yoksa botun dizinine `logs` adında bir klasör oluştur.
 4. Konsola `npm i` çekerek node modüllerini kur. <br>
@@ -62,7 +55,7 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
 Eğer bu yazıyı okuyorsanız güncelleme desteği devam etmektedir. Güncellemeyi keseceksem de tam burada bildiririm. Her güncelleme için birkaç ayda bir yoklamakta fayda var. Projeyi yıldızlayarak katkıda bulunabilirsiniz!
 
 ## 💞 Yardıma İhtiyacın Olursa
-[Nraphy Discord Sunucusu](https://discord.gg/JhasTMZr2A)'na katılabilir ve destek alabilirsin. Baştan uyarayım, emeksizce ve bilgisizce bot sahibi olma peşindekiler lütfen projeyi terk etsinler.
+[Nraphy Discord Sunucusu](https://discord.gg/JhasTMZr2A)'na katılabilir ve destek alabilirsin. Baştan uyarayım; emeksizce, bilgisizce bot sahibi olma peşindekiler ve bu metni baştan sona okumadan yardım isteyecekler lütfen projeyi terk etsinler.
 
 ## ❤️ Ayrıca Teşekkürler
 Aşağıdaki kişilere, projelere ve aklıma gelmeyen daha nice kaynağa, emeklerinden dolayı teşekkürlerimi sunuyorum. (Aklıma geldikçe dahasını da ekleyeceğim)
