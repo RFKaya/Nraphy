@@ -59,7 +59,7 @@ module.exports = async (client, member, autoRole, guildData) => {
       guildData.markModified('autoRole.channel');
       await guildData.save();
 
-      member.guild.channels.cache.get(autoRole.setupChannel).send({
+      return member.guild.channels.cache.get(autoRole.setupChannel)?.send({
         embeds: [
           {
             color: client.settings.embedColors.red,

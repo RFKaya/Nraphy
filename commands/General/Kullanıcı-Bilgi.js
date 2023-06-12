@@ -23,43 +23,13 @@ module.exports = {
 
   async execute(client, interaction, data, args) {
 
-    if (interaction.type == 2) {
-      var user =
-        interaction.options.getUser("kullanıcı") || interaction.user;
-    } else {
-      var user =
-        interaction.mentions.users.first() ||
-        client.users.cache.get(args.join(" ")) ||
-        interaction.author;
-    }
+    var user = interaction.type === 2
+      ? interaction.options.getUser("kullanıcı") || interaction.user
+      : interaction.mentions.users.first() || client.users.cache.get(args.join(" ")) || interaction.author;
 
-    let member = interaction.guild.members.cache.get(user.id);
-
-    let userData = await client.database.fetchUser(user.id);
-
-    /*let cihaz;
-    if (mention.bot) {
-      cihaz = "Bilinmiyor.";
-    } else {
-      cihaz = {
-        web: "İnternet Tarayıcısı",
-        desktop: "Bilgisayar",
-        mobile: "Mobil"
-      }[Object.keys(mention.presence.clientStatus)[0]];
-    }*/
-
-    //Premium
-    let Premium = userData.NraphyPremium;
-    if (Premium) {
-      if (Premium < Date.now()) {
-        var kalanPremiumSüresi = "Premium'un bitmiş görünüyor :(";
-      } else {
-        var kalanPremiumSüresi = `${humanize(Premium - Date.now(), { language: "tr", round: true, largest: 2 })}`;
-      }
-    };
-
-    //NC
-    let NC = new Intl.NumberFormat().format(userData.NraphyCoin);//await db.fetch(`paracık_${user.id}`);
+    let userData = user.id === (interaction.type === 2 ? interaction.user : interaction.author).id
+      ? data.user
+      : await client.database.fetchUser(user.id);
 
     let embed = {
       color: client.settings.embedColors.default,
@@ -84,29 +54,76 @@ module.exports = {
       ]
     };
 
-    //if (mention.presence.status !== "offline") embed.addField("**»** Bağlandığı Cihaz", "**•** "+ sa)
-    if (member) embed.fields.push(
+    let member = interaction.guild.members.cache.get(user.id);
+    if (member) {
+
+      //Sunucuya Katılma Tarihi
+      embed.fields.push(
+        {
+          name: '**»** Sunucuya Katılma Tarihi',
+          value: `**•** <t:${(member.joinedAt.getTime() / 1000).toFixed(0)}:f> • \`(${humanize(Date.now() - member.joinedAt.getTime(), { language: "tr", round: true, largest: 4 })})\``,
+        }
+      );
+
+      //Davetler
+      embed.fields.push(
+        {
+          name: '**»** Davetler',
+          value:
+            data.guild.inviteManager.channel ?
+              data.guild.inviteManager.invites?.[user.id]?.length
+                ? `**•** \`${data.guild.inviteManager.invites[user.id].length} Davet\`\n` + `**•** \`/davetler\``
+                : `**•** \`Bu kullanıcının hiç daveti yok.\`\n` + `**•** \`/davet-sistemi bilgi\``
+              : `**•** \`Bu sunucuda davet sistemi kapalı.\`\n` + `**•** \`/davet-sistemi bilgi\``,
+        }
+      );
+
+      //Uyarılar
+      if (user.id === (interaction.type === 2 ? interaction.user : interaction.author).id || interaction.channel.permissionsFor(interaction.member).has("ManageMessages"))
+        embed.fields.push(
+          {
+            name: '**»** Uyarılar',
+            value:
+              data.guild.warns?.[user.id]?.length
+                ? `**•** \`${data.guild.warns[user.id].length} Uyarı\`\n` + `**•** \`/uyarı listele\``
+                : `**•** \`Bu kullanıcının hiç uyarısı yok.\`\n` + `**•** \`/uyarı bilgi\``,
+          }
+        );
+
+    } else embed.fields.push(
       {
-        name: '**»** Sunucuya Katılma Tarihi',
-        value: `**•** <t:${(member.joinedAt.getTime() / 1000).toFixed(0)}:f> • \`(${humanize(Date.now() - member.joinedAt.getTime(), { language: "tr", round: true, largest: 4 })})\``,
+        name: '**»** Not',
+        value:
+          `**•** Kullanıcı sunucuda olmadığı için aşağıdakiler gösterilemiyor.\n` +
+          `**•** \`Sunucuya Katılma Tarihi, Davetler ve Uyarılar\``,
       }
     );
 
-    if (userData.NraphyCoin) embed.fields.push(
-      {
-        name: '**»** NraphyCoin',
-        value: `**•** \`${NC} NraphyCoin\` <:NraphyCoin:946801199976419339>`,
-      }
-    );
+    //NraphyCoin
+    let NC = new Intl.NumberFormat().format(userData.NraphyCoin);
+    if (userData.NraphyCoin)
+      embed.fields.push(
+        {
+          name: '**»** NraphyCoin',
+          value: `**•** \`${NC} NraphyCoin\` <:NraphyCoin:946801199976419339>`,
+        }
+      );
 
-    if (Premium) embed.fields.push(
-      {
-        name: '**»** Premium Süresi',
-        value: `**•** \`${kalanPremiumSüresi}\``,
-      }
-    );
+    //Premium
+    let Premium = userData.NraphyPremium
+      ? userData.NraphyPremium > Date.now()
+        ? `${humanize(userData.NraphyPremium - Date.now(), { language: "tr", round: true, largest: 2 })}`
+        : "Premium'un bitmiş görünüyor :("
+      : null;
+    if (Premium)
+      embed.fields.push(
+        {
+          name: '**»** Premium Süresi',
+          value: `**•** \`${Premium}\``,
+        }
+      );
 
-    interaction.reply({ embeds: [embed] });
+    return interaction.reply({ embeds: [embed] });
 
   }
 };

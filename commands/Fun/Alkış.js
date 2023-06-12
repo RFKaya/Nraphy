@@ -11,7 +11,6 @@ module.exports = {
       }
     ]
   },
-  interactionOnly: true,
   aliases: ["alkışla"],
   category: "Fun",
   memberPermissions: [],
@@ -20,19 +19,20 @@ module.exports = {
   cooldown: false,
   ownerOnly: false,
 
-  async execute(client, interaction, data) {
-    const text = interaction.options.getString("yazı");
+  async execute(client, interaction, data, args) {
+
+    const text = interaction.type === 2 ? interaction.options.getString("yazı") : args.join(" ");
 
     const { messageChecker } = require("../../modules/Functions");
-    await messageChecker(interaction, text, "alkış Bravo!");
+    if (!await messageChecker(interaction, text, "alkış Bravo!")) return;
 
-    interaction.reply({
+    return interaction.reply({
       embeds: [
         {
           color: client.settings.embedColors.default,
           author: {
-            name: `${interaction.user.username} alkışlıyor!`,
-            icon_url: interaction.user.displayAvatarURL(),
+            name: `${(interaction.type === 2 ? interaction.user : interaction.author).username} alkışlıyor!`,
+            icon_url: (interaction.type === 2 ? interaction.user : interaction.author).displayAvatarURL(),
           },
           description: `**»** ${text}`,
           image: {

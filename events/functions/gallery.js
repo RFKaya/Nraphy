@@ -2,9 +2,6 @@ module.exports = async (client, message, gallery) => {
 
   try {
 
-    //Galeri açıksa ve o kanal galeri kanalıysa
-    if (message.channel.id !== gallery) return;
-
     //Mesaj sahibi kanalları yönet yetkisine sahip değilse
     if (message.channel.permissionsFor(message.member).has("ManageChannels")) return;
 

@@ -25,31 +25,12 @@ module.exports = {
 
     //------------------------------KOMUT BİLGİ------------------------------//
 
-    if (interaction.type === 2) {
-
-      var userData = await client.database.fetchUser(interaction.user.id);
-      var commandArgs = interaction.options.getString("komut");
-
-    } else {
-
-      var userData = await client.database.fetchUser(interaction.author.id);
-      var commandArgs = args.slice(0).join(" ");
-
-    }
+    let commandArgs = interaction.type === 2 ? interaction.options.getString("komut") : args.slice(0).join(" ");
 
     if (commandArgs) {
 
-      var selectedCmd;
-
-      client.commands.forEach(cmd => {
-        if ((cmd.interaction && cmd.interaction.name == commandArgs) || (cmd.name && cmd.name == commandArgs)) {
-          selectedCmd = cmd;
-
-        } else if (cmd.aliases && cmd.aliases.includes(commandArgs)) {
-          selectedCmd = cmd;
-
-        }
-      });
+      let selectedCmd = client.commands.filter(command => command.category && command.category !== "Developer")
+        .find(cmd => (cmd.interaction || cmd).name === commandArgs || cmd.aliases.includes(commandArgs));
 
       if (selectedCmd) {
 
@@ -221,63 +202,6 @@ module.exports = {
       }
     });*/
 
-    //Müzik Komutları - Back End
-    let commandsMusic = [];
-    client.commands.forEach(command => {
-      if (command.category == 'Music') {
-        if (!command.interaction) {
-          commandsMusic.push(`**•** \`${data.prefix}${command.name}\` - ${command.description}\n`);
-        } else {
-          if (command.interaction.type && command.interaction.type == 3) {
-            commandsMusic.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
-          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2)) {
-            command.interaction.options.forEach(subCommand => {
-              commandsMusic.push(`**•** \`/${command.interaction.name + " " + subCommand.name}\` - ${subCommand.description}\n`);
-            });
-          } else {
-            commandsMusic.push(`**•** \`/${command.interaction.name}\` - ${command.interaction.description}\n`);
-          }
-        }
-      }
-    });
-
-    //Çekiliş Komutları - Back End
-    let commandsGiveaway = [];
-    client.commands.forEach(command => {
-      if (command.category == 'Giveaway') {
-        if (!command.interaction) {
-          commandsGiveaway.push(`**•** \`${data.prefix}${command.name}\` - ${command.description}\n`);
-        } else {
-          if (command.interaction.type && command.interaction.type == 3) {
-            commandsGiveaway.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
-          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2)) {
-            command.interaction.options.forEach(subCommand => {
-              commandsGiveaway.push(`**•** \`/${command.interaction.name + " " + subCommand.name}\` - ${subCommand.description}\n`);
-            });
-          } else {
-            commandsGiveaway.push(`**•** \`/${command.interaction.name}\` - ${command.interaction.description}\n`);
-          }
-        }
-      }
-    });
-
-    //NraphyCoin - Back End
-    let commandsNC = [];
-    client.commands.forEach(command => {
-      if (command.category == 'NC') {
-        if (!command.interaction) {
-          commandsNC.push(`**•** \`${data.prefix}${command.name}\` - ${command.description}\n`);
-        } else {
-          if (command.interaction.type && command.interaction.type == 3) {
-            commandsNC.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
-          } else {
-            //Manuel Düzenleme Yapılmıştır (Diğerlerinden Farklıdır)
-            commandsNC.push(`**•** \`/${command.interaction.name}\` - ${command.interaction.description}\n`);
-          }
-        }
-      }
-    });
-
     //Botla İlgili Komutlar - Back End
     let commandsBot = [];
     client.commands.forEach(command => {
@@ -317,6 +241,36 @@ module.exports = {
     embedModeration.title = `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`;
     embedModeration.description = commandsModeration.join('');
     embedModeration.fields.push(fieldsLinks);
+    embedModeration.fields.unshift({
+      name: '**»** Mesaj Filtreleme Sistemleri',
+      value:
+        `**•** Bu komutlar farklı bir sayfaya taşınmıştır.\n` +
+        `**•** \`Bağlantı Engel, Büyük Harf Engel, Spam Koruması\``,
+      inline: false
+    });
+
+    //Mesaj Filtreleme Sistemleri - Embed
+    let embedMessageFilters = {
+      color: client.settings.embedColors.default,
+      author: {
+        name: `${client.user.username} • Mesaj Filtreleme Sistemleri`,
+        icon_url: client.settings.icon,
+      },
+      title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
+      //description: "31",
+      fields: [
+        ...(client.commands.filter(command => command.category === "MessageFilters").map(command => ({
+          name: `**»** ${command.interaction.name.replace(/-/g, " ").toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
+            return letter.toUpperCase();
+          })}`,
+          value:
+            `**•** ${command.interaction.description}\n` +
+            command.interaction.options.map(option => `**•** \`/${command.interaction.name} ${option.name}\``).join('\n'),
+          inline: false
+        }))),
+        fieldsLinks
+      ],
+    };
 
     //Eğlence Komutları - Embed
     let embedFun = {
@@ -362,7 +316,7 @@ module.exports = {
       fields: [fieldsLinks],
     };*/
 
-    //Müzik Komutları - Embed
+    //Müzik Komutları
     let embedMusic = {
       color: client.settings.embedColors.default,
       author: {
@@ -370,32 +324,43 @@ module.exports = {
         icon_url: client.settings.icon,
       },
       title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
-      description: commandsMusic.join(''),
-      fields: [fieldsLinks],
-    };
-
-    //Çekiliş - Embed
-    let embedGiveaway = {
-      color: client.settings.embedColors.default,
-      author: {
-        name: `${client.user.username} • Çekiliş`,
-        icon_url: client.settings.icon,
-      },
-      title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
-      description: commandsGiveaway.join(''),
-      fields: [fieldsLinks],
-    };
-
-    //NraphyCoin - Embed
-    let embedNC = {
-      color: client.settings.embedColors.default,
-      author: {
-        name: `${client.user.username} • NraphyCoin`,
-        icon_url: client.settings.icon,
-      },
-      title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
-      description: commandsNC.join(''),
-      fields: [fieldsLinks],
+      /*description: client.commands
+        .filter(command => command.category == 'Music')
+        .sort((a, b) => {
+          console.log(a);
+          if (a.interaction.name === "çal" || a.interaction.name === "ara") return -1;
+          //if (a < b) return -1;
+          //return 0;
+        })
+        .map(command => `**•** \`/${command.interaction.name}\` - ${command.interaction.description}`
+          + (command.interaction.name === "ara" ? '\n' : ''))
+        .join('\n'),*/
+      fields: [
+        {
+          name: '**»** Şarkı Başlatma',
+          value:
+            client.commands
+              .filter(command => command.category == 'Music_Player')
+              .map(command => `**•** \`/${command.interaction.name}\` - ${command.interaction.description}`)
+              .join('\n'),
+          inline: false
+        },
+        {
+          name: '**»** Oynatıcı Fonksiyonları',
+          value:
+            [
+              {
+                interaction: { name: "durdur - /yürüt", description: "Çalan şarkıyı duraklatır/devam ettirir.", },
+                category: "Music"
+              },
+              ...Array.from(client.commands.filter(command => command.category == 'Music' && !['durdur', 'yürüt'].includes(command.interaction.name)), ([key, value]) => (value))
+            ]
+              .map(command => `**•** \`/${command.interaction.name}\` - ${command.interaction.description}`)
+              .sort()
+              .join('\n'),
+          inline: false
+        },
+        fieldsLinks],
     };
 
     //Botla İlgili Komutlar - Embed
@@ -423,18 +388,17 @@ module.exports = {
 
         `📚 • Ana Sayfa\n\n` +
 
-        `📘 • Yetkili Komutları (**${commandsModeration.length + embedModeration.fields.length - 1}**)\n` +
+        `📘 • Yetkili Komutları (**${commandsModeration.length + embedModeration.fields.length - 2}**)\n` +
+        `᲼᲼᲼↳ Mesaj Filtreleme Sistemleri (**${embedMessageFilters.fields.length - 1}**)\n` +
         `📙 • Eğlence Komutları (**${commandsFun.length}**)\n` +
         `📗 • Genel Komutlar (**${commandsGeneral.length}**)\n` +
         `📕 • Oyunlar (**${commandsGames.length + embedGames.fields.length - 1}**)\n` +
-        `🎵 • Müzik Komutları (**${commandsMusic.length}**)\n` +
-        //`🎉 • Çekiliş (**${commandsGiveaway.length}**)\n` +
-        //`💰 • NraphyCoin (**${commandsNC.length}**)\n` +
+        `🎵 • Müzik Komutları (**${client.commands.filter(command => command.category?.startsWith('Music')).size}**)\n` +
         `🤖 • Botla İlgili Komutlar (**${commandsBot.length}**)\n\n` +
 
         `Hata bildirimi veya öneriler için: \`/bildiri\`\n` +
         `Bu bot [Nraphy Açık Kaynak Projesi](https://discord.gg/VppTU9h) ile oluşturulmuştur.`
-        /*`${(userData.readDateOfChanges < client.settings.updateDate) ?
+        /*`${(data.user.readDateOfChanges < client.settings.updateDate) ?
           `✉️ Okunmamış yenilikler mevcut! \`/yenilikler\` yazarak okuyabilirsin!` :
           `Gelişmelerden haberdar olmak için destek sunucumuza katılabilirsiniz!`}`*/,
       fields: [fieldsLinks],
@@ -460,6 +424,12 @@ module.exports = {
               value: 'moderationOption',
             },
             {
+              label: '᲼᲼᲼Mesaj Filtreleme Sistemleri',
+              //emoji: '📘',
+              description: '᲼᲼᲼Bağlantı Engel, Spam Koruması vb.',
+              value: 'messageFiltersOption',
+            },
+            {
               label: 'Eğlence Komutları',
               emoji: '📙',
               description: 'Espri, Aşk-Ölçer, Konuştur, 144p gibi eğlenceli komutlar.',
@@ -483,18 +453,6 @@ module.exports = {
               //description: 'Müzik çalmanıza yarayan komutlar.',
               value: 'musicOption',
             },
-            /*{
-              label: 'Çekiliş Komutları',
-              emoji: '🎉',
-              //description: 'Çekiliş yapmanıza yarayan komutlar.',
-              value: 'giveawayOption',
-            },
-            {
-              label: 'NraphyCoin Komutları',
-              emoji: '💰',
-              //description: 'NraphyCoin ile ilgili tüm komutlar.',
-              value: 'NCOption',
-            },*/
             {
               label: 'Bot Komutları',
               emoji: '🤖',
@@ -513,91 +471,38 @@ module.exports = {
       components: [row]
     }).then(async msg => {
 
-      if (interaction.type === 2) {
+      const embedMaps = {
+        "mainPageOption": embedMainPage,
+        "moderationOption": embedModeration,
+        "messageFiltersOption": embedMessageFilters,
+        "funOption": embedFun,
+        "generalOption": embedGeneral,
+        "gamesOption": embedGames,
+        "botOption": embedBot,
+        "musicOption": embedMusic,
+      };
 
-        const reply = await interaction.fetchReply();
-        const filter = i => {
-          return i.message.id === reply.id && i.deferUpdate() && i.user.id === interaction.user.id;
-        };
-        var calc = interaction.channel.createMessageComponentCollector({ filter, time: 1800000 });
+      const reply = interaction.type === 2 ? await interaction.fetchReply() : msg;
+      const filter = i => {
+        return i.message.id === reply.id && i.deferUpdate() && i.user.id === (interaction.type === 2 ? interaction.user : interaction.author).id;
+      };
 
-        calc.on('collect', async int => {
+      var calc = (interaction.type === 2 ? interaction.channel : msg).createMessageComponentCollector({ filter, time: 1800000 });
 
-          let collectedOption = row.components[0].options.find(selectMenuOption => selectMenuOption.data.value == int.values.toString());
-          row.components[0].setPlaceholder(`${collectedOption.data.emoji.name} ${collectedOption.data.label}`);
+      calc.on('collect', async int => {
 
-          if (int.values.toString() === "mainPageOption") {
-            interaction.editReply({ embeds: [embedMainPage], components: [row] });
+        let collectedOption = row.components[0].options.find(selectMenuOption => selectMenuOption.data.value == int.values.toString());
+        row.components[0].setPlaceholder(`${collectedOption.data.emoji?.name || "📘"} ${collectedOption.data.label.replaceAll("᲼", '')}`);
 
-          } else if (int.values.toString() === "moderationOption") {
-            interaction.editReply({ embeds: [embedModeration], components: [row] });
+        if (interaction.type === 2) {
+          interaction.editReply({ embeds: [embedMaps[int.values.toString()]], components: [row] });
+          //.catch(e => { });
+        } else {
+          msg.edit({ embeds: [embedMaps[int.values.toString()]], components: [row] });
+          //.catch(e => { });
+        }
 
-          } else if (int.values.toString() === "funOption") {
-            interaction.editReply({ embeds: [embedFun], components: [row] });
-
-          } else if (int.values.toString() === "generalOption") {
-            interaction.editReply({ embeds: [embedGeneral], components: [row] });
-
-          } else if (int.values.toString() === "gamesOption") {
-            interaction.editReply({ embeds: [embedGames], components: [row] });
-
-          } else if (int.values.toString() === "NCOption") {
-            interaction.editReply({ embeds: [embedNC], components: [row] });
-
-          } else if (int.values.toString() === "botOption") {
-            interaction.editReply({ embeds: [embedBot], components: [row] });
-
-          } else if (int.values.toString() === "musicOption") {
-            interaction.editReply({ embeds: [embedMusic], components: [row] });
-
-          } else if (int.values.toString() === "giveawayOption") {
-            interaction.editReply({ embeds: [embedGiveaway], components: [row] });
-
-          }
-        });
-
-      } else {
-
-        const filter = i => {
-          return i.message.id === msg.id && i.deferUpdate() && i.user.id === interaction.author.id;
-        };
-        var calc = msg.createMessageComponentCollector({ filter, time: 1800000 });
-
-        calc.on('collect', async int => {
-
-          let collectedOption = row.components[0].options.find(selectMenuOption => selectMenuOption.data.value == int.values.toString());
-          row.components[0].setPlaceholder(`${collectedOption.data.emoji.name} ${collectedOption.data.label}`);
-
-          if (int.values.toString() === "mainPageOption") {
-            msg.edit({ embeds: [embedMainPage], components: [row] });
-
-          } else if (int.values.toString() === "moderationOption") {
-            msg.edit({ embeds: [embedModeration], components: [row] });
-
-          } else if (int.values.toString() === "funOption") {
-            msg.edit({ embeds: [embedFun], components: [row] });
-
-          } else if (int.values.toString() === "generalOption") {
-            msg.edit({ embeds: [embedGeneral], components: [row] });
-
-          } else if (int.values.toString() === "gamesOption") {
-            msg.edit({ embeds: [embedGames], components: [row] });
-
-          } else if (int.values.toString() === "NCOption") {
-            msg.edit({ embeds: [embedNC], components: [row] });
-
-          } else if (int.values.toString() === "botOption") {
-            msg.edit({ embeds: [embedBot], components: [row] });
-
-          } else if (int.values.toString() === "musicOption") {
-            msg.edit({ embeds: [embedMusic], components: [row] });
-
-          } else if (int.values.toString() === "giveawayOption") {
-            msg.edit({ embeds: [embedGiveaway], components: [row] });
-
-          }
-        });
-      }
+      });
 
     });
 

@@ -28,8 +28,8 @@ const client = new Client({
       GatewayIntentBits.Guilds,
       GatewayIntentBits.MessageContent
     ],
-  failIfNotExists: false,
-  restRequestTimeout: 60000
+  //failIfNotExists: false,
+  //restRequestTimeout: 60000
   /*sweepers: {
     ...Options.DefaultSweeperSettings,
     threads: {
@@ -45,11 +45,16 @@ const client = new Client({
 
 const interactionCommands = [];
 
-//Önbellek Veri Tabanı
-global.database = { guildsCache: {}, usersCache: {} };
+//Veri Tabanı yerel hafıza
+global.localDatabase = { guilds: {}, users: {} };
+client.guildsWaitingForSync = [];
+
+//Gereksiz database
 client.userDataCache = {};
 client.guildDataCache = {};
+client.clientDataCache = { topggStatus: { status: true, lastCheck: null }, logQueue: [] };
 
+//kaldırılacak bunlar
 client.guildInvites = new Map();
 client.gamesPlaying = new Map();
 client.usersMap = new Map();
@@ -59,8 +64,7 @@ client.warnsMap = new Map();
 
 client.settings = {
   presences: [
-    "📌 /komutlar",
-    "📂 /log"
+    "📌 /komutlar"
   ],
   prefix: "n!",
   owner: "700385307077509180",
@@ -73,7 +77,6 @@ client.settings = {
     blue: 0x3498DB,
     darkGrey: 0x979C9F
   },
-  language: "tr",
   invite: "https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code"
 };
 
@@ -86,6 +89,7 @@ client.commands = new Discord.Collection();
 client.database = require('./Mongoose/Mongoose.js');
 client.logger = require("./modules/Logger.js");
 client.date = require("./modules/Date.js");
+client.functions = require("./modules/Functions.js");
 //client.userFetcher = require("./modules/userFetcher.js");
 client.config = require("./config.json");
 client.listGuilds = async function () {
@@ -154,11 +158,12 @@ async function startUp() {
   client.database = require('./Mongoose/Mongoose.js');
   client.databaseQueue = { users: {}, guilds: {}, client: {} };
   mongoose.set("strictQuery", false);
-  mongoose.connect(client.config.mongooseToken, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+  await mongoose.connect(client.config.mongooseToken, {
+    maxPoolSize: 25,
+    /*useNewUrlParser: true,
+    useUnifiedTopology: true*/
   }).then(() => {
-    //client.logger.log('Connected to MongoDB');
+    client.logger.log('Connected to MongoDB');
   }).catch((err) => {
     console.log('Unable to connect to MongoDB Database.\nError: ' + err);
   });
@@ -183,7 +188,7 @@ client.on("reconnecting", () => client.logger.error("Bot reconnecting..."));
 client.on("error", (e) => client.logger.error(e));
 client.on("warn", (info) => { console.log("client.on(\"warn\") event"); client.logger.error(info); });
 //client.on("debug", (log) => client.logger.debug(log))
-//client.on("raw", r => { if (r.t !== "PRESENCE_UPDATE") client.logger.debug(r.t) })
+//client.on("raw", r => client.logger.debug(r.t))
 
 client.on('shardError', error => {
   console.error('A websocket connection encountered an error:', error);
@@ -215,7 +220,7 @@ const { YtDlpPlugin } = require('@distube/yt-dlp');
 client.distube = new DisTube(client, {
   leaveOnStop: true,
   leaveOnEmpty: true,
-  emptyCooldown: 15,
+  emptyCooldown: 10,
   leaveOnFinish: true,
   emitNewSongOnly: true,
   emitAddSongWhenCreatingQueue: false,
@@ -287,10 +292,9 @@ client.distube
           description: `**•** Odada kimse kalmadığı için oynatma bitirildi.`,
         }
       ]
-    });
+    }).catch(e => { });
   })
   .on('searchNoResult', (message, query) => {
-    console.log(`searchNoResult`);
     message.channel.send({
       embeds: [
         {
@@ -298,7 +302,7 @@ client.distube
           description: `**»** Bir sonuç bulunamadı!`,
         }
       ]
-    });
+    }).catch(e => { });
   })
   .on('finish', queue => {
     queue.textChannel.send({
@@ -309,7 +313,10 @@ client.distube
           description: `**•** Sırada şarkı kalmadığı için oynatma bitirildi!`,
         }
       ]
-    });
+    }).catch(e => { });
+  })
+  .on("initQueue", queue => {
+    queue.volume = 80;
   });
 
 //------------------------------Müzik------------------------------//

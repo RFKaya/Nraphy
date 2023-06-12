@@ -1,9 +1,7 @@
-const { ButtonBuilder } = require('discord.js');
-
 module.exports = {
   interaction: {
     name: "çal",
-    description: "Bağlantısını veya adını girdiğiniz şarkıyı/oynatma listesini çalar.",
+    description: "Adını veya bağlantısını girdiğiniz şarkıyı/oynatma listesini çalar.",
     options: [
       {
         name: "şarkı",
@@ -14,11 +12,11 @@ module.exports = {
     ]
   },
   aliases: ["play", "p", "oynat", "ç", "oynat", "şarkı"],
-  category: "Music",
+  category: "Music_Player",
   memberPermissions: [],
   botPermissions: ["SendMessages", "EmbedLinks", "AddReactions"],
   nsfw: false,
-  cooldown: 3000,
+  cooldown: 5000,
   ownerOnly: false,
 
   async execute(client, interaction, data, args) {
@@ -39,7 +37,7 @@ module.exports = {
         }]
       });
 
-    const music = interaction.type == 2 ? interaction.options.getString("şarkı") : args.join(' ');
+    const music = interaction.type === 2 ? interaction.options.getString("şarkı") : args.join(' ');
 
     if (!music)
       return interaction.reply({
@@ -49,26 +47,30 @@ module.exports = {
         }]
       });
 
-    if (interaction.type == 2)
+    const queue = client.distube.getQueue(interaction.guild);
+
+    if (!data.guildIsBoosted && queue?.songs.length > 200)
+      return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          description:
+            `**»** Şarkı sırası tamamen dolu. Daha fazla şarkı ekleyemezsin.\n` +
+            `**•** **Nraphy Boost** ile bu limiti sınırsıza çıkarabilirsin! \`/boost bilgi\``
+        }]
+      });
+
+    if (interaction.type === 2)
       await interaction.deferReply();
     else await interaction.react('✅').catch(e => { });
 
-    try {
-
-      await client.distube.play(interaction.member.voice.channel, music, {
-        member: interaction.member,
-        textChannel: interaction.channel,
-        voiceChannel: interaction.member.voice.channel,
-        metadata: {
-          commandMessage: interaction
-        }
-      });
-
-    } catch (error) {
-
-      require('../../events/distube/functions/errorHandler.js')(client, error, interaction.channel, interaction);
-
-    }
+    await client.distube.play(interaction.member.voice.channel, music, {
+      member: interaction.member,
+      textChannel: interaction.channel,
+      voiceChannel: interaction.member.voice.channel,
+      metadata: {
+        commandMessage: interaction
+      }
+    }).catch(error => require('../../events/distube/functions/errorHandler.js')(client, error, interaction.channel, interaction));
 
   },
 };

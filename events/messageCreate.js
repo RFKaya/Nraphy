@@ -3,6 +3,7 @@ module.exports = async (client, message) => {
   if (!message.guild) return;
   if (!message.channel) return;
   if (message.author.bot) return;
+  if (message.system) return;
 
   const guildData = await client.database.fetchGuild(message.guild.id);
   var userData;
@@ -13,36 +14,30 @@ module.exports = async (client, message) => {
 
   try {
 
-    //MessageStats
-    /*if (message.guild.id === "532991144112554005") {
-      var nowDate = new Date();
-      var date = `${nowDate.getFullYear()}.${(nowDate.getMonth() + 1)}.${nowDate.getDate()}`;
-      console.log(date)
-    }*/
-
     //Commands
     if (message.content.toLowerCase().startsWith(prefix.toLowerCase())) {
 
       //Checking if the message is a command
       const args = message.content.slice(prefix.length).trim().split(/ +/g);
-      const commandName = args.shift().toLowerCase();
-      const cmd = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases?.includes(commandName));
+      const commandName = args.shift().toLowerCase().replaceAll('-', '').toEN();
+      const cmd = client.commands.find(command => [(command.interaction || command).name, ...(command.aliases || [])].map(string => string.replaceAll('-', '').toEN()).includes(commandName));
       if (!cmd) return;
 
       userData ||= await client.database.fetchUser(message.author.id);
 
       await require('../events/functions/cmdExecuter.js')(client, message, cmd, guildData, userData, args);
-
     }
 
-    //Bağlantı Engel
     const linkBlock = guildData.linkBlock;
+    const gallery = guildData.gallery;
+
+    //Bağlantı Engel
     if (linkBlock && message.content)
-      require("./functions/linkBlock")(client, message, linkBlock, false);
+      //Galeri muaf
+      if (message.channel.id !== gallery) require("./functions/linkBlock")(client, message, linkBlock, false);
 
     //Galeri
-    let gallery = guildData.gallery;
-    if (gallery)
+    if (gallery && message.channel.id == gallery)
       require("./functions/gallery.js")(client, message, gallery);
 
     //Spam Koruması
@@ -57,7 +52,7 @@ module.exports = async (client, message) => {
     //Kelime Oyunu
     var wordGame = guildData.wordGame;
     if (wordGame?.channel === message.channel.id) {
-      client.logger.log(`KELİME-OYUNU TETİKLENDİ! • ${message.guild.name} (${message.guild.id})`);
+      client.logger.log(`KELİME-OYUNU TETİKLENDİ! • ${message.guild.name} (${message.guild.id})`, "log", false);
       require("./functions/wordGame.js")(client, message, wordGame, guildData);
     }
 
@@ -66,7 +61,7 @@ module.exports = async (client, message) => {
     userCache.lastMessage = Date.now();
 
     //Prefixim & Soru-Sor
-    if (message.content.toLowerCase() === `<@!${client.user.id}>` || message.content.toLowerCase() === `<@${client.user.id}>`) {
+    if (message.content === `<@!${client.user.id}>` || message.content === `<@${client.user.id}>` || message.content === `<@&${client.user.id}>`) {
 
       message.channel.send({
         embeds: [{

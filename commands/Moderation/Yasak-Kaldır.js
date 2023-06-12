@@ -79,7 +79,7 @@ module.exports = {
           }
         ],
         components: []
-      });
+      }).catch(error => { });
 
     await message.guild.members.unban(member);
 

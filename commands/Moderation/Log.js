@@ -64,9 +64,7 @@ module.exports = {
               {
                 name: '**»** Log Sistemi Hangi Olayları Bildirir?',
                 value:
-                  `**•** Mesaj Düzenleme ve Silme (İçerikleriyle birlikte)\n` +
-                  `**•** Emoji Oluşturma, Düzenleme ve Silme\n` +
-                  `**•** Yakında daha fazla olay bildirir hâle gelecek.`,
+                  `**•** Mesaj Düzenleme ve Silme (İçerikleriyle birlikte)`
               },
               {
                 name: '**»** Log Sistemi Nasıl Açılır?',
@@ -118,7 +116,7 @@ module.exports = {
         });
 
       const webhook = await getChannel.createWebhook({
-        name: 'Nraphy Logger (Beta)',
+        name: 'Nraphy Logger',
         avatar: 'https://media.discordapp.net/attachments/727501328519004200/910108789796110346/Nraphy-Test-Logo-Kare.png',
         reason: `Nraphy Log Sistemi • ${interaction.user.tag} tarafından açıldı.`
       }).catch(err => {

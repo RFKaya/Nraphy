@@ -55,8 +55,7 @@ module.exports = {
         ]
       });
 
-    data.user.AFK.reason = sebep;
-    data.user.AFK.time = Date.now();
+    data.user.AFK = { time: Date.now(), reason: sebep };
     await data.user.save();
 
     message.reply({

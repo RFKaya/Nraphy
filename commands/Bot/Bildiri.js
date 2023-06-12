@@ -73,23 +73,9 @@ module.exports = {
         }
       ],
       components: []
-    });
+    }).catch(error => { });
 
-    //Webhook url belirt kardeeş
-    try {
-      var webhookClient = new WebhookClient({ url: 'https://canary.discord.com/api/webhooks/...' });
-    } catch {
-      return interaction.editReply({
-        embeds: [
-          {
-            color: client.settings.embedColors.red,
-            title: '**»** Bildirin İletilemedi!',
-            description: `**•** Bot geliştiricisiyle iletişime geçmelisin.`
-          }
-        ],
-        components: []
-      });
-    }
+    let webhookClient = new WebhookClient({ url: client.config.clientLogsWebhookURL });
 
     const embed = {
       color: client.settings.embedColors.default,

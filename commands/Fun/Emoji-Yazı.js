@@ -24,6 +24,7 @@ module.exports = {
       }
 
       const mapping = {
+        ' ': '     ',
         ',': '     ',
         '0': ':zero:',
         '1': ':one:',
@@ -74,7 +75,7 @@ module.exports = {
           ]
         });
 
-      let emojiYazı = message.split('').map(c => mapping[c.toUpperCase()] || c).join(' ').toString();
+      let emojiYazı = message.split('').map(c => mapping[c.toUpperCase()] || c).join('').toString();
 
       if (!emojiYazı || !emojiYazı.length || emojiYazı.length == 0 || emojiYazı.trim().length === 0)
         return interaction.reply({

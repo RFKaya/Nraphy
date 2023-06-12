@@ -1,0 +1,57 @@
+[12 Haziran 2023 • 13:40:01] (CLIENT) Loading Client...
+
+[12 Haziran 2023 • 13:40:04] (LOG) Connected to MongoDB
+
+[12 Haziran 2023 • 13:40:05] (READY) Client ready in shard 1!
+
+[12 Haziran 2023 • 13:40:10] (LOG) Connected to MongoDB
+
+[12 Haziran 2023 • 13:40:10] (READY) Client ready in shard 2!
+
+[12 Haziran 2023 • 13:40:15] (LOG) Connected to MongoDB
+
+[12 Haziran 2023 • 13:40:16] (READY) Client ready in shard 3!
+
+[12 Haziran 2023 • 13:40:21] (LOG) Connected to MongoDB
+
+[12 Haziran 2023 • 13:40:22] (READY) Client ready in shard 4!
+
+[12 Haziran 2023 • 13:40:26] (LOG) Connected to MongoDB
+
+[12 Haziran 2023 • 13:40:27] (READY) Client ready in shard 5!
+
+[12 Haziran 2023 • 13:40:32] (LOG) Connected to MongoDB
+
+[12 Haziran 2023 • 13:40:34] (READY) Client ready in shard 6!
+
+[12 Haziran 2023 • 13:40:47] (CLIENT) Loading Client...
+
+[12 Haziran 2023 • 13:40:52] (LOG) Connected to MongoDB
+
+[12 Haziran 2023 • 13:40:53] (READY) Client ready in shard 1!
+
+[12 Haziran 2023 • 13:40:59] (LOG) Top.gg & Database stats updated! | 4 servers
+
+[12 Haziran 2023 • 13:43:15] (CMD) (INTERACTION)
+ => User: Rauqq#0001 (700385307077509180)
+ => Guild: Nraphy Laboratories (767040721890312212)
+ => CMD: Ayarlar
+
+[12 Haziran 2023 • 13:43:17] (CMD) (MESSAGE)
+ => User: Rauqq#0001 (700385307077509180)
+ => Guild: Nraphy Laboratories (767040721890312212)
+ => CMD: Komutlar
+ => Content: q!y
+
+[12 Haziran 2023 • 13:45:19] (CLIENT) Loading Client...
+
+[12 Haziran 2023 • 13:45:23] (LOG) Connected to MongoDB
+
+[12 Haziran 2023 • 13:45:24] (READY) Client ready in shard 1!
+
+[12 Haziran 2023 • 13:45:54] (CMD) (MESSAGE)
+ => User: Rauqq#0001 (700385307077509180)
+ => Guild: Nraphy Laboratories (767040721890312212)
+ => CMD: Komutlar
+ => Content: q!y
+

@@ -9,7 +9,7 @@ module.exports = {
   memberPermissions: [],
   botPermissions: ["SendMessages", "EmbedLinks"],
   nsfw: false,
-  cooldown: false,
+  cooldown: 5000,
   ownerOnly: false,
 
   async execute(client, message, args, data) {
@@ -110,7 +110,7 @@ module.exports = {
           }
         ],
         components: []
-      });
+      }).catch(error => { });
 
     }
 
@@ -130,7 +130,9 @@ module.exports = {
       const taken = [];
       let userTurn = true;
       let winner = null;
-      while (!winner && taken.length < 9) {
+      let drawStatus = false;
+      let toplamSıraAtlama = 0;
+      while (!winner && !drawStatus && taken.length < 9) {
         const user = userTurn ? message.author : opponent;
         const sign = userTurn ? 'X' : 'O';
         await message.channel.send(
@@ -148,6 +150,8 @@ module.exports = {
         };
         const turn = await message.channel.awaitMessages({ filter, max: 1, time: 15000 });
         if (!turn.size) {
+          toplamSıraAtlama += 1;
+
           await message.channel.send({
             embeds: [
               {
@@ -157,6 +161,12 @@ module.exports = {
               }
             ]
           });
+
+          if (toplamSıraAtlama >= 4) {
+            drawStatus = true;
+            break;
+          }
+
           userTurn = !userTurn;
           continue;
         }
@@ -171,10 +181,16 @@ module.exports = {
 
       return message.channel.send({
         embeds: [
-          {
-            color: client.settings.embedColors.default,
-            title: winner ? `**»** Tebrikler ${winner.username}, kazandın! 🏆` : `**»** Maalesef, kimse kazanamadı.`
-          }
+          (winner
+            ? {
+              color: client.settings.embedColors.green,
+              title: `**»** Tebrikler ${winner.username}, kazandın! 🏆`
+            }
+            : {
+              color: client.settings.embedColors.red,
+              title: `**»** Maalesef, kimse kazanamadı.`
+            }
+          )
         ]
       });
 

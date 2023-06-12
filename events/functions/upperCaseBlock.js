@@ -14,7 +14,7 @@ module.exports = async (client, message, guildData) => {
     if (!message.member?.moderatable) return;
 
     //O kanalda büyük harf engel çalışacak mı?
-    if (!upperCaseBlock.guild && !upperCaseBlock.channels?.includes(message.channel.id)) return;
+    if (!upperCaseBlock.guild) return;
 
     //ManageMessages Yetki Muaf
     if (message.member.permissions.has("ManageMessages")) return;
@@ -55,7 +55,7 @@ module.exports = async (client, message, guildData) => {
 
     if ((upperCase / text.length * 100) < (guildData.upperCaseBlock.rate || 70)) return;
 
-    message.delete();
+    message.delete().catch(e => { });
 
     //---------------Warner---------------//
 
@@ -74,7 +74,7 @@ module.exports = async (client, message, guildData) => {
             },
           }
         ]
-      }).then(msg => setTimeout(() => msg.delete(), 5000));
+      }).then(msg => setTimeout(() => msg.delete().catch(e => { }), 5000));
     }
 
     //---------------Warner---------------//

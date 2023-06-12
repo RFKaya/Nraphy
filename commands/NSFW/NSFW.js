@@ -103,7 +103,7 @@ module.exports = {
         ]
       });
 
-    client.userDataCache[interaction.author.id].lastCmds[this.name] = Date.now() + 600 + ((i - 1) * (data.premium ? (this.cooldown / (3 / 2)) : this.cooldown));
+    client.userDataCache[interaction.author.id].lastCmds[this.name] = Date.now() + 500 + ((i - 1) * (data.premium ? (this.cooldown / (4 / 2)) : this.cooldown));
 
     if (i > 1) interaction.react('✅');
 

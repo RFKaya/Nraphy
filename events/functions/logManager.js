@@ -6,8 +6,12 @@ module.exports = async (client, guildData, logMessageContent) => {
 
   try {
 
+    const guildDataCache = client.guildDataCache[guildData.guildId] || (client.guildDataCache[guildData.guildId] = {});
+    guildDataCache.logQueue ||= [];
+    guildDataCache.logQueue.push(...logMessageContent.embeds);
+
     //Logging
-    let webhookClient = new WebhookClient({ url: guildData.logger.webhook });
+    /*let webhookClient = new WebhookClient({ url: guildData.logger.webhook });
     webhookClient.send(logMessageContent)
       .catch(async error => {
         if (error.code == 10015) {
@@ -17,7 +21,7 @@ module.exports = async (client, guildData, logMessageContent) => {
         } else {
           client.logger.error(error);
         }
-      });
+      });*/
 
   } catch (err) { client.logger.error(err); };
 };

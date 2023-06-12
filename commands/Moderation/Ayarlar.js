@@ -1,4 +1,3 @@
-const db = require('quick.db');
 const axios = require('axios');
 const { ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder } = require('discord.js');
 
@@ -28,11 +27,11 @@ module.exports = {
     const inviteManager = data.guild.inviteManager;
     const linkBlock = data.guild.linkBlock;
     const memberCounter = data.guild.memberCounter;
-    const upperCaseBlock = data.guild.upperCaseBlock;
-    const spamProtection = data.guild.spamProtection;
+    const nameClearing = data.guild.nameClearing;
     const prefix = data.guild.prefix || client.settings.prefix;
+    const spamProtection = data.guild.spamProtection;
+    const upperCaseBlock = data.guild.upperCaseBlock;
     const wordGame = data.guild.wordGame;
-    const isimTemizleme = db.fetch(`isim-temizle.${interaction.guild.id}`);
 
     var caughtProblems = [];
 
@@ -85,26 +84,27 @@ module.exports = {
       }
 
     //"Bir takım problemlerle karşılaşıldı" uyarısı
-    if (caughtProblems.length) return interaction.editReply({
-      embeds: [
-        {
-          color: client.settings.embedColors.yellow,
-          title: "**»** Bir Takım Problemlerle Karşılaşıldı!",
-          description:
-            `**•** \`${caughtProblems.join('\`\n**•** \`')}\`\n\n` +
+    if (caughtProblems.length)
+      return interaction.editReply({
+        embeds: [
+          {
+            color: client.settings.embedColors.yellow,
+            title: "**»** Bir Takım Problemlerle Karşılaşıldı!",
+            description:
+              `**•** \`${caughtProblems.join('\`\n**•** \`')}\`\n\n` +
 
-            `**•** Ayarları görmek için lütfen komutu tekrar kullanın.\n` +
-            `**•** Bir sorun olduğunu düşünüyorsanız [destek sunucumuza](https://discord.gg/QvaDHvuYVm) gelebilirsiniz.`
-        }
-      ],
-      components: [
-        {
-          type: 1, components: [
-            new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link')
-          ]
-        },
-      ]
-    });
+              `**•** Ayarları görmek için lütfen komutu tekrar kullanın.\n` +
+              `**•** Bir sorun olduğunu düşünüyorsanız [destek sunucumuza](https://discord.gg/QvaDHvuYVm) gelebilirsiniz.`
+          }
+        ],
+        components: [
+          {
+            type: 1, components: [
+              new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link')
+            ]
+          },
+        ]
+      });
 
     let moderationPageEmbed = {
       color: client.settings.embedColors.default,
@@ -131,6 +131,10 @@ module.exports = {
           value: `**•** ${memberCounter.channel ? `Kanal: ${interaction.guild.channels.cache.get(memberCounter.channel)}\n**•** Hedef: \`${memberCounter.target}\`` : `\`Kapalı\``}`,
         },
         {
+          name: '**»** İsim Temizleme Sistemi',
+          value: `**•** ${nameClearing ? `\`Açık\`` : `\`Kapalı\``}`,
+        },
+        {
           name: '**»** Kampanya Haber',
           value: `**•** ${campaignNews ? `Kanal: ${interaction.guild.channels.cache.get(campaignNews)}` : `\`Kapalı\``}`,
         },
@@ -145,10 +149,6 @@ module.exports = {
         {
           name: '**»** Uyarılar',
           value: `**•** ${warns_warns ? `\`${warns_users} Kullanıcı, ${warns_warns} Uyarı\`` : `\`Bu sunucuda hiçbir kullanıcı uyarılmamış.\``}`,
-        },
-        {
-          name: '**»** İsim Temizleme Sistemi',
-          value: `**•** ${isimTemizleme ? `\`Açık\`` : `\`Kapalı\``}`,
         },
       ],
     };
@@ -191,7 +191,7 @@ module.exports = {
               emoji: '📘'
             },
             {
-              label: 'Çekilişler (Bakımda)',
+              label: 'Çekilişler',
               value: 'giveawaysPageOption',
               //description: '',
               emoji: '🎉'
@@ -245,27 +245,16 @@ module.exports = {
                 name: `${interaction.guild.name} Sunucusunun Ayarları (Bağlantı Engel)`,
                 icon_url: interaction.guild.iconURL(),
               },
-              title: `**»** ${linkBlock?.guild || linkBlock?.channels?.length > 0 ? linkBlock.guild ? "Sunucu Genelinde Açık!" : "Belirli Kanallarda Açık!" : "Kapalı"}`,
+              title: `**»** ${linkBlock?.guild ? "Açık!" : "Kapalı"}`,
               fields: [
-                {
-                  name: '**»** Aktif Kanallar',
-                  value: `**•** ` +
-                    (linkBlock?.guild || linkBlock?.channels?.length > 0 ?
-                      linkBlock.guild ?
-                        linkBlock.channels ?
-                          "Muaf kanallar hariç tüm sunucu!"
-                          : "Tüm sunucu!"
-                        : linkBlock.channels.map(channel => interaction.guild.channels.cache.get(channel)).join(`\n**•** `)
-                      : "Kapalı")
-                },
                 {
                   name: '**»** Muaflar',
                   value:
-                    `**•** Kanallar: ${linkBlock?.exempts?.channels?.length > 0 ?
-                      linkBlock.exempts.channels.map(channel => interaction.guild.channels.cache.get(channel)).join(`, `)
+                    `**•** Kanallar: ${linkBlock?.exempts?.channels?.length > 0
+                      ? linkBlock.exempts.channels.map(channel => interaction.guild.channels.cache.get(channel)).join(`, `)
                       : `\`Muaf kanal yok\``}\n` +
-                    `**•** Roller: ${linkBlock?.exempts?.roles?.length > 0 ?
-                      linkBlock.exempts.roles.map(role => interaction.guild.roles.cache.get(role)).join(`, `)
+                    `**•** Roller: ${linkBlock?.exempts?.roles?.length > 0
+                      ? linkBlock.exempts.roles.map(role => interaction.guild.roles.cache.get(role)).join(`, `)
                       : `\`Muaf rol yok\``}\n` +
                     `**•** Bağlantılar: \`GIPHY, Tenor, GIBIRNet\` (Düzenleme şimdilik mevcut değil)\n` +
                     `**•** Ek: \`"Mesajları Yönet" yetkisine sahip üyeler\``
@@ -286,19 +275,8 @@ module.exports = {
                 name: `${interaction.guild.name} Sunucusunun Ayarları (Büyük Harf Engel)`,
                 icon_url: interaction.guild.iconURL(),
               },
-              title: `**»** ${upperCaseBlock?.guild || upperCaseBlock?.channels?.length > 0 ? upperCaseBlock.guild ? "Sunucu Genelinde Açık!" : "Belirli Kanallarda Açık!" : "Kapalı"}`,
+              title: `**»** ${upperCaseBlock?.guild ? "Açık!" : "Kapalı"}`,
               fields: [
-                {
-                  name: '**»** Aktif Kanallar',
-                  value: `**•** ` +
-                    (upperCaseBlock?.guild || upperCaseBlock?.channels?.length > 0 ?
-                      upperCaseBlock.guild ?
-                        upperCaseBlock.channels ?
-                          "Muaf kanallar hariç tüm sunucu!"
-                          : "Tüm sunucu!"
-                        : upperCaseBlock.channels.map(channel => interaction.guild.channels.cache.get(channel)).join(`\n**•** `)
-                      : "Kapalı")
-                },
                 {
                   name: '**»** Büyük Harf Oranı',
                   value: `**•** ${upperCaseBlock.rate ? `\`%${upperCaseBlock.rate}\`` : `\`Varsayılan (%70)\``}`
@@ -306,11 +284,11 @@ module.exports = {
                 {
                   name: '**»** Muaflar',
                   value:
-                    `**•** Kanallar: ${upperCaseBlock?.exempts?.channels?.length > 0 ?
-                      upperCaseBlock.exempts.channels.map(channel => interaction.guild.channels.cache.get(channel)).join(`, `)
+                    `**•** Kanallar: ${upperCaseBlock?.exempts?.channels?.length > 0
+                      ? upperCaseBlock.exempts.channels.map(channel => interaction.guild.channels.cache.get(channel)).join(`, `)
                       : `\`Muaf kanal yok\``}\n` +
-                    `**•** Roller: ${upperCaseBlock?.exempts?.roles?.length > 0 ?
-                      upperCaseBlock.exempts.roles.map(role => interaction.guild.roles.cache.get(role)).join(`, `)
+                    `**•** Roller: ${upperCaseBlock?.exempts?.roles?.length > 0
+                      ? upperCaseBlock.exempts.roles.map(role => interaction.guild.roles.cache.get(role)).join(`, `)
                       : `\`Muaf rol yok\``}\n` +
                     `**•** Ek: \`"Mesajları Yönet" yetkisine sahip üyeler\``
                 },
@@ -330,27 +308,16 @@ module.exports = {
                 name: `${interaction.guild.name} Sunucusunun Ayarları (Spam Koruması)`,
                 icon_url: interaction.guild.iconURL(),
               },
-              title: `**»** ${spamProtection.guild || spamProtection?.channels?.length > 0 ? spamProtection.guild ? "Sunucu Genelinde Açık!" : "Belirli Kanallarda Açık!" : "Kapalı"}`,
+              title: `**»** ${spamProtection.guild ? "Açık!" : "Kapalı"}`,
               fields: [
-                {
-                  name: '**»** Aktif Kanallar',
-                  value: `**•** ` +
-                    (spamProtection.guild || spamProtection?.channels?.length > 0 ?
-                      spamProtection.guild ?
-                        spamProtection.channels ?
-                          "Muaf kanallar hariç tüm sunucu!"
-                          : "Tüm sunucu!"
-                        : spamProtection.channels.map(channel => interaction.guild.channels.cache.get(channel)).join(`\n**•** `)
-                      : "Kapalı")
-                },
                 {
                   name: '**»** Muaflar',
                   value:
-                    `**•** Kanallar: ${spamProtection?.exempts?.channels?.length > 0 ?
-                      spamProtection.exempts.channels.map(channel => interaction.guild.channels.cache.get(channel)).join(`, `)
+                    `**•** Kanallar: ${spamProtection?.exempts?.channels?.length > 0
+                      ? spamProtection.exempts.channels.map(channel => interaction.guild.channels.cache.get(channel)).join(`, `)
                       : `\`Muaf kanal yok\``}\n` +
-                    `**•** Roller: ${spamProtection?.exempts?.roles?.length > 0 ?
-                      spamProtection.exempts.roles.map(role => interaction.guild.roles.cache.get(role)).join(`, `)
+                    `**•** Roller: ${spamProtection?.exempts?.roles?.length > 0
+                      ? spamProtection.exempts.roles.map(role => interaction.guild.roles.cache.get(role)).join(`, `)
                       : `\`Muaf rol yok\``}\n` +
                     `**•** Ek: \`"Mesajları Yönet" yetkisine sahip üyeler\`, \`Nraphy'nin zaman aşımı veremeyeceği üyeler\``
                 },
@@ -378,15 +345,41 @@ module.exports = {
 
       } else if (int.values.toString() === "giveawaysPageOption") {
 
+        let guildGiveaways = await client.database.betaGiveaways.find({ guildId: interaction.guild.id, isDrop: false }).lean().exec();
+
+        let continuingGiveaways = guildGiveaways.filter(giveaway => !giveaway.isEnded),
+          endedGiveaways = guildGiveaways.filter(giveaway => giveaway.isEnded);
+
         interaction.editReply({
           embeds: [
             {
-              color: client.settings.embedColors.red, //client.settings.embedColors.default,
+              color: client.settings.embedColors.default,
               author: {
                 name: `${interaction.guild.name} Sunucusunun Ayarları (Çekilişler)`,
                 icon_url: interaction.guild.iconURL(),
               },
-              description: "Bu sayfa bakımdadır. En kısa sürede güncelleme ile düzeltilecektir 😊"
+              fields: [
+                {
+                  name: '**»** Aktif Çekilişler',
+                  value:
+                    `**•** ${continuingGiveaways
+                      .map(giveaway => continuingGiveaways.length >= 8
+                        ? giveaway.prize.slice(0, 100)
+                        : `[${giveaway.prize.slice(0, 100)}](https://discord.com/channels/${giveaway.guildId}/${giveaway.channelId}/${giveaway.messageId})`)
+                      .join('\n**•** ')
+                    || "Aktif çekiliş bulunmuyor."}`
+                },
+                {
+                  name: '**»** Geçmiş Çekilişler (Son 30 gün)',
+                  value:
+                    `**•** ${endedGiveaways
+                      .map(giveaway => endedGiveaways.length >= 8
+                        ? giveaway.prize.slice(0, 100)
+                        : `[${giveaway.prize.slice(0, 100)}](https://discord.com/channels/${giveaway.guildId}/${giveaway.channelId}/${giveaway.messageId})`)
+                      .join('\n**•** ')
+                    || "Geçmiş çekiliş verisi bulunmuyor."}`
+                },
+              ],
             }
           ],
           components: [row]
@@ -452,7 +445,7 @@ module.exports = {
     collector.on('end', collected => {
       return interaction.editReply({
         components: []
-      });
+      }).catch(e => { });
     });
 
   }

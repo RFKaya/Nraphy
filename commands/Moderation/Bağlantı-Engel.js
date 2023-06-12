@@ -12,51 +12,10 @@ module.exports = {
         options: []
       },
       {
-        name: "ayarla",
-        description: "Bağlantı engelleme sistemininin ayarlarını ayarlar.",
-        type: 2,
-        options: [
-          {
-            name: "sunucu",
-            description: "Bağlantı engel sistemini sunucu genelinde çalışacak şekilde ayarlar.",
-            type: 1,
-            options: [
-              {
-                name: "işlem",
-                description: "Koruma, sunucu geneline açılsın mı/kapatılsın mı?",
-                choices: [
-                  { name: "Aç", value: "ac" },
-                  { name: "Kapat", value: "kapat" }
-                ],
-                type: 3,
-                required: true
-              },
-            ]
-          },
-          {
-            name: "kanal",
-            description: "Bağlantı engelleme sisteminin çalışacağı kanalları seçmenize yarar.",
-            type: 1,
-            options: [
-              {
-                name: "işlem",
-                description: "Seçtiğin kanal koruma listesine eklensin mi/kaldırılsın mı?",
-                choices: [
-                  { name: "Ekle", value: "ekle" },
-                  { name: "Kaldır", value: "kaldir" }
-                ],
-                type: 3,
-                required: true
-              },
-              {
-                name: "kanal",
-                description: "İşlem yapılacak kanalı seç.",
-                type: 7,
-                required: true
-              }
-            ]
-          },
-        ]
+        name: "aç",
+        description: "Bağlantı engelleme sistemini açar.",
+        type: 1,
+        options: []
       },
       {
         name: "muaf",
@@ -144,7 +103,7 @@ module.exports = {
   },
   interactionOnly: true,
   aliases: ["bağlantıengel", "linkengel", "adblock", "link-engel", 'reklam', 'reklam-engeli', 'reklam-engelleme', 'reklamengel', 'reklamengelleme', 'reklamengeli', "reklamkoruması", "reklam-koruması"],
-  category: "Moderation",
+  category: "MessageFilters",
   memberPermissions: ["ManageChannels"],
   botPermissions: ["SendMessages", "EmbedLinks", "ManageMessages"],
   nsfw: false,
@@ -176,30 +135,23 @@ module.exports = {
                 value: `**•** Bağlantı engelleme sistemini açtığınızda; sunucunuzdaki üyeler herhangi bir kanala bağlantı içeren bir mesaj attığında mesajı silinir.`,
               },
               {
-                name: '**»** Sunucu Geneli ya da Belirli Kanallar Nedir?',
-                value: `**•** Bağlantı engelleme sistemini sunucudaki tüm kanallar için veya sadece seçtiğiniz kanallar için çalışacak şekilde ayarlayabilirsiniz.`,
-              },
-              {
                 name: '**»** Bağlantı Engelleme Sistemi Nasıl Açılır?',
                 value:
-                  `**•** Sunucu geneli için: \`/bağlantı-engel Ayarla Sunucu Aç\`\n` +
-                  `**•** Belirli kanallar için: \`/bağlantı-engel Ayarla Kanal <#Kanal>\``,
+                  `**•** \`/bağlantı-engel Aç\``
               },
               {
                 name: '**»** Muaf Kanallar ve Muaf Roller Nasıl Ayarlanır?',
-                value: `**•** \`/bağlantı-engel Muaf Kanal <#Kanal>\`\n**•** \`/bağlantı-engel Muaf Rol <@Rol>\``
+                value:
+                  `**•** \`/bağlantı-engel Muaf Kanal <#Kanal>\`\n` +
+                  `**•** \`/bağlantı-engel Muaf Rol <@Rol>\``
               },
               {
                 name: '**»** Ayarladığım Bağlantı Engelleme Ayarlarını Nasıl Görürüm?',
-                value: `**•** \`/ayarlar\` yazıp alttaki butonlardan **Bağlantı Engel**'e tıklayarak her detayı görebilirsiniz.`,
+                value: `**•** \`/ayarlar\` yazıp alttaki seçeneklerden **Bağlantı Engel**'e tıklayarak her detayı görebilirsiniz.`,
               },
               {
                 name: '**»** Bağlantı Engelleme Sistemi Nasıl Kapatılır?',
                 value: `**•** \`/bağlantı-engel Kapat\``,
-              },
-              {
-                name: '**»** Sunucu Genelinde Geçerli Korumayı Belirli Kanallarda Çalışacak Şekile Taşıma',
-                value: `**•** \`/bağlantı-engel Ayarla Sunucu Kapat\` yazarak bunu yapabilirsiniz. Böylece muaf ayarlarınız korunur.`,
               },
               {
                 name: '**»** Hangi Bağlantılar Engellenir, Hangi Bağlantılar İstisnadır?',
@@ -225,207 +177,32 @@ module.exports = {
         ]
       });
 
-      //------------------------------Ayarla - Sunucu------------------------------//
-    } else if (getSubcommand == "ayarla") {
+      //------------------------------Aç------------------------------//
+    } else if (getCommand == "aç") {
 
-      if (getCommand == "sunucu") {
+      if (linkBlock?.guild)
+        return interaction.reply({
+          embeds: [
+            {
+              color: client.settings.embedColors.red,
+              title: '**»** Bağlantı Engelleme Sistemi Zaten Sunucu Genelinde Açık!',
+              description: `**•** Kapatmak için \`/bağlantı-engel Kapat\` yazabilirsin.`
+            }
+          ]
+        });
 
-        const getOperation = interaction.options.getString("işlem");
+      data.guild.linkBlock.guild = true;
+      await data.guild.save();
 
-        if (getOperation == "ac") {
-
-          if (linkBlock?.guild)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: '**»** Bağlantı Engelleme Sistemi Zaten Sunucu Genelinde Açık!',
-                  description: `**•** Kapatmak için \`/bağlantı-engel Kapat\` yazabilirsin.`
-                }
-              ]
-            });
-
-          //db.set(`guilds.${interaction.guild.id}.linkBlock.guild`, true)
-          data.guild.linkBlock.guild = true;
-          data.guild.markModified('linkBlock.guild');
-          await data.guild.save();
-          interaction.reply({
-            embeds: [
-              {
-                color: client.settings.embedColors.green,
-                title: '**»** Bağlantı Engelleme Sistemi Açıldı!',
-                description: `**•** Muaflar ve diğer bilgiler için \`/bağlantı-engel Bilgi\` yazabilirsin.`
-              }
-            ]
-          });
-
-        } else if (getOperation == "kapat") {
-
-          if (!linkBlock)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: '**»** Bağlantı Engelleme Sistemi Zaten Kapalı!!',
-                  description: `**•** Detaylı bilgi almak için \`/bağlantı-engel Bilgi\` yazabilirsin.`
-                }
-              ]
-            });
-
-          if (!linkBlock.guild)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: '**»** Bağlantı Engelleme Sistemi Zaten Belirli Kanallarda Açık!',
-                  description: `**•** Detaylı bilgi almak için \`/bağlantı-engel Bilgi\` yazabilirsin.`
-                }
-              ]
-            });
-
-          //db.set(`guilds.${interaction.guild.id}.linkBlock.guild`, false)
-          data.guild.linkBlock.guild = false;
-          data.guild.markModified('linkBlock.guild');
-          await data.guild.save();
-          interaction.reply({
-            embeds: [
-              {
-                color: client.settings.embedColors.green,
-                title: '**»** Bağlantı Engelleme Sistemi Sunucu Genelinde Kapatıldı!',
-                description: `**•** Sistemle ilgili bilgi almak için \`/bağlantı-engel Bilgi\` yazabilirsin.`
-              }
-            ]
-          });
-
-        }
-
-        //------------------------------Ayarla - Kanal------------------------------//
-      } else if (getCommand == "kanal") {
-
-        const getOperation = interaction.options.getString("işlem");
-        const getChannel = interaction.options.getChannel("kanal");
-
-        if (getChannel.type !== 0)
-          return interaction.reply({
-            embeds: [
-              {
-                color: client.settings.embedColors.red,
-                title: `**»** Geçerli Bir Kanal Belirtmelisin!`,
-                description: `**•** Belirttiğin kanal, oda veya kategori olmamalı. Sadece yazı kanalı.`,
-              }
-            ],
-            ephemeral: true
-          });
-
-        if (getOperation == "ekle") {
-
-          if (linkBlock?.guild)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: `**»** Bağlantı Engelleme Sistemi Zaten Sunucu Genelinde Açık!`,
-                  description: `**•** Belirttiğin kanal da otomatik olarak koruma dahilinde oluyor.`,
-                }
-              ],
-              ephemeral: true
-            });
-
-          if (linkBlock?.channels?.includes(getChannel.id))
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: `**»** Belirttiğin Kanal Zaten Bağlantı Koruması Altında!`,
-                  description: `**•** Detaylı bilgi almak için \`/bağlantı-engel Bilgi\` yazabilirsin.`,
-                }
-              ],
-              ephemeral: true
-            });
-
-          //db.push(`guilds.${interaction.guild.id}.linkBlock.channels`, getChannel.id)
-          data.guild.linkBlock.channels.push(getChannel.id);
-          data.guild.markModified('linkBlock.channels');
-          await data.guild.save();
-          interaction.reply({
-            embeds: [
-              {
-                color: client.settings.embedColors.green,
-                title: `**»** Belirttiğin Kanal Artık Koruma Altında!`,
-                description: `**•** Yardıma ihtiyacın olursa \`/bağlantı-engel Bilgi\` yazabilirsin.`,
-              }
-            ]
-          });
-
-        } else if (getOperation == "kaldir") {
-
-          if (linkBlock?.guild)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: `**»** Sanırsam Muaf Demek İstedin Çünkü Şu An Tüm Sunucu Koruma Altında!`,
-                  description: `**•** Muaf listesine eklemek/kaldırmak istiyosan /bağlantı-engel Muaf Kanal Ekle <#kanal>`,
-                }
-              ],
-              ephemeral: true
-            });
-
-          if (!linkBlock?.channels || linkBlock.channels.length == 0)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: `**»** Hiçbir Kanal Koruma Altında Değil ki!`,
-                  description: `**•** Olayı yanlış anladın bence sen \`/bağlantı-engel Bilgi\``,
-                }
-              ],
-              ephemeral: true
-            });
-
-          if (!linkBlock.channels.includes(getChannel.id))
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: `**»** Anlamadım Seni. Bu Kanal Zaten Koruma Altında Değil Ki!`,
-                  description: `**•** Yardım lazımsa \`/bağlantı-engel Bilgi\` yaz, ben yetişirim sana.`,
-                }
-              ],
-              ephemeral: true
-            });
-
-          if (linkBlock.channels.length == 1)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: `**»** Koruma Listesindeki Kalan Son Kanalı Listeden Çıkaramazsın!`,
-                  description: `**•** Önce başka kanal ekle veya direkt sistemi kapat. \`/bağlantı-engel Kapat\``,
-                }
-              ],
-              ephemeral: true
-            });
-
-          linkBlock.channels.splice(linkBlock.channels.indexOf(getChannel.id), 1);
-
-          //db.set(`guilds.${interaction.guild.id}.linkBlock.channels`, linkBlock.channels)
-          data.guild.linkBlock.channels = linkBlock.channels;
-          data.guild.markModified('linkBlock.channels');
-          await data.guild.save();
-          interaction.reply({
-            embeds: [
-              {
-                color: client.settings.embedColors.green,
-                title: `**»** \`#${getChannel.name}\` Başarıyla Koruma Listesinden Kaldırıldı!`,
-                description: `**•** Yardıma ihtiyacın olursa \`/bağlantı-engel Bilgi\` yazabilirsin.`,
-              }
-            ]
-          });
-
-        }
-
-      }
+      interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.green,
+            title: '**»** Bağlantı Engelleme Sistemi Açıldı!',
+            description: `**•** Muaflar ve diğer bilgiler için \`/bağlantı-engel Bilgi\` yazabilirsin.`
+          }
+        ]
+      });
 
       //------------------------------Muaf------------------------------//
     } else if (getSubcommand == "muaf") {
@@ -462,10 +239,10 @@ module.exports = {
               ephemeral: true
             });
 
-          //db.push(`guilds.${interaction.guild.id}.linkBlock.exempts.channels`, getChannel.id)
           data.guild.linkBlock.exempts.channels.push(getChannel.id);
           data.guild.markModified('linkBlock.exempts.channels');
           await data.guild.save();
+
           interaction.reply({
             embeds: [
               {
@@ -504,10 +281,10 @@ module.exports = {
 
           linkBlock.exempts.channels.splice(linkBlock.exempts.channels.indexOf(getChannel.id), 1);
 
-          //db.set(`guilds.${interaction.guild.id}.linkBlock.exempts.channels`, linkBlock.exempts.channels)
           data.guild.linkBlock.exempts.channels = linkBlock.exempts.channels;
           data.guild.markModified('linkBlock.exempts.channels');
           await data.guild.save();
+
           interaction.reply({
             embeds: [
               {
@@ -538,10 +315,10 @@ module.exports = {
               ephemeral: true
             });
 
-          //db.push(`guilds.${interaction.guild.id}.linkBlock.exempts.roles`, getRole.id)
           data.guild.linkBlock.exempts.roles.push(getRole.id);
           data.guild.markModified('linkBlock.exempts.roles');
           await data.guild.save();
+
           interaction.reply({
             embeds: [
               {
@@ -580,10 +357,10 @@ module.exports = {
 
           linkBlock.exempts.roles.splice(linkBlock.exempts.roles.indexOf(getRole.id), 1);
 
-          //db.set(`guilds.${interaction.guild.id}.linkBlock.exempts.roles`, linkBlock.exempts.roles)
           data.guild.linkBlock.exempts.roles = linkBlock.exempts.roles;
           data.guild.markModified('linkBlock.exempts.roles');
           await data.guild.save();
+
           interaction.reply({
             embeds: [
               {
@@ -636,7 +413,7 @@ module.exports = {
       //------------------------------Kapat------------------------------//
     } else if (getCommand == "kapat") {
 
-      if (!linkBlock.guild && !linkBlock.channels.length)
+      if (!linkBlock.guild)
         return interaction.reply({
           embeds: [
             {
@@ -647,11 +424,9 @@ module.exports = {
           ]
         });
 
-      //db.delete(`guilds.${interaction.guild.id}.linkBlock`)
-      data.guild.linkBlock.channels = [];
-      data.guild.linkBlock.guild = null;
-      data.guild.markModified('linkBlock');
+      data.guild.linkBlock.guild = undefined;
       await data.guild.save();
+
       interaction.reply({
         embeds: [
           {

@@ -14,7 +14,7 @@ module.exports = {
     ]
   },
   aliases: ['sr', "search"],
-  category: "Music",
+  category: "Music_Player",
   memberPermissions: [],
   botPermissions: ["SendMessages", "EmbedLinks"],
   nsfw: false,
@@ -49,6 +49,18 @@ module.exports = {
         }]
       });
 
+    if (music.includes('https://') || music.includes('http://'))
+      /*return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          title: '**»** Bir Bağlantı Belirtmişsin?!',
+          description:
+            `**•** Müzik arama komutu, hangi şarkıyı açacağını bulamayanlar içindir.\n` +
+            `**•** Ama sen ise şarkıyı açacağını bulmusşun, direkt \`/çal\` komutunu kullanabilirsin.\n`
+        }]
+      });*/
+      return require('./Çal.js').execute(client, interaction, data, args);
+
     if (music.length > 200)
       return interaction.reply({
         embeds: [{
@@ -58,9 +70,25 @@ module.exports = {
         }]
       });
 
+    const queue = client.distube.getQueue(interaction.guild);
+
+    if (!data.guildIsBoosted && queue?.songs.length > 200)
+      return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          description:
+            `**»** Şarkı sırası tamamen dolu. Daha fazla şarkı ekleyemezsin.\n` +
+            `**•** **Nraphy Boost** ile bu limiti sınırsıza çıkarabilirsin! \`/boost bilgi\``
+        }]
+      });
+
     if (interaction.type == 2) await interaction.deferReply();
 
-    const results = await client.distube.search(music);
+    try {
+      var results = await client.distube.search(music);
+    } catch (error) {
+      return require('../../events/distube/functions/errorHandler.js')(client, error, interaction.channel, interaction);
+    }
 
     const embed = {
       color: client.settings.embedColors.default,

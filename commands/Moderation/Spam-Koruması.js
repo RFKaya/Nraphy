@@ -12,51 +12,10 @@ module.exports = {
         options: []
       },
       {
-        name: "ayarla",
-        description: "Spam koruması sistemininin ayarlarını ayarlar.",
-        type: 2,
-        options: [
-          {
-            name: "sunucu",
-            description: "Spam koruması sistemini sunucu genelinde çalışacak şekilde ayarlar.",
-            type: 1,
-            options: [
-              {
-                name: "işlem",
-                description: "Koruma, sunucu geneline açılsın mı/kapatılsın mı?",
-                choices: [
-                  { name: "Aç", value: "ac" },
-                  { name: "Kapat", value: "kapat" }
-                ],
-                type: 3,
-                required: true
-              },
-            ]
-          },
-          {
-            name: "kanal",
-            description: "Spam koruması sisteminin çalışacağı kanalları seçmenize yarar.",
-            type: 1,
-            options: [
-              {
-                name: "işlem",
-                description: "Seçtiğin kanal koruma listesine eklensin mi/kaldırılsın mı?",
-                choices: [
-                  { name: "Ekle", value: "ekle" },
-                  { name: "Kaldır", value: "kaldir" }
-                ],
-                type: 3,
-                required: true
-              },
-              {
-                name: "kanal",
-                description: "İşlem yapılacak kanalı seç.",
-                type: 7,
-                required: true
-              }
-            ]
-          },
-        ]
+        name: "aç",
+        description: "Spam koruması sisteminini açar.",
+        type: 1,
+        options: []
       },
       {
         name: "muaf",
@@ -121,7 +80,7 @@ module.exports = {
   },
   interactionOnly: true,
   aliases: ["spam-engel", "spamengel", "spamkoruma", "spamkoruması", "spam", "flood"],
-  category: "Moderation",
+  category: "MessageFilters",
   memberPermissions: ["Administrator"],
   botPermissions: ["SendMessages", "EmbedLinks", "ManageMessages", "ModerateMembers"],
   nsfw: false,
@@ -130,6 +89,7 @@ module.exports = {
   voteRequired: true,
 
   async execute(client, interaction, data) {
+
     const getSubcommand = interaction.options.getSubcommandGroup(false);
     const getCommand = interaction.options.getSubcommand();
     const spamProtection = data.guild.spamProtection;
@@ -153,30 +113,23 @@ module.exports = {
                 value: `**•** Bir kullanıcı sohbeti kirletebilecek, sunucu akışını bozabilecek kadar çok mesaj atıyorsa spam koruması devreye girer ve kullanıcıyı geçici olarak susturur.`,
               },
               {
-                name: '**»** Sunucu Geneli ya da Belirli Kanallar Nedir?',
-                value: `**•** Spam koruması sistemini sunucudaki tüm kanallar için veya sadece seçtiğiniz kanallar için çalışacak şekilde ayarlayabilirsiniz.`,
-              },
-              {
                 name: '**»** Spam Koruması Sistemi Nasıl Açılır?',
                 value:
-                  `**•** Sunucu geneli için: \`/spam-koruması Ayarla Sunucu Aç\`\n` +
-                  `**•** Belirli kanallar için: \`/spam-koruması Ayarla Kanal <#Kanal>\``,
+                  `**•** \`/spam-koruması Aç\``,
               },
               {
                 name: '**»** Muaf Kanallar ve Muaf Roller Nasıl Ayarlanır?',
-                value: `**•** \`/spam-koruması Muaf Kanal <#Kanal>\`\n**•** \`/spam-koruması Muaf Rol <@Rol>\``
+                value:
+                  `**•** \`/spam-koruması Muaf Kanal <#Kanal>\`\n` +
+                  `**•** \`/spam-koruması Muaf Rol <@Rol>\``
               },
               {
                 name: '**»** Ayarladığım Spam Koruması Ayarlarını Nasıl Görürüm?',
-                value: `**•** \`/ayarlar\` yazıp alttaki butonlardan **Spam Koruması**'na tıklayarak her detayı görebilirsiniz.`,
+                value: `**•** \`/ayarlar\` yazıp alttaki seçeneklerden **Spam Koruması**'na tıklayarak her detayı görebilirsiniz.`,
               },
               {
                 name: '**»** Spam Koruması Sistemi Nasıl Kapatılır?',
                 value: `**•** \`/spam-koruması Kapat\``,
-              },
-              {
-                name: '**»** Sunucu Genelinde Geçerli Korumayı Belirli Kanallarda Çalışacak Şekile Taşıma',
-                value: `**•** \`/spam-koruması Ayarla Sunucu Kapat\` yazarak bunu yapabilirsiniz. Böylece muaf ayarlarınız korunur.`,
               },
               {
                 name: '**»** Geçici Olarak Susturulan Üyeler Ne Kadar Süre Boyunca Konuşamaz?',
@@ -204,203 +157,32 @@ module.exports = {
         ]
       });
 
-      //------------------------------Ayarla - Sunucu------------------------------//
-    } else if (getSubcommand == "ayarla") {
+      //------------------------------Aç------------------------------//
+    } else if (getCommand == "aç") {
 
-      if (getCommand == "sunucu") {
+      if (spamProtection?.guild)
+        return interaction.reply({
+          embeds: [
+            {
+              color: client.settings.embedColors.red,
+              title: '**»** Spam Koruması Sistemi Zaten Sunucu Genelinde Açık!',
+              description: `**•** Kapatmak için \`/spam-koruması Kapat\` yazabilirsin.`
+            }
+          ]
+        });
 
-        const getOperation = interaction.options.getString("işlem");
+      data.guild.spamProtection.guild = true;
+      await data.guild.save();
 
-        if (getOperation == "ac") {
-
-          if (spamProtection?.guild)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: '**»** Spam Koruması Sistemi Zaten Sunucu Genelinde Açık!',
-                  description: `**•** Kapatmak için \`/spam-koruması Kapat\` yazabilirsin.`
-                }
-              ]
-            });
-
-          data.guild.spamProtection.guild = true;
-          data.guild.markModified('spamProtection.guild');
-          await data.guild.save();
-          interaction.reply({
-            embeds: [
-              {
-                color: client.settings.embedColors.green,
-                title: '**»** Spam Koruması Sistemi Açıldı!',
-                description: `**•** Muaflar ve diğer bilgiler için \`/spam-koruması Bilgi\` yazabilirsin.`
-              }
-            ]
-          });
-
-        } else if (getOperation == "kapat") {
-
-          if (!spamProtection)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: '**»** Spam Koruması Sistemi Zaten Kapalı!!',
-                  description: `**•** Detaylı bilgi almak için \`/spam-koruması Bilgi\` yazabilirsin.`
-                }
-              ]
-            });
-
-          if (!spamProtection.guild)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: '**»** Spam Koruması Sistemi Zaten Belirli Kanallarda Açık!',
-                  description: `**•** Detaylı bilgi almak için \`/spam-koruması Bilgi\` yazabilirsin.`
-                }
-              ]
-            });
-
-          data.guild.spamProtection.guild = false;
-          data.guild.markModified('spamProtection.guild');
-          await data.guild.save();
-          interaction.reply({
-            embeds: [
-              {
-                color: client.settings.embedColors.green,
-                title: '**»** Spam Koruması Sistemi Sunucu Genelinde Kapatıldı!',
-                description: `**•** Sistemle ilgili bilgi almak için \`/spam-koruması Bilgi\` yazabilirsin.`
-              }
-            ]
-          });
-
-        }
-
-        //------------------------------Ayarla - Kanal------------------------------//
-      } else if (getCommand == "kanal") {
-
-        const getOperation = interaction.options.getString("işlem");
-        const getChannel = interaction.options.getChannel("kanal");
-
-        if (getChannel.type !== 0)
-          return interaction.reply({
-            embeds: [
-              {
-                color: client.settings.embedColors.red,
-                title: `**»** Geçerli Bir Kanal Belirtmelisin!`,
-                description: `**•** Belirttiğin kanal, oda veya kategori olmamalı. Sadece yazı kanalı.`,
-              }
-            ],
-            ephemeral: true
-          });
-
-        if (getOperation == "ekle") {
-
-          if (spamProtection?.guild)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: `**»** Spam Koruması Sistemi Zaten Sunucu Genelinde Açık!`,
-                  description: `**•** Belirttiğin kanal da otomatik olarak koruma dahilinde oluyor.`,
-                }
-              ],
-              ephemeral: true
-            });
-
-          if (spamProtection?.channels && spamProtection.channels.includes(getChannel.id))
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: `**»** Belirttiğin Kanal Zaten Bağlantı Koruması Altında!`,
-                  description: `**•** Detaylı bilgi almak için \`/spam-koruması Bilgi\` yazabilirsin.`,
-                }
-              ],
-              ephemeral: true
-            });
-
-          data.guild.spamProtection.channels.push(getChannel.id);
-          data.guild.markModified('spamProtection.channels');
-          await data.guild.save();
-          interaction.reply({
-            embeds: [
-              {
-                color: client.settings.embedColors.green,
-                title: `**»** Belirttiğin Kanal Artık Koruma Altında!`,
-                description: `**•** Yardıma ihtiyacın olursa \`/spam-koruması Bilgi\` yazabilirsin.`,
-              }
-            ]
-          });
-
-        } else if (getOperation == "kaldir") {
-
-          if (spamProtection?.guild)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: `**»** Sanırsam Muaf Demek İstedin Çünkü Şu An Tüm Sunucu Koruma Altında!`,
-                  description: `**•** Muaf listesine eklemek/kaldırmak istiyosan /spam-koruması Muaf Kanal Ekle <#kanal>`,
-                }
-              ],
-              ephemeral: true
-            });
-
-          if (!!spamProtection?.channels || spamProtection.channels.length == 0)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: `**»** Hiçbir Kanal Koruma Altında Değil ki!`,
-                  description: `**•** Olayı yanlış anladın bence sen \`/spam-koruması Bilgi\``,
-                }
-              ],
-              ephemeral: true
-            });
-
-          if (!spamProtection.channels.includes(getChannel.id))
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: `**»** Anlamadım Seni. Bu Kanal Zaten Koruma Altında Değil Ki!`,
-                  description: `**•** Yardım lazımsa \`/spam-koruması Bilgi\` yaz, ben yetişirim sana.`,
-                }
-              ],
-              ephemeral: true
-            });
-
-          if (spamProtection.channels.length == 1)
-            return interaction.reply({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  title: `**»** Koruma Listesindeki Kalan Son Kanalı Listeden Çıkaramazsın!`,
-                  description: `**•** Önce başka kanal ekle veya direkt sistemi kapat. \`/spam-koruması Kapat\``,
-                }
-              ],
-              ephemeral: true
-            });
-
-          spamProtection.channels.splice(spamProtection.channels.indexOf(getChannel.id), 1);
-
-          data.guild.spamProtection.channels = spamProtection.channels;
-          data.guild.markModified('spamProtection.channels');
-          await data.guild.save();
-          interaction.reply({
-            embeds: [
-              {
-                color: client.settings.embedColors.green,
-                title: `**»** \`#${getChannel.name}\` Başarıyla Koruma Listesinden Kaldırıldı!`,
-                description: `**•** Yardıma ihtiyacın olursa \`/spam-koruması Bilgi\` yazabilirsin.`,
-              }
-            ]
-          });
-
-        }
-
-      }
+      interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.green,
+            title: '**»** Spam Koruması Sistemi Açıldı!',
+            description: `**•** Muaflar ve diğer bilgiler için \`/spam-koruması Bilgi\` yazabilirsin.`
+          }
+        ]
+      });
 
       //------------------------------Muaf------------------------------//
     } else if (getSubcommand == "muaf") {
@@ -440,6 +222,7 @@ module.exports = {
           data.guild.spamProtection.exempts.channels.push(getChannel.id);
           data.guild.markModified('spamProtection.exempts.channels');
           await data.guild.save();
+
           interaction.reply({
             embeds: [
               {
@@ -481,6 +264,7 @@ module.exports = {
           data.guild.spamProtection.exempts.channels = spamProtection.exempts.channels;
           data.guild.markModified('spamProtection.exempts.channels');
           await data.guild.save();
+
           interaction.reply({
             embeds: [
               {
@@ -514,6 +298,7 @@ module.exports = {
           data.guild.spamProtection.exempts.roles.push(getRole.id);
           data.guild.markModified('spamProtection.exempts.roles');
           await data.guild.save();
+
           interaction.reply({
             embeds: [
               {
@@ -555,6 +340,7 @@ module.exports = {
           data.guild.spamProtection.exempts.roles = spamProtection.exempts.roles;
           data.guild.markModified('spamProtection.exempts.roles');
           await data.guild.save();
+
           interaction.reply({
             embeds: [
               {
@@ -572,7 +358,7 @@ module.exports = {
       //------------------------------Kapat------------------------------//
     } else if (getCommand == "kapat") {
 
-      if (!spamProtection.guild && !spamProtection.channels.length)
+      if (!spamProtection.guild)
         return interaction.reply({
           embeds: [
             {
@@ -583,10 +369,10 @@ module.exports = {
           ]
         });
 
-      data.guild.spamProtection.channels = [];
-      data.guild.spamProtection.guild = null;
+      data.guild.spamProtection.guild = undefined;
       data.guild.markModified('spamProtection');
       await data.guild.save();
+
       interaction.reply({
         embeds: [
           {

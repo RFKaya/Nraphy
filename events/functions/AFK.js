@@ -1,9 +1,9 @@
 const humanize = require("humanize-duration");
 
-module.exports.removeAFK = async (client, message, userDataCache) => {
+module.exports.removeAFK = async (client, message, userData) => {
 
-  if (userDataCache?.AFK?.time) {
-    const { time, reason } = userDataCache.AFK;
+  if (userData?.AFK?.time) {
+    const { time, reason } = userData.AFK;
 
     let sürecik = Date.now() - time;
 
@@ -35,9 +35,7 @@ module.exports.removeAFK = async (client, message, userDataCache) => {
         ]
       });
 
-      const userData = await client.database.fetchUser(message.author.id);
-      userData.AFK.time = null;
-      userData.AFK.reason = null;
+      userData.AFK = undefined;
       await userData.save();
     }
   }

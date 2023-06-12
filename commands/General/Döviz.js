@@ -1,6 +1,4 @@
-const Discord = require("discord.js");
 const tcmbdoviz = require('tcmb-doviz');
-const db = require("quick.db");
 
 module.exports = {
   name: "döviz",

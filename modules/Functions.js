@@ -100,19 +100,21 @@ module.exports = {
 
   messageChecker: function (interaction, message = '', example = '') {
 
-    if (!message || message.length < 1)
-      return interaction.reply({
+    if (!message || message.length < 1) {
+      interaction.reply({
         embeds: [
           {
             color: interaction.client.settings.embedColors.red,
             title: '**»** Bir Mesaj Belirtmelisin!',
-            description: `**•** Örnek kullanım: \`/${example}`
+            description: `**•** Örnek kullanım: \`/${example}\``
           }
         ]
       });
+      return false;
+    }
 
-    if (message.length > 180)
-      return interaction.reply({
+    if (message.length > 180) {
+      interaction.reply({
         embeds: [
           {
             color: interaction.client.settings.embedColors.red,
@@ -121,9 +123,11 @@ module.exports = {
           }
         ]
       });
+      return false;
+    }
 
-    if (message.toLowerCase().includes('discord.gg'))
-      return interaction.reply({
+    if (message.toLowerCase().includes('discord.gg')) {
+      interaction.reply({
         embeds: [
           {
             color: interaction.client.settings.embedColors.red,
@@ -132,9 +136,11 @@ module.exports = {
           }
         ]
       });
+      return false;
+    }
 
-    if (message.includes('@here') || message.includes('@everyone'))
-      return interaction.reply({
+    if (message.includes('@here') || message.includes('@everyone')) {
+      interaction.reply({
         embeds: [
           {
             color: interaction.client.settings.embedColors.red,
@@ -143,8 +149,10 @@ module.exports = {
           }
         ]
       });
+      return false;
+    }
 
-    return;
+    return true;
   },
 
   roleChecker: async function (interaction, role) {
