@@ -44,7 +44,7 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
     * **mongooseToken:** [MongoDB Cloud](https://cloud.mongodb.com) üzerinden edinebilirsin.
 		> Nasıl edineceği bilmiyorsan [MongoDB Atlas connection bağlantısı alma](https://medium.com/@thearkxd/node-js-projeleri-i%C3%A7in-mongodb-atlas-connection-linki-alma-5d955bbe5ae6) rehberine göz atabilirsin. 
 	*(Medium'daki **@thearkxd** kullanıcısına aittir. Kendisiyle bağlantım yoktur.)*
-    * **clientLogsWebhookURL:** Client Log'ları için Webhook bağlantısı. Doldurulması tavsiye edilir. <br>
+    * **clientLogsWebhookURL:** Client Logları için Webhook bağlantısı. Doldurulması tavsiye edilir. <br>
 2. `client.js` dosyasındaki `client.settings` objesinin verilerini botuna göre özelleştir.
 3. Eğer yoksa botun dizinine `logs` adında bir klasör oluştur.
 4. Konsola `npm i` çekerek node modüllerini kur. <br>
