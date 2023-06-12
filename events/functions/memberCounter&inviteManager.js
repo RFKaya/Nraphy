@@ -39,7 +39,7 @@ module.exports = async (client, member, memberCounter, inviteManager, guildData)
       guildData.inviteManager = undefined;
       await guildData.save();
 
-      return member.guild.channels.cache.get(memberCounter.setupChannel).send({
+      return member.guild.channels.cache.get(memberCounter.setupChannel)?.send({
         embeds: [{
           color: client.settings.embedColors.red,
           author: {

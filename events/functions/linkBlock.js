@@ -3,7 +3,7 @@ module.exports = async (client, message, linkBlock, isEditEvent = false) => {
   try {
 
     //O kanalda reklam engelleme çalışacak mı?
-    if (!linkBlock.guild && !linkBlock.channels?.includes(message.channel.id)) return;
+    if (!linkBlock.guild) return;
 
     //Muaflar
     if (

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const schema = new mongoose.Schema({
 
   userId: { type: String, unique: true },
-  registeredAt: { type: Number, default: Date.now() },
+  registeredAt: { type: Number, default: Date.now },
   readDateOfChanges: { type: Number, default: 0 },
 
   about: { type: String, default: null },
@@ -19,7 +19,11 @@ const schema = new mongoose.Schema({
   NraphyCoin: { type: Number, default: 0, get: Math.floor },
   NraphyPremium: { type: Number, default: null },
   NraphyBoost: Array,
-  //USD: Number,
+  hunter: {
+    level: Number,
+    name: String,
+    commands: [Object]
+  },
 
   commandUses: Number, //{ type: Number, default: 0 },
   statistics: {
@@ -35,18 +39,13 @@ const schema = new mongoose.Schema({
   },
 
   AFK: {
+    time: Date,
     reason: String,
-    time: Date
   },
 
   lastBonus: {
     lastStandardBonus: Date,
     lastPremiumBonus: Date,
-  },
-
-  hunter: {
-    level: { type: Number, default: 0 }
-
   },
 
   topggVotes: {
@@ -63,7 +62,7 @@ schema.pre('save', async function () {
 
   //let thisDoc = { ...this._doc };
   function funcName(client, { userId }) {
-    delete global.database.usersCache[userId];
+    delete global.localDatabase.users[userId];
   }
   global.client.shard.broadcastEval(funcName, { context: { userId: this.userId } });
   //global.database.usersCache[this.userId] = this;//{ ...global.databaseCache[this.userId], ...thisDoc };

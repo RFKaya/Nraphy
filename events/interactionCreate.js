@@ -1,9 +1,10 @@
 module.exports = async (client, interaction) => {
 
-  if (!interaction.guild) return interaction.reply({ content: ":x: | Etkileşim komutları maalesef DM'de kullanılamamaktadır." });
-
   if (interaction.type !== 2)
     client.logger.interaction(`user: ${interaction.user.tag} (${interaction.user.id}), type: ${interaction.type}, customId: ${interaction.customId}`);
+
+  if (!interaction.guild)
+    return interaction.reply({ content: ":x: | Etkileşim komutları maalesef DM'de kullanılamamaktadır." });
 
   try {
 

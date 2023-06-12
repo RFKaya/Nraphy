@@ -55,6 +55,7 @@ module.exports = {
 
   async execute(client, interaction, data) {
 
+    const getSubcommand = interaction.options.getSubcommandGroup(false);
     const getCommand = interaction.options.getSubcommand();
 
     if (getCommand == "bilgi") {
@@ -75,6 +76,10 @@ module.exports = {
               {
                 name: '**»** Davet Sıralamasına Nasıl Ulaşırım?',
                 value: `**•** \`/sıralama\` komutunu çalıştırıp, mesajın altındaki butonlardan davet sıralamasını seçerek sıralamaya ulaşabilirsiniz.`,
+              },
+              {
+                name: '**»** Kendimin veya Başkasının Davetlerine Nasıl Ulaşırım?',
+                value: `**•** \`/davetler\``,
               },
               {
                 name: '**»** Sayaç Sistemiyle Uyumu!',
@@ -162,7 +167,7 @@ module.exports = {
         ]
       });
 
-    } else if (getCommand == "sıfırla") {
+    } else if (getSubcommand == "sıfırla") {
 
       return interaction.reply({
         embeds: [

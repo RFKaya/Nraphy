@@ -1,6 +1,3 @@
-const db = require('quick.db');
-const Discord = require('discord.js');
-
 module.exports = {
   name: "galeri",
   description: "Belirttiğiniz kanalda sadece Fotoğraf/Video gönderilebilir.",
@@ -44,6 +41,11 @@ module.exports = {
               {
                 name: '**»** Nasıl Kapatılır?',
                 value: `**•** \`${data.prefix}galeri Sıfırla\` yazarak galeri sistemini kapatabilirsiniz.`,
+              },
+              {
+                name: '**»** Ek Not',
+                value:
+                  `**•** Galeri kanallarında Bağlantı-Engel sistemi muaf tutulur.`,
               },
             ],
           }

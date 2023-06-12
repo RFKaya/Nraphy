@@ -152,7 +152,7 @@ module.exports = {
             {
               color: client.settings.embedColors.green,
               title: '**»** Sayaç Kanalı Değiştirildi!',
-              description: `**•** Kanal ${mentionedChannel} olarak değiştirildi.`
+              description: `**•** Kanal ${channel} olarak değiştirildi.`
             }
           ]
         });

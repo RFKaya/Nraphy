@@ -29,7 +29,7 @@ module.exports = {
     //interaction.deferReply();
 
     request(`https://api.thecatapi.com/v1/images/search`, function (error, response, body) {
-
+      
       if (error || !body || !JSON.parse(body)[0]?.url)
         return interaction.reply({
           embeds: [

@@ -1,12 +1,20 @@
-const { WebhookClient } = require('discord.js'),
-  chalk = require("chalk"),
+const chalk = require("chalk"),
   fs = require("fs"),
   dateModule = require("./Date.js"),
   capitalizeFirstLetter = ([first, ...rest], locale = "tr-TR") => first.toLocaleUpperCase(locale) + rest.join(''),
   config = require("../config.json");
 
-var nowDate = new Date(),
-  logFile = `./logs/log-${nowDate.getFullYear()}.${(nowDate.getMonth() + 1)}.txt`;
+function logTXT(content) {
+
+  let nowDate = new Date(),
+    logFile = `./logs/log-${nowDate.getFullYear()}.${(nowDate.getMonth() + 1)}.txt`;
+
+  fs.appendFile(logFile, content,
+    function (err) {
+      if (err) return console.log(err);
+    });
+
+}
 
 //---------------cmdLog---------------//
 exports.cmdLog = async (user, guild, type, cmdName, content) => {
@@ -17,15 +25,11 @@ exports.cmdLog = async (user, guild, type, cmdName, content) => {
   console.log(`${timestamp} ${chalk.white(`CMD (${type.toUpperCase()})`)} ${user.tag} (${user.id}) => ${capitalizeFirstLetter(cmdName, "tr")}`);
 
   //Log TXT
-  fs.appendFile(logFile,
-    `${timestamp} (CMD) (${type.toUpperCase()})\n` +
+  logTXT(`${timestamp} (CMD) (${type.toUpperCase()})\n` +
     ` => User: ${user.tag} (${user.id})\n` +
     ` => Guild: ${guild.name} (${guild.id})\n` +
     ` => CMD: ${capitalizeFirstLetter(cmdName, "tr")}\n` +
-    ` => Content: ${content || "No Data"}\n\n`,
-    function (err) {
-      if (err) return console.log(err);
-    });
+    (content ? ` => Content: ${content}\n\n` : `\n`));
 
   //Client commandUses
   const Mongoose = require(".././Mongoose/Mongoose.js");
@@ -60,38 +64,53 @@ exports.cmdLog = async (user, guild, type, cmdName, content) => {
 //---------------error---------------//
 exports.error = async (content) => {
 
-  let dateNow = Date.now();
-  let timestamp = dateModule.timestamp();
+  try {
 
-  //Console Log
-  //console.log(`${timestamp} ${chalk.red("ERROR")} ${content}`);
-  console.log(`${timestamp} ${chalk.red("ERROR")}`);
-  console.error(content);
-  if (content.requestBody?.json?.data?.embeds) console.log("error.requestBody.json.data.embeds:", content.requestBody.json.data.embeds);
-  else if (content.requestBody?.json?.embeds) console.log("error.requestBody.json.embeds:", content.requestBody.json.embeds);
-  else if (content.requestBody?.json) console.log("error.requestBody.json:", content.requestBody.json);
+    let dateNow = Date.now();
+    let timestamp = dateModule.timestamp();
 
-  //Log TXT
-  fs.appendFile(logFile,
-    `${timestamp} (ERROR) Error Log\n` +
-    ` => ID: ${dateNow}\n` +
-    ` => Content: ${content}\n\n`,
-    function (err) {
-      if (err) return console.log(err);
+    //Console Log
+    //console.log(`${timestamp} ${chalk.red("ERROR")} ${content}`);
+    console.log(`${timestamp} ${chalk.red("ERROR")}`);
+    console.error(content);
+    if (content.requestBody?.json?.data?.embeds) console.log("error.requestBody.json.data.embeds:", content.requestBody.json.data.embeds);
+    else if (content.requestBody?.json?.embeds) console.log("error.requestBody.json.embeds:", content.requestBody.json.embeds);
+    else if (content.requestBody?.json) console.log("error.requestBody.json:", content.requestBody.json);
+
+    //Log TXT
+    logTXT(`${timestamp} (ERROR) Error Log\n` +
+      ` => ID: ${dateNow}\n` +
+      ` => Content: ${content}\n\n`);
+
+    //Database Error Counter
+    const Mongoose = require(".././Mongoose/Mongoose.js");
+    var clientData = await Mongoose.fetchClientData();
+    clientData.error += 1;
+    clientData.markModified('error');
+    await clientData.save();
+
+    //Webhook Log
+    global.client.clientDataCache.logQueue.push({
+      color: 0xE74C3C,
+      title: `**»** Hata Oluştu! (\`${dateNow}\`)`,
+      description: `\`\`\`${content}\`\`\``,
     });
 
-  //Database Error Counter
-  const Mongoose = require(".././Mongoose/Mongoose.js");
-  var clientData = await Mongoose.fetchClientData();
-  clientData.error += 1;
-  clientData.markModified('error');
-  await clientData.save();
+
+  } catch (error) {
+
+    console.log(chalk.red("KRİTİK HATA! HATA LOGLAMA SİSTEMİNDE BİR HATA MEYDANA GELDİ!"));
+    console.log(error);
+
+  }
 
 };
 
 //---------------warn---------------//
 exports.warn = async (content) => {
 
+  let nowDate = new Date(),
+    logFile = `./logs/log-${nowDate.getFullYear()}.${(nowDate.getMonth() + 1)}.txt`;
   let dateNow = Date.now();
   let timestamp = dateModule.timestamp();
 
@@ -99,27 +118,33 @@ exports.warn = async (content) => {
   console.log(`${timestamp} ${chalk.yellow("WARN")} ${content}`);
 
   //Log TXT
-  fs.appendFile(logFile,
-    `${timestamp} (WARN) \n` +
+  logTXT(`${timestamp} (WARN) \n` +
     ` => Date Timestamp: ${dateNow}\n` +
-    ` => Content: ${content}\n\n`,
-    function (err) {
-      if (err) return console.log(err);
-    });
+    ` => Content: ${content}\n\n`);
+
+  //Webhook Log
+  global.client.clientDataCache.logQueue.push({
+    color: 0xFEE75C,
+    title: `**»** Uyarı! (\`${dateNow}\`)`,
+    description: `\`\`\`${content}\`\`\``,
+  });
 
 };
 
 //------------------------------⬇️ Eski ⬇️------------------------------//
-exports.log = (content, type = "log", writeFileLog = true) => {
+exports.log = (content, type = "log", writeFileLog = true, sendWebhookMessage = false) => {
 
   let timestamp = dateModule.timestamp();
 
-  if (type !== "interaction" && writeFileLog) {
-    fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) ${content}\n\n`,
-      function (err) {
-        if (err) return console.log(err);
-      });
-  }
+  if (type !== "interaction" && writeFileLog)
+    logTXT(`${timestamp} (${type.toUpperCase()}) ${content}\n\n`);
+
+  //Webhook Log
+  if (sendWebhookMessage)
+    global.client.clientDataCache.logQueue.push({
+      color: 0x3498DB,
+      description: `\`\`\`${content}\`\`\``,
+    });
 
   switch (type) {
     case "client": {
@@ -151,10 +176,10 @@ exports.log = (content, type = "log", writeFileLog = true) => {
     }*/
     case 'interaction': {
       console.log(`${timestamp} ${chalk.white(type.toUpperCase())} ${content}`);
-      fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) Interaction Log\n • ${content}\n\n`,
+      /*fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) Interaction Log\n • ${content}\n\n`,
         function (err) {
           if (err) return console.log(err);
-        });
+        });*/
       return;
     }
     /*case 'interactionCmd': {

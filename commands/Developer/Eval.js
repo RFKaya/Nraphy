@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const db = require("quick.db");
 const request = require("request");
 const fs = require('fs');
 const moment = require('moment');

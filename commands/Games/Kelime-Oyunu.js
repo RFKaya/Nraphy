@@ -360,7 +360,7 @@ module.exports = {
             }
           ],
           components: []
-        });
+        }).catch(error => { });
 
         await interaction.editReply({
           embeds: [

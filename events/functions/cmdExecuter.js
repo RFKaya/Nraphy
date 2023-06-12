@@ -23,10 +23,71 @@ module.exports = async (client, interaction, cmd, guildData, userData, args = nu
       cmd: cmd,
       prefix: guildData.prefix || client.settings.prefix,
       premium: (userData.NraphyPremium && userData.NraphyPremium > Date.now()),
+      guildIsBoosted: (guildData.NraphyBoost?.users?.length ? true : false)
     };
 
+    //---------------Permissions---------------//
+    let
+      missingMemberPerms = (cmd.memberPermissions || [])
+        .filter(perm => !interaction.channel.permissionsFor(interaction.member).has(perm)),
+      missingClientPerms = [...new Set(["SendMessages", "ReadMessageHistory", "EmbedLinks", ...(cmd.botPermissions || [])])]
+        .filter(perm => !interaction.channel.permissionsFor(interaction.guild.members.me).has(perm));
+
+    if (missingClientPerms.length) {
+
+      let
+        missingClientPermsEmbedMessage = {
+          embeds: [
+            {
+              color: client.settings.embedColors.red,
+              author: {
+                name: `Bu Komutu Çalıştırabilmem İçin Gereken İzinlere Sahip Değilim!`,
+                icon_url: interaction.guild.iconURL(),
+              },
+              fields: [
+                {
+                  name: '**»** İhtiyacım Olan İzinler;',
+                  value: `**•** ${missingClientPerms.map(perm => permissions[perm]).join("\n**•** ")}`,
+                },
+              ]
+            }
+          ],
+          ephemeral: true
+        },
+        missingClientPermsMessage = {
+          content:
+            "**»** Bu komutu çalıştırabilmem için aşağıdaki izinlere ihtiyacım var!\n\n" +
+            `**•** ${missingClientPerms.map(perm => permissions[perm]).join("\n**•** ")}`,
+          ephemeral: true
+        };
+
+      if (missingClientPerms.includes("SendMessages"))
+        return user.send(missingClientPermsEmbedMessage);
+
+      else if (missingClientPerms.includes("ReadMessageHistory")) {
+        return interaction.channel.send(missingClientPerms.includes("EmbedLinks") ? missingClientPermsMessage : missingClientPermsEmbedMessage);
+      }
+
+      else if (missingClientPerms.includes("EmbedLinks"))
+        return interaction.reply(missingClientPermsMessage);
+
+      else return interaction.reply(missingClientPermsEmbedMessage);
+
+    }
+
+    if (missingMemberPerms.length)
+      return interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            description: `**»** Bu komutu kullanabilmek için **${missingMemberPerms.map(perm => permissions[perm])}** yetkisine sahip olmalısın.`
+          }
+        ],
+        ephemeral: true
+      });
+
     //---------------Interaction Only---------------//
-    if (cmd.interactionOnly && interaction.type === 0)
+    if (cmd.interactionOnly && interaction.type !== 2)
       return interaction.reply({
         embeds: [
           {
@@ -36,72 +97,6 @@ module.exports = async (client, interaction, cmd, guildData, userData, args = nu
           }
         ]
       });
-
-    //---------------Permissions---------------//
-    let
-      userPerms = cmd.memberPermissions
-        .filter(perm => !interaction.channel.permissionsFor(interaction.member).has(perm))
-        .map(perm => permissions[perm]),
-      clientPerms = cmd.botPermissions
-        .filter(perm => !interaction.channel.permissionsFor(interaction.guild.members.me).has(perm))
-        .map(perm => permissions[perm]);
-
-    if (userPerms.length > 0) {
-      if (clientPerms.includes("Bağlantı Yerleştir")) {
-        return interaction.reply({
-          content: `Bu komutu kullanabilmek için ` + userPerms.map((p) => `**${p}**` + " yetkisine sahip olmalısın.").join(", "),
-          ephemeral: true
-        });
-      } else {
-        return interaction.reply({
-          embeds: [{
-            color: client.settings.embedColors.red,
-            description: `**»** Bu komutu kullanabilmek için ` + userPerms.map((p) => `**${p}**` + " yetkisine sahip olmalısın.").join(", ")
-          }],
-          ephemeral: true
-        });
-      }
-    }
-
-    if (clientPerms.length > 0) {
-      if (clientPerms.includes("Mesaj Gönder")) {
-
-        return user.send({
-          embeds: [{
-            color: client.settings.embedColors.red,
-            author: {
-              name: `Bu Komutu Çalıştırabilmem İçin Gereken İzinlere Sahip Değilim!`,
-              icon_url: interaction.guild.iconURL(),
-            },
-            fields: [
-              {
-                name: '**»** İhtiyacım Olan İzinler;',
-                value: "**•** " + clientPerms.map((p) => `${p}`).join("\n**•** "),
-              },
-            ]
-          }]
-        });
-
-      } else if (clientPerms.includes("Bağlantı Yerleştir")) {
-        return interaction.reply({ content: "Bu komutu çalıştırabilmem için aşağıdaki izinlere ihtiyacım var!\n\n" + "**•** " + clientPerms.map((p) => `${p}`).join("\n**•** ") });
-      } else {
-        return interaction.reply({
-          embeds: [{
-            color: client.settings.embedColors.red,
-            author: {
-              name: `Bu Komutu Çalıştırabilmem İçin Gereken İzinlere Sahip Değilim!`,
-              icon_url: interaction.guild.iconURL(),
-            },
-            fields: [
-              {
-                name: '**»** İhtiyacım Olan İzinler;',
-                value: "**•** " + clientPerms.map((p) => `${p}`).join("\n**•** "),
-              },
-            ]
-          }]
-        });
-      }
-    }
 
     //---------------NSFW---------------//
     if (cmd.nsfw && !interaction.channel.nsfw) {
@@ -121,9 +116,29 @@ module.exports = async (client, interaction, cmd, guildData, userData, args = nu
 
     //---------------Vote---------------//
     if (cmd.voteRequired && client.config.topggToken) {
+
       let topgg = require(`@top-gg/sdk`);
       let topggapi = new topgg.Api(client.config.topggToken);
-      if (!data.premium && !(await topggapi.hasVoted(user.id))) {
+
+      //Topgg API bozuksa
+      const topggStatus = client.clientDataCache.topggStatus;
+      if (!topggStatus.status) {
+        client.logger.log(`${(interaction.user || interaction.author).id} kullanıcısına vote muaf verildi.`, "log", true, true);
+
+        if (Date.now() - topggStatus.lastCheck > 900000) {
+          topggapi.hasVoted(user.id)
+            .then(data => topggStatus = ({ status: true, lastCheck: Date.now() }))
+            .catch(error => topggStatus = ({ status: false, lastCheck: Date.now() }));
+        }
+      }
+
+      //Topgg API çalışıyorsa
+      else if (!data.premium && !(await topggapi.hasVoted(user.id)
+        .catch(error => {
+          client.logger.error(`Topgg Error: "${error}" - 15 dakikalığına topgg api muaf aktif edildi!`);
+          topggStatus = ({ status: false, lastCheck: Date.now() });
+        })
+      )) {
         return interaction.reply({
           embeds: [{
             color: client.settings.embedColors.red,
@@ -143,6 +158,7 @@ module.exports = async (client, interaction, cmd, guildData, userData, args = nu
           ephemeral: true
         });
       }
+
     }
 
     //---------------Cooldown---------------//
@@ -169,7 +185,7 @@ module.exports = async (client, interaction, cmd, guildData, userData, args = nu
     userDataCache_lastCmds[(cmd.interaction || cmd).name] = Date.now();
 
     //---------------Logging & Stats---------------//
-    client.logger.cmdLog(user, interaction.guild, interaction.type === 2 ? "interaction" : "message", (cmd.interaction || cmd).name, null);
+    client.logger.cmdLog(user, interaction.guild, interaction.type === 2 ? "interaction" : "message", (cmd.interaction || cmd).name, interaction.type === 0 ? interaction.content : null);
 
     //---------------CMD Execute---------------//
     if (interaction.type === 2)

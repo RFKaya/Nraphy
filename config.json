@@ -1,6 +1,7 @@
 {
-  "token": "TOKEN",
+  "token": "NzE2MTE1NDc3MjcyNzIzNDY2.GNzpC6.CNY5B8KxR41unzJ0w6Cx70S4sc1UOOxj_w9bsc",
   "totalShards": "auto",
   "topggToken": "",
-  "mongooseToken": ""
+  "mongooseToken": "mongodb+srv://RFKaya:DTfc53dnt5q8sg0c@cluster0.bxtbm.mongodb.net/NraphyTest?retryWrites=true&w=majority",
+  "clientLogsWebhookURL": "https://canary.discord.com/api/webhooks/940665708738674689/fH0wfgYWV-J6gwzVaGSumaUkcL_pYbgKj7BndQqZdZLcPF6blwEvCtg5JcbuUfUhQjF-"
 }

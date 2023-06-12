@@ -1,5 +1,3 @@
-//const request = require("request");
-//const db = require("quick.db");
 const axios = require('axios');
 
 module.exports = async (client, message, wordGame, guildData) => {
@@ -24,7 +22,6 @@ module.exports = async (client, message, wordGame, guildData) => {
     if (clientPerms.length > 0) {
 
       client.logger.log(`Kelime oyunu kanalında bir/birkaç yetkim bulunmadığı için kelime oyunu sistemi sıfırlanıyor... • ${message.guild.name} (${message.guild.id})`);
-      //db.delete(`guilds.${message.guild.id}.wordGame.channel`);
       guildData.wordGame.channel = undefined;
       guildData.markModified('wordGame');
       await guildData.save();
@@ -44,7 +41,7 @@ module.exports = async (client, message, wordGame, guildData) => {
             },
           ]
         }]
-      });
+      }).catch(e => { });
 
     }
 
@@ -52,7 +49,7 @@ module.exports = async (client, message, wordGame, guildData) => {
 
     //---------------Warner---------------//
 
-    async function warner(user, title, description) {
+    async function warner(user, title, description, deleteMessage = true) {
 
       //Uyarı Metni
       const userCache = client.userDataCache[user.id] || (client.userDataCache[user.id] = {});
@@ -71,16 +68,14 @@ module.exports = async (client, message, wordGame, guildData) => {
       }
 
       //Mesaj Silme
-      message.delete().catch(e => { });
+      if (deleteMessage) message.delete().catch(e => { });
 
     }
 
     //---------------Warner---------------//
 
-    const guildDataQueue = global.client.databaseQueue.guilds[message.guild.id] ||= {};
-
     //Üst Üste Yazma
-    if (!wordGame.writeMore && (guildDataQueue.wordGame?.lastWord || wordGame.lastWord)?.author == message.author.id) {
+    if (!wordGame.writeMore && wordGame.lastWord?.author == message.author.id) {
       return warner(
         message.author,
         "Hey, Dur! Üst Üste Kelimeler Türetemezsin",
@@ -90,6 +85,8 @@ module.exports = async (client, message, wordGame, guildData) => {
 
     //Sadece Düzgün Harfler Kullanmalısın!
     const ingilizceKarakterlerMapping = {
+      'â': 'a',
+      'Â': 'A',
       'ı': 'i',
       'İ': 'I',
       'ü': 'u',
@@ -129,26 +126,8 @@ module.exports = async (client, message, wordGame, guildData) => {
       );
     }
 
-    //1 Harfli Sözcük mü Olur ki?
-    if (message.content.length < 2) {
-      return warner(
-        message.author,
-        "1 Harfli Sözcük mü Olur ki?",
-        "Olmaz ki! Yoksa olur mu? Yoo olmaz. Olma ihtimali var mı? :thinking:"
-      );
-    }
-
-    //En Az 3 Harfli Bir Sözcük Bulmalısın!
-    if (message.content.length < 3) {
-      return warner(
-        message.author,
-        "En Az 3 Harfli Bir Sözcük Bulmalısın!",
-        "Oyun basit olmasın diye böyle. Yapacak bir şey yok. :confused:"
-      );
-    }
-
     let küçükHarfliKelime = message.content.toLocaleLowerCase('tr-TR');
-    let öncekiKelime = guildDataQueue.wordGame?.lastWord?.word || wordGame.lastWord?.word || "n";
+    let öncekiKelime = wordGame.lastWord?.word || "n";
 
     //Önceki Sözcükten Farklı Bir Sözcük Bulmalısın!
     if (öncekiKelime == küçükHarfliKelime) {
@@ -168,8 +147,26 @@ module.exports = async (client, message, wordGame, guildData) => {
       );
     }
 
+    //1 Harfli Sözcük mü Olur ki?
+    if (message.content.length < 2) {
+      return warner(
+        message.author,
+        "1 Harfli Sözcük mü Olur ki?",
+        "Olmaz ki! Yoksa olur mu? Yoo olmaz. Olma ihtimali var mı? :thinking:"
+      );
+    }
+
+    //En Az 3 Harfli Bir Sözcük Bulmalısın!
+    if (message.content.length < 3) {
+      return warner(
+        message.author,
+        "En Az 3 Harfli Bir Sözcük Bulmalısın!",
+        "Oyun basit olmasın diye böyle. Yapacak bir şey yok. :confused:"
+      );
+    }
+
     //Belirttiğin Sözcük Yakın Zamanda Kullanılmış!
-    if (((wordGame.history?.concat(guildDataQueue.wordGame?.history || []))?.slice(-200) || []).includes(küçükHarfliKelime)) {
+    if (((wordGame.history?.concat(wordGame?.history || []))?.slice(-200) || []).includes(küçükHarfliKelime)) {
       return warner(
         message.author,
         "Belirttiğin Sözcük Yakın Zamanda Kullanılmış!",
@@ -210,29 +207,32 @@ module.exports = async (client, message, wordGame, guildData) => {
     }
 
     //Tepki
-    message.react('✅');
+    message.react('✅')
+      .catch(error => {
+        if (error.code === 90001)
+          warner(
+            message.author,
+            "Mesajına Tepki Ekleyemiyorum!",
+            `Beni engellemiş olabilirsin :rage:\n` +
+            `**•** İstersen [destek sunucumuzdan](https://discord.gg/VppTU9h) yardım alabilirsin 🥺`,
+            false
+          );
+        else if (error.code !== 10008)
+          client.logger.error(error);
+      });
 
     //İstatistikler
-    /*db.add(`guilds.${message.guild.id}.wordGame.stats.${message.author.id}.wordCount`, 1);
-    db.add(`guilds.${message.guild.id}.wordGame.stats.${message.author.id}.wordLength`, küçükHarfliKelime.length);*/
-    ((guildDataQueue.wordGame ||= {}).stats ||= {})[message.author.id] ||= {};
-    guildDataQueue.wordGame.stats[message.author.id].wordCount ||= 0;
-    guildDataQueue.wordGame.stats[message.author.id].wordCount += 1;
-    guildDataQueue.wordGame.stats[message.author.id].wordLength ||= 0;
-    guildDataQueue.wordGame.stats[message.author.id].wordLength += küçükHarfliKelime.length;
+    ((wordGame ||= {}).stats ||= {})[message.author.id] ||= { wordCount: 0, wordLength: 0 };
+    wordGame.stats[message.author.id].wordCount += 1;
+    wordGame.stats[message.author.id].wordLength += küçükHarfliKelime.length;
 
     //En uzun kelime
-    //if (!wordGame.longestWord || küçükHarfliKelime.length > wordGame.longestWord.word.length) db.set(`guilds.${message.guild.id}.wordGame.longestWord`, { author: message.author.id, word: küçükHarfliKelime });
-    if (küçükHarfliKelime.length > ((guildDataQueue.wordGame.longestWord || wordGame.longestWord)?.word?.length || 0))
-      guildDataQueue.wordGame.longestWord = { author: message.author.id, word: küçükHarfliKelime };
+    if (küçükHarfliKelime.length > (wordGame.longestWord?.word?.length || 0))
+      wordGame.longestWord = { author: message.author.id, word: küçükHarfliKelime };
 
     //Geçmiş
-    /*if (wordGame.history && wordGame.history.length > 200) {
-      wordGame.history.shift();
-      db.set(`guilds.${message.guild.id}.wordGame.history`, wordGame.history);
-    };
-    db.push(`guilds.${message.guild.id}.wordGame.history`, küçükHarfliKelime);*/
-    (guildDataQueue.wordGame.history ||= []).push(küçükHarfliKelime);
+    (wordGame.history ||= []).push(küçükHarfliKelime);
+    wordGame.history = wordGame.history.slice(-150);
 
     //Yumuşak G
     if (küçükHarfliKelime.slice(-1) == "ğ") {
@@ -260,11 +260,7 @@ module.exports = async (client, message, wordGame, guildData) => {
       });
 
       //Son Kelime
-      /*db.set(`guilds.${message.guild.id}.wordGame.lastWord`, {
-        word: küçükHarfliKelime + yeniHarf,
-        author: message.author.id
-      });*/
-      guildDataQueue.wordGame.lastWord = {
+      wordGame.lastWord = {
         word: küçükHarfliKelime + yeniHarf,
         author: message.author.id
       };
@@ -272,19 +268,15 @@ module.exports = async (client, message, wordGame, guildData) => {
     } else {
 
       //Son Kelime
-      /*db.set(`guilds.${message.guild.id}.wordGame.lastWord`, {
-        word: küçükHarfliKelime,
-        author: message.author.id
-      });*/
-      guildDataQueue.wordGame.lastWord = {
+      wordGame.lastWord = {
         word: küçükHarfliKelime,
         author: message.author.id
       };
 
       //"Aynı harfi çok sık kullandınız" uyarısı
-      if ((guildDataQueue.wordGame || wordGame).history?.length) {
+      if (wordGame.history?.length) {
         const counts = {};
-        const sampleArray = ((wordGame.history?.concat(guildDataQueue.wordGame?.history || []))?.splice(0, 200) || []).slice(-6).map(word => word.slice(-1));
+        const sampleArray = ((wordGame.history?.concat(wordGame?.history || []))?.splice(0, 200) || []).slice(-6).map(word => word.slice(-1));
         sampleArray.forEach(async function (x) { counts[x] = (counts[x] || 0) + 1; });
 
         //Son 6 kelimenin 5'i aynı harfle bitiyosa
@@ -293,8 +285,7 @@ module.exports = async (client, message, wordGame, guildData) => {
 
         if (sonHarfinKullanımOranı >= 5) {
           let yeniHarf = makeid(1, sonHarf).toLocaleLowerCase('tr-TR');
-          //db.set(`guilds.${message.guild.id}.wordGame.lastWord.word`, küçükHarfliKelime + yeniHarf);
-          guildDataQueue.wordGame.lastWord = {
+          wordGame.lastWord = {
             word: küçükHarfliKelime + yeniHarf,
             author: message.author.id
           };
@@ -315,6 +306,10 @@ module.exports = async (client, message, wordGame, guildData) => {
         }
       }
     }
+
+    //Database
+    guildData.markModified('wordGame');
+    if (!client.guildsWaitingForSync.includes(message.guild.id)) client.guildsWaitingForSync.push(message.guild.id);
 
     function makeid(length, exemptLetter = "") {
       var result = '';

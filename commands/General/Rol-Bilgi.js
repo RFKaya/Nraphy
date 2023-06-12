@@ -1,6 +1,3 @@
-const Discord = require("discord.js");
-const moment = require("moment");
-const db = require("quick.db");
 const humanize = require("humanize-duration");
 
 module.exports = {

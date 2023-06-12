@@ -3,10 +3,10 @@ const mongoose = require("mongoose");
 const schema = new mongoose.Schema({
 
   guildId: { type: String, unique: true },
-  registeredAt: { type: Number, default: Date.now() },
+  registeredAt: { type: Number, default: Date.now },
 
   //Nraphy Verileri
-  prefix: { type: String, default: "n!" },
+  prefix: { type: String },
   NraphyBoost: {
     users: Array
   },
@@ -51,10 +51,23 @@ const schema = new mongoose.Schema({
     setupChannel: String
   },
 
+  memberStats: Object,
+
+  mentionSpamBlock: {
+    autoModerationRuleId: String
+  },
+
+  nameClearing: Boolean,
+
   spamProtection: {
     guild: Boolean,
     channels: [String],
     exempts: { channels: [String], roles: [String] }
+  },
+
+  stickyRoles: {
+    status: Boolean,
+    members: Object
   },
 
   /*starboard: {
@@ -98,9 +111,10 @@ const schema = new mongoose.Schema({
 schema.pre('save', async function () {
   //console.log("guild schema - save event");
 
-  //global.database.guildsCache[this.guildId] = this;
+  //global.localDatabase.guilds[this.guildId] = this;
   function funcName(client, { guildId }) {
-    delete global.database.guildsCache[guildId];
+    client.guildsWaitingForSync.splice(client.guildsWaitingForSync.indexOf(guildId), 1);
+    delete global.localDatabase.guilds[guildId];
   }
   global.client.shard.broadcastEval(funcName, { context: { guildId: this.guildId } });
 });

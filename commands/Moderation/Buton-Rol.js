@@ -423,7 +423,7 @@ module.exports = {
             ]
           });
 
-        await messageChecker(interaction, getTitle, '/buton-rol Düzenle Başlık-Belirle Burcunu seç!');
+        if (!await messageChecker(interaction, getTitle, '/buton-rol Düzenle Başlık-Belirle Burcunu seç!')) return;
 
         data.guild.buttonRole[getButtonRoleMessageId].title = getTitle;
         data.guild.buttonRole[getButtonRoleMessageId].lastUpdate = {

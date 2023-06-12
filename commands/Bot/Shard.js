@@ -21,9 +21,10 @@ module.exports = {
       let shardInfo = {
         ping: await client.shard.fetchClientValues("ws.ping"),
         server_count: await client.shard.fetchClientValues("guilds.cache.size"),
-        user_count: await client.shard.fetchClientValues("users.cache.size"),
+        // user_count: await client.shard.fetchClientValues("users.cache.size"),
         uptime: await client.shard.fetchClientValues("uptime"),
-        memoryUsageRss: await client.shard.broadcastEval(function () { return process.memoryUsage().rss; })
+        memoryUsageRss: await client.shard.broadcastEval(function () { return process.memoryUsage().rss; }),
+        voiceAdaptersSize: await client.shard.fetchClientValues("voice.adapters.size")
       };
 
       let shardDatas = [];
@@ -32,10 +33,11 @@ module.exports = {
         shardDatas.push({
           shardId: i,
           serverCount: shardInfo.server_count[i],
-          userCount: shardInfo.user_count[i],
+          //userCount: shardInfo.user_count[i],
           ping: shardInfo.ping[i],
           uptime: shardInfo.uptime[i],
-          memoryUsageRss: shardInfo.memoryUsageRss[i]
+          memoryUsageRss: shardInfo.memoryUsageRss[i],
+          voiceAdaptersSize: shardInfo.voiceAdaptersSize[i],
         });
       }
 
@@ -50,10 +52,11 @@ module.exports = {
             name: `**»** Shard ${shardData.shardId + 1}`,
             value:
               `**• Sunucular:** ${shardData.serverCount}\n` +
-              `**• Kullanıcılar:** ${shardData.userCount}\n` +
+              //`**• Kullanıcılar:** ${shardData.userCount}\n` +
               `**• Ping:** ${shardData.ping}ms\n` +
               `**• Uptime:** ${humanize(shardData.uptime, { language: "tr", round: true, largest: 2 })}\n` +
-              `**• Memory Usage (Rss):** ${(shardData.memoryUsageRss / (1024 ** 2)).toFixed()} MB`,
+              `**• Memory Usage:** ${(shardData.memoryUsageRss / (1024 ** 2)).toFixed()} MB\n` +
+              `**• VoiceAdapters:** ${shardData.voiceAdaptersSize}`,
             inline: true,
           })),
           footer: {

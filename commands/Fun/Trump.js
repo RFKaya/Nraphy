@@ -1,4 +1,3 @@
-const Discord = require("discord.js");
 var request = require("request");
 
 module.exports = {
@@ -14,7 +13,6 @@ module.exports = {
       }
     ]
   },
-  interactionOnly: true,
   aliases: ["trumpet"],
   category: "Fun",
   memberPermissions: [],
@@ -23,19 +21,21 @@ module.exports = {
   cooldown: 3000,
   ownerOnly: false,
 
-  async execute(client, interaction, data) {
+  async execute(client, interaction, data, args) {
 
-    const text = interaction.options.getString("yazı");
+    const text = interaction.type === 2 ? interaction.options.getString("yazı") : args.join(" ");
 
     const { messageChecker } = require("../../modules/Functions");
-    await messageChecker(interaction, text, "trump KuRşUn İkİ bUçUk MiLyOn!");
+    if (!await messageChecker(interaction, text, "trump KuRşUn İkİ bUçUk MiLyOn!")) return;
 
-    await interaction.deferReply();
+    if (interaction.type === 2) await interaction.deferReply();
 
     request(`https://nekobot.xyz/api/imagegen?type=trumptweet&text=${encodeURI(text)}`, function (error, response, body) {
 
-      if (error || !body || !JSON.parse(body).success)
-        return interaction.editReply({
+      if (error || !body || !JSON.parse(body).success) {
+        client.logger.error(error);
+
+        let messageContent = {
           embeds: [
             {
               color: client.settings.embedColors.red,
@@ -43,10 +43,13 @@ module.exports = {
               description: `**•** Hatanın sebebini bilmiyorum.`
             }
           ]
-        });
+        };
+        if (interaction.type === 2)
+          return interaction.editReply(messageContent);
+        else return interaction.edit(messageContent);
+      }
 
-
-      interaction.editReply({
+      let messageContent = {
         embeds: [
           {
             color: client.settings.embedColors.default,
@@ -59,7 +62,10 @@ module.exports = {
             }
           }
         ]
-      });
+      };
+      if (interaction.type === 2)
+        return interaction.editReply(messageContent);
+      else return interaction.reply(messageContent);
 
     });
 

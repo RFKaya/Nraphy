@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const db = require("quick.db");
 const fetch = require('node-fetch');
 
 module.exports = {

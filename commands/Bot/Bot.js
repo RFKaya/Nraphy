@@ -1,7 +1,6 @@
 const { ButtonBuilder } = require('discord.js');
 const humanize = require("humanize-duration");
 const os = require('os');
-const db = require("quick.db");
 const axios = require('axios');
 const { getLastDays } = require("../../modules/Functions");
 
@@ -79,7 +78,7 @@ module.exports = {
       let ortalamaErrorFark = errorCount - ortalamaError;
 
       //---------------Komutlar Hakkında---------------//
-      let clientCommands = client.commands.filter(command => command.category);
+      let clientCommands = client.commands.filter(command => command.category && command.category !== "Developer");
       let commandsInteractionSupport = 0;
       let commandsInteractionOnly = 0;
       let commandsVoteRequired = 0;
@@ -288,8 +287,8 @@ module.exports = {
             };
 
             //---------------Sistemlerin Kullanım İstatistikleri---------------//
-            let userDatas = await client.database.users.find().exec(),
-              guildDatas = await client.database.guilds.find().exec();
+            let userDatas = await client.database.users.find().lean().exec(),
+              guildDatas = await client.database.guilds.find().lean().exec();
 
             let linkBlock_guilds = 0,
               buttonRole_messages = 0,
@@ -306,26 +305,42 @@ module.exports = {
               warns_users = 0,
               warns_warns = 0,
               wordGame_guilds = 0,
-              countingGame_guilds = 0;
+              countingGame_guilds = 0,
+              nameClearing_guilds = 0,
+              boostedGuilds = 0,
+              mentionSpamBlock_guilds = 0;
+
             for await (let guildData of guildDatas) {
 
-              //Davet-Sistemi
-              if (guildData.inviteManager?.channel && guildData.inviteManager.channel !== "false") inviteManager_guilds++;
-
-              //Sayaç
-              if (guildData.memberCounter?.channel) memberCounter_guilds++;
-
-              //Oto-Cevap
-              if (guildData.autoReply) autoReply_guilds++;
-
               //Bağlantı-Engel
-              if (guildData.linkBlock?.guild || guildData.linkBlock?.channels.length) linkBlock_guilds++;
+              if (guildData.linkBlock?.guild) linkBlock_guilds++;
 
               //Buton-Rol
               if (guildData.buttonRole && Object.keys(guildData.buttonRole)?.length)
                 for await (let message of Object.keys(guildData.buttonRole)) {
                   buttonRole_messages++;
                 }
+
+              //Büyük Harf Engelleme
+              if (guildData.upperCaseBlock?.guild) upperCaseBlock_guilds++;
+
+              //Davet-Sistemi
+              if (guildData.inviteManager?.channel && guildData.inviteManager.channel !== "false") inviteManager_guilds++;
+
+              //Etiket Sınırlama
+              if (guildData.mentionSpamBlock?.autoModerationRuleId) mentionSpamBlock_guilds++;
+
+              //Nraphy ile Güçlendirilmiş Sunucular
+              if (guildData.NraphyBoost?.users?.length) boostedGuilds++;
+
+              //İsim-Temizleme
+              if (guildData.nameClearing) nameClearing_guilds++;
+
+              //Sayaç
+              if (guildData.memberCounter?.channel) memberCounter_guilds++;
+
+              //Oto-Cevap
+              if (guildData.autoReply) autoReply_guilds++;
 
               //Kampanya-Haber
               if (guildData.campaignNews) campaignNews_guilds++;
@@ -343,10 +358,7 @@ module.exports = {
               if (guildData.autoRole?.channel) autoRole_guilds++;
 
               //Spam Koruması
-              if (guildData.spamProtection?.guild || guildData.spamProtection?.channels.length) spamProtection_guilds++;
-
-              //Büyük Harf Engelleme
-              if (guildData.upperCaseBlock?.guild || guildData.upperCaseBlock?.channels.length) upperCaseBlock_guilds++;
+              if (guildData.spamProtection?.guild) spamProtection_guilds++;
 
               //Uyarılar
               if (guildData.warns && Object.keys(guildData.warns)?.length)
@@ -425,23 +437,24 @@ module.exports = {
                 {
                   name: '**»** Sistemlerin Kullanım İstatistikleri (Anlık)',
                   value:
-                    `**•** Bağlantı-Engel: \`${linkBlock_guilds} Sunucu\`\n` +
-                    `**•** Buton-Rol: \`${buttonRole_messages} Mesaj\`\n` +
-                    `**•** Büyük-Harf-Engel: \`${upperCaseBlock_guilds} Sunucu\`\n` +
-                    `**•** Davet-Sistemi: \`${inviteManager_guilds} Sunucu\`\n` +
+                    `**•** Bağlantı Engel: \`${linkBlock_guilds} Sunucu\`\n` +
+                    `**•** Buton Rol: \`${buttonRole_messages} Mesaj\`\n` +
+                    `**•** Büyük Harf Engel: \`${upperCaseBlock_guilds} Sunucu\`\n` +
                     `**•** Çekilişler: \`${availableBetaGiveaways.length} (Devam Eden)\`\n` +
+                    `**•** Davet Sistemi: \`${inviteManager_guilds} Sunucu\`\n` +
+                    `**•** Etiket Sınırlama: \`${mentionSpamBlock_guilds} Sunucu\`\n` +
                     `**•** Galeri: \`${gallery_channels} Kanal\`\n` +
-                    `**•** Geçici-Odalar: \`${tempChannels_guilds} Sunucu\`\n` +
-                    `**•** İsim-Temizleme: \`${Object.keys(db.fetch(`isim-temizle`)).length} Sunucu\`\n` +
-                    `**•** Kampanya-Haber: \`${campaignNews_guilds} Sunucu\`\n` +
+                    `**•** Geçici Odalar: \`${tempChannels_guilds} Sunucu\`\n` +
+                    `**•** İsim Temizleme: \`${nameClearing_guilds} Sunucu\`\n` +
+                    `**•** Kampanya Haber: \`${campaignNews_guilds} Sunucu\`\n` +
                     `**•** Log: \`${logger_guilds} Sunucu\`\n` +
                     `**•** Oto-Cevap: \`${autoReply_guilds} Sunucu\`\n` +
                     `**•** Oto-Rol: \`${autoRole_guilds} Sunucu\`\n` +
                     `**•** Sayaç: \`${memberCounter_guilds} Sunucu\`\n` +
-                    `**•** Spam-Koruması: \`${spamProtection_guilds} Sunucu\`\n` +
+                    `**•** Spam Koruması: \`${spamProtection_guilds} Sunucu\`\n` +
                     `**•** Uyarılar: \`${warns_users} Kullanıcı, ${warns_warns} Uyarı\`\n` +
-                    `**•** Kelime-Oyunu: \`${wordGame_guilds} Sunucu\`\n` +
-                    `**•** Sayı-Saymaca: \`${countingGame_guilds} Sunucu\``,
+                    `**•** Kelime Oyunu: \`${wordGame_guilds} Sunucu\`\n` +
+                    `**•** Sayı Saymaca: \`${countingGame_guilds} Sunucu\``,
                   inline: true
                 },
                 {
@@ -449,7 +462,8 @@ module.exports = {
                   value:
                     `**•** Güncelleme Yayınlanma Tarihi: <t:${(client.settings.updateDate / 1000).toFixed(0)}:f> - \`(${humanize(Date.now() - client.settings.updateDate, { language: "tr", round: true, largest: 1 })} önce)\`\n` +
                     `**•** Yenilikleri Okuyan Kullanıcılar: \`${yeniliklerinOkunması}\`\n` +
-                    `**•** Nraphy Premium Kullanıcıları: \`${premiumUsers}\``,
+                    `**•** Nraphy Premium Kullanıcıları: \`${premiumUsers}\`\n` +
+                    `**•** Nraphy ile Güçlendirilmiş Sunucular: \`${boostedGuilds}\``,
                 },
               ],
             };
@@ -548,7 +562,6 @@ module.exports = {
                     name: '**»** Veri Tabanı Durumları',
                     value:
                       `**•** MongoDB Atlas: \n` +
-                      `**•** Quick.db: \n` +
                       `**•** Log (Yerel): `
                   },
                   {

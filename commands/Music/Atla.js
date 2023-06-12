@@ -72,7 +72,9 @@ module.exports = {
           embeds: [{
             color: client.settings.embedColors.red,
             title: "**»** Bir Hata Oluştu!",
-            description: "**•** Sorunu geliştirici ekibe ilettim, en kısa sürede çözülecektir."
+            description:
+              `**•** Hatayla ilgili geliştirici bilgilendirildi.\n` +
+              `**•** En kısa sürede çözülecektir.`
           }],
           components: [
             {
