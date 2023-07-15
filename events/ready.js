@@ -50,7 +50,7 @@ module.exports = async (client) => {
           .catch(async error => client.logger.error(error));
       } else {
 
-        client.logger.warn("Client logları için webhook adresi tanımlanmadığı için bir takım client logları webhook'a gönderilemedi!");
+        client.logger.log("config.js üzerindeki \"clientLogsWebhookURL\" tanımlanmadığı için bir grup log, webhook ile gönderilmedi!", "log", false);
 
       }
 
