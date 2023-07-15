@@ -8,7 +8,7 @@ if (!config.mongooseToken)
 
 const manager = new ShardingManager('./client.js', {
 
-  totalShards: config.totalShards,
+  totalShards: "auto",
 
   respawn: true,
 
