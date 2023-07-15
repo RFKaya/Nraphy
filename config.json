@@ -1,7 +1,6 @@
 {
   "token": "",
-  "totalShards": "auto",
-  "topggToken": "",
   "mongooseToken": "",
-  "clientLogsWebhookURL": ""
+  "clientLogsWebhookURL": "",
+  "topggToken": ""
 }
