@@ -42,6 +42,7 @@ const client = new Client({
     },
   },*/
 });
+global.client = client;
 
 const interactionCommands = [];
 
