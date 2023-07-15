@@ -8,8 +8,6 @@ module.exports = async (client) => {
 
   client.logger.ready(`Client ready in shard ${client.shard.ids[0] + 1}!`);
 
-  global.client = client;
-
   try {
 
     //------------------------------Logging------------------------------//
