@@ -43,8 +43,8 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
     * **token:** [Discord Developer Portal](https://discord.com/developers/applications) üzerinden oluşturduğun botunun tokeni. <br>
     * **topggToken:** Top.gg oy kontrolü vb. için kullanılır. Doldurulması zorunlu değildir. <br>
     * **mongooseToken:** [MongoDB Cloud](https://cloud.mongodb.com) üzerinden edinebilirsin.
-		> Nasıl edineceği bilmiyorsan [MongoDB Atlas connection bağlantısı alma](https://medium.com/@thearkxd/node-js-projeleri-i%C3%A7in-mongodb-atlas-connection-linki-alma-5d955bbe5ae6) rehberine göz atabilirsin. 
-	*(Medium'daki **@thearkxd** kullanıcısına aittir. Kendisiyle bağlantım yoktur.)*
+		> Nasıl edineceği bilmiyorsan [MongoDB URL alma](https://www.youtube.com/watch?v=MFla3bZwBOc) videosuna ya da [MongoDB Atlas connection bağlantısı alma](https://medium.com/@thearkxd/node-js-projeleri-i%C3%A7in-mongodb-atlas-connection-linki-alma-5d955bbe5ae6) rehberine göz atabilirsin. 
+	*(Kaynaklar projemize ait değildir.)*
     * **clientLogsWebhookURL:** Client Logları için Webhook bağlantısı. Doldurulması tavsiye edilir. <br>
 2. `client.js` dosyasındaki `client.settings` objesinin verilerini botuna göre özelleştir.
 3. Eğer yoksa botun dizinine `logs` adında bir klasör oluştur.
@@ -56,7 +56,11 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
 Eğer bu yazıyı okuyorsanız güncelleme desteği devam etmektedir. Güncellemeyi keseceksem de tam burada bildiririm. Her güncelleme için birkaç ayda bir yoklamakta fayda var. Projeyi yıldızlayarak katkıda bulunabilirsiniz!
 
 ## 💞 Yardıma İhtiyacın Olursa
-[Nraphy Discord Sunucusu](https://discord.gg/JhasTMZr2A)'na katılabilir ve destek alabilirsin. Baştan uyarayım; emeksizce, bilgisizce bot sahibi olma peşindekiler ve bu metni baştan sona okumadan yardım isteyecekler lütfen projeyi terk etsinler.
+- Bu metni baştan sona kadar okuduysan,
+- Projenin ham (düzenlenmemiş) hâliyle ilgili destek alacaksan,
+- Sorunun Mongo/NodeJS kaynaklı olmadığından eminsen,
+- Emeksizce ve bilgisizce bot sahibi olma peşindekilerden değilsen,
+[Nraphy Discord Sunucusu](https://discord.gg/JhasTMZr2A)'na katılabilir ve destek alabilirsin.
 
 ## ❤️ Ayrıca Teşekkürler
 Aşağıdaki kişilere, projelere ve aklıma gelmeyen daha nice kaynağa, emeklerinden dolayı teşekkürlerimi sunuyorum. (Aklıma geldikçe dahasını da ekleyeceğim)
