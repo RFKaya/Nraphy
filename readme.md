@@ -8,7 +8,7 @@ Nraphy altyapısı, Discord Türkiye'deki en kapsamlı ve gelişmiş bot altyap�
 - En güncel discord.js sürümü (v14) ve slash komutları ile geride bırakmaz. 
 - Önbellekleme sistemiyle modifiye edilmiş MongoDB veritabanı ile hiç olmadığı kadar hızlı 🚀
 
-Açık kaynak projemize destek vermek istersen yıldızlayabilirsin ⭐
+Açık kaynak projemize destek vermek istersen yıldızlayabilirsin ⭐ <br>
 Ya da hiç zahmete girmeyip direkt [Davet bağlantısı](https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code) ile Nraphy'i sunucuna ekleyebilirsin.
 
 ## ❤️‍🔥 Özellikler
