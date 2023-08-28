@@ -4,7 +4,12 @@
 </p>
 
 # Nraphy - Discord Bot Altyapısı (Discord js v14)
-Discord için en kapsamlı bot altyapısıdır. En güncel Discord.js sürümünü (v14) kullanmaktadır ve slash komutları desteklemektedir. Botu kurmakla falan uğraşmak istemezsen ve güncel halini kullanmak istersen [Davet bağlantısı](https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code) ile Nraphy'i davet edebilirsin.
+Nraphy altyapısı, Discord Türkiye'deki en kapsamlı ve gelişmiş bot altyapısıdır. 
+- En güncel discord.js sürümü (v14) ve slash komutları ile geride bırakmaz. 
+- Önbellekleme sistemiyle modifiye edilmiş MongoDB veritabanı ile hiç olmadığı kadar hızlı 🚀
+
+Açık kaynak projemize destek vermek istersen yıldızlayabilirsin ⭐
+Ya da hiç zahmete girmeyip direkt [Davet bağlantısı](https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code) ile Nraphy'i sunucuna ekleyebilirsin.
 
 ## ❤️‍🔥 Özellikler
 Bu projede tüm Nraphy kodları açık olarak paylaşılmamıştır. Botun güncel hâli saklıdır, güncel hâli ileri zamanlarda paylaşılacaktır, takipte kalabilirsin. Bu projede, Nraphy'de bulunan sistemlerle ilgili durumlar aşağıdaki gibidir:
