@@ -162,41 +162,7 @@ module.exports = {
             ]
           });
 
-        if (getChannel.type !== 0)
-          return interaction.reply({
-            embeds: [
-              {
-                color: client.settings.embedColors.red,
-                title: `**»** Geçerli Bir Kanal Belirtmelisin!`,
-                description: `**•** Belirttiğin kanal, oda veya kategori olmamalı. Sadece yazı kanalı.`,
-              }
-            ]
-          });
-
-        const permissions = require("../../utils/Permissions.json");
-        let clientPerms = [];
-        this.botPermissions.forEach((perm) => {
-          if (!getChannel.permissionsFor(interaction.guild.members.me).has(perm)) {
-            clientPerms.push(permissions[perm]);
-          }
-        });
-        if (clientPerms.length > 0) {
-          return interaction.reply({
-            embeds: [{
-              color: client.settings.embedColors.red,
-              author: {
-                name: `#${getChannel.name} Kanalında Gereken İzinlere Sahip Değilim!`,
-                icon_url: interaction.guild.iconURL(),
-              },
-              fields: [
-                {
-                  name: '**»** İhtiyacım Olan İzinler;',
-                  value: "**•** " + clientPerms.map((p) => `${p}`).join("\n**•** "),
-                },
-              ]
-            }]
-          });
-        }
+        if (!await client.functions.channelChecker(interaction, getChannel, this.botPermissions)) return;
 
         if (getChannel.id == data.guild.autoRole.channel)
           return interaction.reply({

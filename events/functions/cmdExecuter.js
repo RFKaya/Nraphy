@@ -121,7 +121,7 @@ module.exports = async (client, interaction, cmd, guildData, userData, args = nu
       let topggapi = new topgg.Api(client.config.topggToken);
 
       //Topgg API bozuksa
-      const topggStatus = client.clientDataCache.topggStatus;
+      let topggStatus = client.clientDataCache.topggStatus;
       if (!topggStatus.status) {
         client.logger.log(`${(interaction.user || interaction.author).id} kullanıcısına vote muaf verildi.`, "log", true, true);
 

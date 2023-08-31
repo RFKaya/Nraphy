@@ -104,7 +104,7 @@ module.exports = {
     } catch (err) {
       interaction.reply("hata cıktı koc");
       client.logger.error(err);
-    };
+    }
 
   }
 };

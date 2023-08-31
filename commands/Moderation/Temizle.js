@@ -125,9 +125,7 @@ module.exports = {
       //Bazı mesajlar silinemedi
       if (deletedMessages !== m) embed.description = `**•** **${(m - 1) - (deletedMessages - 1)}** adet mesaj, 14 günden eski olduğu için silinemedi.`;
 
-      const reply = await (interaction.type === 2 ?
-        interaction.channel.send({ embeds: [embed] })
-        : interaction.reply({ embeds: [embed] }));
+      const reply = await interaction.channel.send({ embeds: [embed] });
       setTimeout(() => reply.delete().catch(e => { }), 4000);
 
     } catch (err) {
@@ -152,9 +150,8 @@ module.exports = {
           },
         ]
       };
-      if (interaction.type === 2)
-        return interaction.channel.send(messageContent);
-      else return interaction.reply(messageContent);
+
+      interaction.channel.send(messageContent);
 
     }
 

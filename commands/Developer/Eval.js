@@ -3,7 +3,7 @@ const request = require("request");
 const fs = require('fs');
 const moment = require('moment');
 const axios = require('axios');
-const { MessageActionRow, ButtonBuilder } = require('discord.js');
+const { TextInputBuilder, ButtonBuilder, WebhookClient } = require('discord.js');
 
 module.exports = {
   name: "eval",

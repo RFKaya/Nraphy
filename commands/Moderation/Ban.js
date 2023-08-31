@@ -23,7 +23,6 @@ module.exports = {
           { name: "Gönderme", value: "false" }
         ],
         type: 3,
-        type: 3,
         required: false
       }
     ]
@@ -205,7 +204,7 @@ module.exports = {
         fields: [
           {
             name: `**»** Yasaklanma Sebebi`,
-            value: `**•** ${reason || "Belirtilmemiş."}`,
+            value: `**•** ${reason ? client.functions.truncate(reason, 1000) : "Belirtilmemiş."}`,
             inline: false
           }
         ],
@@ -250,7 +249,7 @@ module.exports = {
           },
           description:
             `**•** **Yasaklanan Üye:** ${toBanUser} (**${toBanUser.id}**)\n` +
-            `**•** **Sebep:** ${reason || "Belirtilmemiş."}\n` +
+            `**•** **Sebep:** ${reason ? client.functions.truncate(reason, 500) : "Belirtilmemiş."}\n` +
             //`**•** **Yetkili:** ${interaction.type === 2 ? interaction.user : interaction.author}`,
             `**•** DM'den bilgilendirme mesajı **${dmMesaj ? (dmMesaj_status ? "gönderildi" : "gönderilemedi") : "gönderilmedi"}.**`,
           thumbnail: {

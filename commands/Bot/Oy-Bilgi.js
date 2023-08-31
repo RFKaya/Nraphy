@@ -4,7 +4,7 @@ module.exports = {
     description: "Oy verme hakkında tüm bilgileri verir.",
     options: []
   },
-  aliases: ["oybilgi"],
+  aliases: ["vote-bilgi"],
   category: "Bot",
   memberPermissions: [],
   botPermissions: ["SendMessages", "EmbedLinks"],

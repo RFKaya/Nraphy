@@ -1,8 +1,6 @@
-const { Client, GatewayIntentBits, Options } = require('discord.js');
+const { Client, GatewayIntentBits } = require('discord.js');
 const Discord = require('discord.js');
 const fs = require("fs");
-const util = require("util");
-const readdir = util.promisify(fs.readdir);
 
 const client = new Client({
   intents:
@@ -44,28 +42,10 @@ const client = new Client({
 });
 global.client = client;
 
-const interactionCommands = [];
-
-//Veri Tabanı yerel hafıza
-global.localDatabase = { guilds: {}, users: {} };
-client.guildsWaitingForSync = [];
-
-//Gereksiz database
-client.userDataCache = {};
-client.guildDataCache = {};
-client.clientDataCache = { topggStatus: { status: true, lastCheck: null }, logQueue: [] };
-
-//kaldırılacak bunlar
-client.guildInvites = new Map();
-client.gamesPlaying = new Map();
-client.usersMap = new Map();
-client.warnsMap = new Map();
-
 //------------------------------Ayarlar------------------------------//
-
 client.settings = {
   presences: [
-    "📌 /komutlar"
+    "📌 Nraphy Altyapısı"
   ],
   prefix: "n!",
   owner: "700385307077509180",
@@ -81,17 +61,13 @@ client.settings = {
   invite: "https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code"
 };
 
-//------------------------------Ayarlar------------------------------//
-
-//------------------------------Kurulum------------------------------//
-
-client.events = new Discord.Collection();
+//------------------------------Client Tanımları------------------------------//
 client.commands = new Discord.Collection();
 client.database = require('./Mongoose/Mongoose.js');
 client.logger = require("./modules/Logger.js");
 client.date = require("./modules/Date.js");
 client.functions = require("./modules/Functions.js");
-//client.userFetcher = require("./modules/userFetcher.js");
+client.config = require("./config.json");
 client.config = require("./config.json");
 client.listGuilds = async function () {
   const guilds = [];
@@ -124,99 +100,108 @@ client.getRandom = function getRandom(arr, n) {
   return result;
 };
 
-async function startUp() {
+//Veri tabanı önbellekleme
+global.localDatabase = { guilds: {} };
+client.guildsWaitingForSync = [];
 
-  //Starting all events
-  let eventFiles = fs.readdirSync('./events/').filter(file => file.endsWith('.js'));
-  //client.logger.load(`Loading Events...`)
-  for (let eventFile of eventFiles) {
-    let event = require(`./events/${eventFile}`);
-    let eventName = eventFile.split(".")[0];
-    //client.logger.event(`Loading Event: ${eventName}`);
-    client.on(eventName, event.bind(null, client));
-  }
-  //client.logger.event(`Events Loaded!`)
+//Gereksiz hafıza (Oturum bitiminde kaybolacaklar)
+client.userDataCache = {};
+client.guildDataCache = {};
+client.clientDataCache = { topggStatus: { status: true, lastCheck: null } };
 
-  //Load all the commands
-  let commandCategories = await readdir("./commands/");
-  //client.logger.load(`Loading Commands...`)
-  commandCategories.forEach(commandCategory => {
-    fs.readdir(`./commands/${commandCategory}/`, (err, commandCategoryFiles) => {
-      if (err) console.error(err);
-      //console.log(`${files.length} command will be loaded.`);
-      for (let commandFile of commandCategoryFiles) {
-        let command = require(`./commands/${commandCategory}/${commandFile}`);
-        //console.log(`Loaded command: ${command.name}`);
-        client.commands.set(command.interaction ? command.interaction.name : command.name, command);
-        if (command.interaction)
-          interactionCommands.push(command.interaction);
-      };
+//kaldırılacak bunlar
+client.guildInvites = new Map();
+client.gamesPlaying = new Map();
+client.usersMap = new Map();
+client.warnsMap = new Map();
+
+//------------------------------Event Loader------------------------------//
+const eventFiles = fs.readdirSync('./events/').filter(file => file.endsWith('.js'));
+//client.logger.load(`Loading Events...`)
+for (let eventFile of eventFiles) {
+  let event = require(`./events/${eventFile}`);
+  let eventName = eventFile.split(".")[0];
+  //client.logger.event(`Loading Event: ${eventName}`);
+  client.on(eventName, event.bind(null, client));
+}
+//client.logger.event(`Events Loaded!`)
+
+//------------------------------Command Loader------------------------------//
+const commandCategories = fs.readdirSync('./commands/');
+//client.logger.load(`Loading Commands...`)
+commandCategories.forEach(commandCategory => {
+  fs.readdir(`./commands/${commandCategory}/`, (err, commandCategoryFiles) => {
+    if (err) console.error(err);
+    //console.log(`${files.length} command will be loaded.`);
+    /*for (let commandFile of commandCategoryFiles) {
+      let command = require(`./commands/${commandCategory}/${commandFile}`);
+      console.log(`Loaded command: ${command.name}`);
+      client.commands.set(command.interaction ? command.interaction.name : command.name, command);
+      if (command.interaction)
+        interactionCommands.push(command.interaction);
+    };*/
+    commandCategoryFiles.forEach(commandFile => {
+      let command = require(`./commands/${commandCategory}/${commandFile}`);
+      //console.log(`Loaded command: ${command.name}`);
+      client.commands.set(command.interaction ? command.interaction.name : command.name, command);
+      /*if (command.interaction)
+        interactionCommands.push(command.interaction);*/
     });
   });
-
-  //---------------Mongoose Database---------------//
-  const mongoose = require('mongoose');
-  client.database = require('./Mongoose/Mongoose.js');
-  client.databaseQueue = { users: {}, guilds: {}, client: {} };
-  mongoose.set("strictQuery", false);
-  await mongoose.connect(client.config.mongooseToken, {
-    maxPoolSize: 25,
-    /*useNewUrlParser: true,
-    useUnifiedTopology: true*/
-  }).then(() => {
-    client.logger.log('Connected to MongoDB');
-  }).catch((err) => {
-    console.log('Unable to connect to MongoDB Database.\nError: ' + err);
-  });
-
-  await client.login(client.config.token);
-}
-
-startUp();
-
-client.on("ready", async () => {
-
-  const { REST } = require('@discordjs/rest');
-  const { Routes } = require('discord-api-types/v9');
-
-  const rest = new REST({ version: '9' }).setToken(client.config.token);
-  await rest.put(Routes.applicationCommands(client.user.id), { body: interactionCommands });
-
 });
 
+//'./events/ready.js' dizininde devam ediyor.
+
+//------------------------------Mongoose------------------------------//
+const mongoose = require('mongoose');
+client.database = require('./Mongoose/Mongoose.js');
+mongoose.set("strictQuery", false);
+mongoose.connect(client.config.mongooseToken, {
+  maxPoolSize: 25,
+  /*useNewUrlParser: true,
+  useUnifiedTopology: true*/
+}).then(() => {
+  //client.logger.log('Connected to MongoDB');
+}).catch((err) => {
+  console.log('Unable to connect to MongoDB Database.\nError: ' + err);
+});
+
+//------------------------------Redis------------------------------//
+const Redis = require('ioredis');
+
+/* global.redis_guilds = new Redis();
+global.redis_guilds.select(0); */
+
+global.redis_users = new Redis();
+global.redis_users.select(1);
+
+//global.redis_users.flushall();
+
+//------------------------------Client------------------------------//
 client.on("disconnect", () => client.logger.error("Bot is disconnecting..."));
 client.on("reconnecting", () => client.logger.error("Bot reconnecting..."));
 client.on("error", (e) => client.logger.error(e));
 client.on("warn", (info) => { console.log("client.on(\"warn\") event"); client.logger.error(info); });
-//client.on("debug", (log) => client.logger.debug(log))
-//client.on("raw", r => client.logger.debug(r.t))
-
+//client.on("debug", (log) => client.logger.debug(log, "debug", false));
+//client.on("raw", r => client.logger.debug(r.t, "debug", false));
 client.on('shardError', error => {
   console.error('A websocket connection encountered an error:', error);
   client.logger.error(error);
 });
 
-process.on("unhandledRejection", (err) => {
-  //console.error(err);
-  client.logger.error(err);
-});
-process.on('uncaughtException', (err) => {
-  //console.error(err);
-  client.logger.error(err);
-});
+client.rest.on("rateLimited", (log) => client.logger.debug(log));
 
+process.on("unhandledRejection", (err) => { /*console.error(err);*/ client.logger.error(err); });
+process.on('uncaughtException', (err) => { /*console.error(err);*/ client.logger.error(err); });
 //process.setMaxListeners(0);
 
-//require('events').EventEmitter.prototype._maxListeners = 100;
-
-//------------------------------Kurulum------------------------------//
+client.login(client.config.isTest ? client.config.testConfig.token : client.config.token);
 
 //------------------------------Müzik------------------------------//
-
 const { DisTube } = require('distube');
-const { SpotifyPlugin } = require('@distube/spotify');
+//const { SpotifyPlugin } = require('@distube/spotify');
 const { SoundCloudPlugin } = require('@distube/soundcloud');
-const { YtDlpPlugin } = require('@distube/yt-dlp');
+//const { YtDlpPlugin } = require('@distube/yt-dlp');
 
 client.distube = new DisTube(client, {
   leaveOnStop: true,
@@ -227,117 +212,36 @@ client.distube = new DisTube(client, {
   emitAddSongWhenCreatingQueue: false,
   emitAddListWhenCreatingQueue: false,
   plugins: [
-    new SpotifyPlugin({
+    /* new SpotifyPlugin({
       emitEventsAfterFetching: true,
-    }),
+    }), */
     new SoundCloudPlugin(),
-    new YtDlpPlugin()
+    //new YtDlpPlugin()
   ]
 });
 
-client.distube
-  .on('playSong', (queue, song) => {
-    let embed = {
-      color: client.settings.embedColors.green,
-      title: `**»** **${queue.voiceChannel.name}** odasında şimdi oynatılıyor;`,
-      description: `**•** [${song.name}](${song.url})`, //(${song.formattedDuration})
-      thumbnail: {
-        url: song.thumbnail,
-      },
-    };
+client.distube.scPlugin = new SoundCloudPlugin();
 
-    if (song.metadata.commandMessage.type === 2 && !song.metadata.commandMessage.replied)
-      song.metadata.commandMessage.editReply({ embeds: [embed] });
-    else queue.textChannel.send({ embeds: [embed] });
-    //` | Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n${status(queue)}`);
-  })
-  .on('addSong', (queue, song) => {
-    let embed = {
-      color: client.settings.embedColors.green,
-      title: `**»** Sıraya Bir Şarkı Eklendi!`,
-      description: `**•** [${song.name}](${song.url})`,
-      thumbnail: {
-        url: song.thumbnail,
-      },
-    };
-    if (song.metadata.commandMessage.type === 2)
-      song.metadata.commandMessage.editReply({ embeds: [embed] });
-    else queue.textChannel.send({ embeds: [embed] });
-  })
-  .on('addList', (queue, playlist) => {
-    let embed = {
-      color: client.settings.embedColors.green,
-      title: `**»** Sıraya Bir Oynatma Listesi Eklendi!`,
-      description:
-        `**•** [${playlist.name}](${playlist.url})\n` +
-        `**•** Sıraya **${playlist.songs.length}** şarkı eklendi.`,
-      thumbnail: {
-        url: playlist.thumbnail,
-      },
-    };
-    if (playlist.metadata.commandMessage.type === 2)
-      playlist.metadata.commandMessage.editReply({ embeds: [embed] });
-    else queue.textChannel.send({ embeds: [embed] });
-  })
-  .on('error', (channel, error) => {
-
-    require('./events/distube/functions/errorHandler.js')(client, error, channel);
-
-  })
-  .on('empty', queue => {
-    queue.textChannel.send({
-      embeds: [
-        {
-          color: client.settings.embedColors.red,
-          title: `**»** Oynatma Sonlandırıldı!`,
-          description: `**•** Odada kimse kalmadığı için oynatma bitirildi.`,
-        }
-      ]
-    }).catch(e => { });
-  })
-  .on('searchNoResult', (message, query) => {
-    message.channel.send({
-      embeds: [
-        {
-          color: client.settings.embedColors.red,
-          description: `**»** Bir sonuç bulunamadı!`,
-        }
-      ]
-    }).catch(e => { });
-  })
-  .on('finish', queue => {
-    queue.textChannel.send({
-      embeds: [
-        {
-          color: client.settings.embedColors.default,
-          title: `**»** Oynatma Sonlandırıldı!`,
-          description: `**•** Sırada şarkı kalmadığı için oynatma bitirildi!`,
-        }
-      ]
-    }).catch(e => { });
-  })
-  .on("initQueue", queue => {
-    queue.volume = 80;
-  });
-
-//------------------------------Müzik------------------------------//
+const distubeEventFiles = fs.readdirSync('./events/distube/').filter(file => file.endsWith('.js'));
+//client.logger.load(`Loading Events...`)
+for (let file of distubeEventFiles) {
+  let event = require(`./events/distube/${file}`);
+  let eventName = file.split(".")[0];
+  //client.logger.event(`Loading Event: ${eventName}`);
+  client.distube.on(eventName, event.bind(null, client));
+}
 
 //------------------------------Log Sistemi------------------------------//
-
-//Starting all events
-const eventFiles = fs.readdirSync('./events/logger/').filter(file => file.endsWith('.js'));
+const logEventFiles = fs.readdirSync('./events/logger/').filter(file => file.endsWith('.js'));
 //client.logger.load(`Loading Events...`)
-for (const file of eventFiles) {
-  const event = require(`./events/logger/${file}`);
-  const eventName = file.split(".")[0];
+for (let file of logEventFiles) {
+  let event = require(`./events/logger/${file}`);
+  let eventName = file.split(".")[0];
   //client.logger.event(`Loading Event: ${eventName}`);
   client.on(eventName, event.bind(null, client));
 }
 
-//------------------------------Log Sistemi------------------------------//
-
-//------------------------------Davet Sistemi Başlangıç------------------------------//
-
+//------------------------------Davet Sistemi------------------------------//
 client.on('inviteCreate', async invite => {
 
   const guildData = await client.database.fetchGuild(invite.guild.id);
@@ -353,8 +257,7 @@ client.on('inviteCreate', async invite => {
   }
 });
 
-//------------------------------Davet Sistemi Bitiş------------------------------//
-
+//------------------------------toEN------------------------------//
 String.prototype.toEN = function () {
   return this//UPPERS:     // LOWERS:
     .replaceAll("Ğ", "G").replaceAll("ğ", "g")
@@ -364,3 +267,10 @@ String.prototype.toEN = function () {
     .replaceAll("Ö", "O").replaceAll("ö", "o")
     .replaceAll("Ç", "C").replaceAll("ç", "c");
 };
+
+//------------------------------GitHub------------------------------//
+setInterval(() => {
+  client.logger.warn("Nraphy GitHub projesinde onbinlerce satırlık emek bulunmaktadır.");
+  client.logger.warn("GitHub üzerinden projemizi yıldızlayarak projeye destek olabilirsiniz.");
+  client.logger.warn("https://github.com/RFKaya/Nraphy/");
+}, 3600000);

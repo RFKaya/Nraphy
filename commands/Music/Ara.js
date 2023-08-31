@@ -39,6 +39,8 @@ module.exports = {
         }]
       });
 
+    const queue = client.distube.getQueue(interaction.guild);
+
     const music = interaction.type == 2 ? interaction.options.getString("şarkı") : args.join(' ');
 
     if (!music)
@@ -70,18 +72,6 @@ module.exports = {
         }]
       });
 
-    const queue = client.distube.getQueue(interaction.guild);
-
-    if (!data.guildIsBoosted && queue?.songs.length > 200)
-      return interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.red,
-          description:
-            `**»** Şarkı sırası tamamen dolu. Daha fazla şarkı ekleyemezsin.\n` +
-            `**•** **Nraphy Boost** ile bu limiti sınırsıza çıkarabilirsin! \`/boost bilgi\``
-        }]
-      });
-
     if (interaction.type == 2) await interaction.deferReply();
 
     try {
@@ -93,7 +83,7 @@ module.exports = {
     const embed = {
       color: client.settings.embedColors.default,
       author: {
-        name: `${client.user.username} • Arama Sonuçları`,
+        name: `${client.user.username} • Arama Sonuçları (SoundCloud)`,
         icon_url: client.settings.icon
       },
       title: `**»** "${music}" için arama sonuçları;`,

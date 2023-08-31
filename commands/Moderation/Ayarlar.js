@@ -22,16 +22,15 @@ module.exports = {
 
     const autoReply = data.guild.autoReply;
     const autoRole = data.guild.autoRole;
-    const campaignNews = data.guild.campaignNews;
-    const countingGame = data.guild.countingGame;
     const inviteManager = data.guild.inviteManager;
     const linkBlock = data.guild.linkBlock;
     const memberCounter = data.guild.memberCounter;
-    const nameClearing = data.guild.nameClearing;
     const prefix = data.guild.prefix || client.settings.prefix;
     const spamProtection = data.guild.spamProtection;
     const upperCaseBlock = data.guild.upperCaseBlock;
     const wordGame = data.guild.wordGame;
+
+    //------------------------------HATA TESPİT------------------------------//
 
     var caughtProblems = [];
 
@@ -51,13 +50,11 @@ module.exports = {
       caughtProblems.push(`Sorunlu ${amountOfButtonsWithError} adet buton rol mesajı tespit edildi ve veri tabanından silindi. Merak etme, aktif olarak kullanılan buton rollerde bir problem olmayacak.`);
     }
 
-    //Gallery
-    const gallery = data.guild.gallery;
-    const galleryChannel = gallery && interaction.guild.channels.cache.get(gallery);
-    if (gallery && !galleryChannel) {
-      data.guild.gallery = undefined;
+    //Kelime Oyunu
+    if (wordGame.channel && !interaction.guild.channels.cache.get(wordGame.channel)) {
+      data.guild.wordGame.channel = undefined;
       await data.guild.save();
-      caughtProblems.push("Galeri kanalı bulunamadı. Galeri sistemi kapatıldı.");
+      caughtProblems.push("Kelime oyunu kanalı bulunamadı. Kelime oyunu kapatıldı. (İstatistikler korunuyor)");
     }
 
     //Logger
@@ -106,6 +103,8 @@ module.exports = {
         ]
       });
 
+    //------------------------------HATA TESPİT------------------------------//
+
     let moderationPageEmbed = {
       color: client.settings.embedColors.default,
       author: {
@@ -131,24 +130,24 @@ module.exports = {
           value: `**•** ${memberCounter.channel ? `Kanal: ${interaction.guild.channels.cache.get(memberCounter.channel)}\n**•** Hedef: \`${memberCounter.target}\`` : `\`Kapalı\``}`,
         },
         {
-          name: '**»** İsim Temizleme Sistemi',
-          value: `**•** ${nameClearing ? `\`Açık\`` : `\`Kapalı\``}`,
-        },
-        {
-          name: '**»** Kampanya Haber',
-          value: `**•** ${campaignNews ? `Kanal: ${interaction.guild.channels.cache.get(campaignNews)}` : `\`Kapalı\``}`,
-        },
-        {
           name: '**»** Log Sistemi',
-          value: `**•** ${loggerChannel ? `Kanal: ${interaction.guild.channels.cache.get(loggerChannel)}` : `\`Kapalı\``}`,
+          value:
+            `**•** ${loggerChannel ? `Kanal: ${interaction.guild.channels.cache.get(loggerChannel)}` : `\`Kapalı\``}\n` +
+            `**•** Log sisteminin nihai sürümü yalnızca Resmî Nraphy botunda mevcuttur.`,
         },
         {
-          name: '**»** Galeri Kanalı',
-          value: `**•** ${galleryChannel ? `Kanal: ${galleryChannel}` : `\`Kapalı\``}`,
-        },
-        {
-          name: '**»** Uyarılar',
-          value: `**•** ${warns_warns ? `\`${warns_users} Kullanıcı, ${warns_warns} Uyarı\`` : `\`Bu sunucuda hiçbir kullanıcı uyarılmamış.\``}`,
+          name: '**»** Bilgi ⚠️',
+          value:
+            `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
+            `**•** Açık kaynak altyapısında aşağıdaki sistemler mevcut değildir.\n` +
+            `**•** Bu sistemler ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
+            `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)\n\n` +
+
+            `**•** İsim Temizleme Sistemi\n` +
+            `**•** Kampanya Haber\n` +
+            `**•** Galeri Sistemi\n` +
+            `**•** Uyarı Sistemi\n` +
+            `**•** ve daha fazlası...`,
         },
       ],
     };
@@ -199,13 +198,7 @@ module.exports = {
             {
               label: 'Oyunlar Sayfası',
               value: 'gamesPageOption',
-              description: 'Sayı Saymaca',
-              emoji: '📕'
-            },
-            {
-              label: 'Kelime Oyunu',
-              value: 'wordGamePageOption',
-              //description: '',
+              description: 'Kelime Oyunu, Sayı Saymaca ve Tuttu Tutmadı',
               emoji: '📕'
             },
           ])
@@ -345,11 +338,6 @@ module.exports = {
 
       } else if (int.values.toString() === "giveawaysPageOption") {
 
-        let guildGiveaways = await client.database.betaGiveaways.find({ guildId: interaction.guild.id, isDrop: false }).lean().exec();
-
-        let continuingGiveaways = guildGiveaways.filter(giveaway => !giveaway.isEnded),
-          endedGiveaways = guildGiveaways.filter(giveaway => giveaway.isEnded);
-
         interaction.editReply({
           embeds: [
             {
@@ -358,28 +346,11 @@ module.exports = {
                 name: `${interaction.guild.name} Sunucusunun Ayarları (Çekilişler)`,
                 icon_url: interaction.guild.iconURL(),
               },
-              fields: [
-                {
-                  name: '**»** Aktif Çekilişler',
-                  value:
-                    `**•** ${continuingGiveaways
-                      .map(giveaway => continuingGiveaways.length >= 8
-                        ? giveaway.prize.slice(0, 100)
-                        : `[${giveaway.prize.slice(0, 100)}](https://discord.com/channels/${giveaway.guildId}/${giveaway.channelId}/${giveaway.messageId})`)
-                      .join('\n**•** ')
-                    || "Aktif çekiliş bulunmuyor."}`
-                },
-                {
-                  name: '**»** Geçmiş Çekilişler (Son 30 gün)',
-                  value:
-                    `**•** ${endedGiveaways
-                      .map(giveaway => endedGiveaways.length >= 8
-                        ? giveaway.prize.slice(0, 100)
-                        : `[${giveaway.prize.slice(0, 100)}](https://discord.com/channels/${giveaway.guildId}/${giveaway.channelId}/${giveaway.messageId})`)
-                      .join('\n**•** ')
-                    || "Geçmiş çekiliş verisi bulunmuyor."}`
-                },
-              ],
+              description:
+                `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
+                `**•** Açık kaynak altyapısında Çekiliş komutları mevcut değildir.\n` +
+                `**•** Çekiliş komutları ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
+                `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`
             }
           ],
           components: [row]
@@ -397,41 +368,28 @@ module.exports = {
               },
               fields: [
                 {
-                  name: '**»** Sayı Saymaca Oyunu',
-                  value: `**•** ${countingGame?.channel ? interaction.guild.channels.cache.get(countingGame.channel) : `\`Kapalı\``}`,
-                },
-              ],
-            }
-          ],
-          components: [row]
-        });
-
-      } else if (int.values.toString() === "wordGamePageOption") {
-
-        interaction.editReply({
-          embeds: [
-            {
-              color: client.settings.embedColors.default,
-              author: {
-                name: `${interaction.guild.name} Sunucusunun Ayarları (Kelime Oyunu)`,
-                icon_url: interaction.guild.iconURL(),
-              },
-              title: `**»** ${wordGame?.channel ? "Aktif!" : "Kapalı"}`,
-              fields: [
-                {
-                  name: '**»** Kanal',
-                  value: `**•** ${wordGame?.channel ? interaction.guild.channels.cache.get(wordGame.channel) : `\`Kapalı\``}`,
-                },
-                {
-                  name: '**»** Ayarlar',
+                  name: '**»** Kelime Oyunu',
                   value:
-                    `**•** Üst Üste Yazma: \`${wordGame?.writeMore ? `\`Açık\`` : `\`Kapalı\``}\``,
-                  //`**•** Kelime Geçmişi: \`Bilgi alınamıyor\``,
+                    wordGame?.channel ?
+                      `**•** Kanal: ${interaction.guild.channels.cache.get(wordGame.channel)}\n` +
+                      `**•** Üst Üste Yazma: \`${wordGame?.writeMore ? `Açık` : `Kapalı`}\``
+                      : `**•** \`Kapalı\``,
                 },
-
                 {
-                  name: '**»** İstatistikler',
-                  value: `**•** \`/sıralama\``,
+                  name: '**»** Sayı Saymaca Oyunu 🔒',
+                  value: `**•** \`Bu oyun yalnızca Resmî Nraphy botunda mevcuttur\``,
+                },
+                {
+                  name: '**»** Tuttu Tutmadı Oyunu 🔒',
+                  value: `**•** \`Bu oyun yalnızca Resmî Nraphy botunda mevcuttur\``,
+                },
+                {
+                  name: '**»** Bilgi ⚠️',
+                  value:
+                    `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
+                    `**•** Açık kaynak altyapısında \`/sıralama\` komutu mevcut değildir.\n` +
+                    `**•** Sıralama komutu ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
+                    `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`,
                 },
               ],
             }

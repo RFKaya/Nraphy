@@ -109,11 +109,10 @@ module.exports = {
 
     } else if (getCommand == "ayarla") {
 
-      const { channelChecker } = require("../../modules/Functions");
       const channel = interaction.options.getChannel("kanal");
 
       //Kanal Kontrol
-      if (await channelChecker(interaction, channel, ["ViewChannel", "SendMessages", "EmbedLinks"], false)) return;
+      if (!await client.functions.channelChecker(interaction, channel, ["ViewChannel", "SendMessages", "EmbedLinks"])) return;
 
       if (data.guild.inviteManager?.channel === channel.id)
         return interaction.reply({

@@ -17,7 +17,6 @@ module.exports = async (client, oldMessage, newMessage) => {
 
   } catch (err) {
     client.logger.error(err);
-    console.log(newMessage);
   };
 
 };

@@ -18,7 +18,6 @@ Bu projede tüm Nraphy kodları açık olarak paylaşılmamıştır. Botun günc
 > ✅ Buton Rol <br>
 > ✅ Büyük Harf Engel <br>
 > ✅ Davet Sistemi <br>
-> ✅ Galeri <br>
 > ✅ Log <br>
 > ✅ Müzik Sistemi <br>
 > ✅ Oto Rol <br>
@@ -50,10 +49,8 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
     * **mongooseToken:** [MongoDB Cloud](https://cloud.mongodb.com) üzerinden edinebilirsin.
 		> Nasıl edineceği bilmiyorsan [MongoDB URL alma](https://www.youtube.com/watch?v=MFla3bZwBOc) videosuna ya da [MongoDB Atlas connection bağlantısı alma](https://medium.com/@thearkxd/node-js-projeleri-i%C3%A7in-mongodb-atlas-connection-linki-alma-5d955bbe5ae6) rehberine göz atabilirsin. 
 	*(Kaynaklar projemize ait değildir.)*
-    * **clientLogsWebhookURL:** Client Logları için Webhook bağlantısı. Doldurulması tavsiye edilir. <br>
 2. `client.js` dosyasındaki `client.settings` objesinin verilerini botuna göre özelleştir.
-3. Eğer yoksa botun dizinine `logs` adında bir klasör oluştur.
-4. Konsola `npm i` çekerek node modüllerini kur. <br>
+3. Konsola `npm i` çekerek node modüllerini kur. <br>
 
 > 🎉 Tebrikler, kurulumu tamamladın! Botu çalıştırmak istediğinde konsola `npm start` yazabilirsin.
 

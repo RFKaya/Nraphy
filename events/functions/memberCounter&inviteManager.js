@@ -2,11 +2,11 @@ const permissions = require("../../utils/Permissions.json");
 
 module.exports = async (client, member, memberCounter, inviteManager, guildData) => {
 
-  const channel = memberCounter.channel;
+  const channel = member.guild.channels.cache.get(memberCounter.channel);
 
   try {
 
-    if (!member.guild.channels.cache.has(channel)) {
+    if (!channel) {
 
       client.logger.log(`Davet&Sayaç kanalı bulunamadı, sunucudaki sayaç sıfırlanıyor... • ${member.guild.name} (${member.guild.id})`);
       guildData.memberCounter = undefined;
@@ -27,7 +27,7 @@ module.exports = async (client, member, memberCounter, inviteManager, guildData)
 
     let clientPerms = [];
     ["ViewChannel", "SendMessages", "EmbedLinks"].forEach((perm) => {
-      if (!member.guild.channels.cache.get(channel).permissionsFor(member.guild.members.me).has(perm)) {
+      if (!channel.permissionsFor(member.guild.members.me).has(perm)) {
         clientPerms.push(permissions[perm]);
       }
     });
@@ -97,23 +97,27 @@ module.exports = async (client, member, memberCounter, inviteManager, guildData)
 
     if (member.user.bot) joinEmbed.author.name += ` (Bot 🤖)`;
 
-    member.guild.channels.cache.get(channel).send({
+    channel.send({
       embeds: [joinEmbed]
     });
 
-    /*if (Number(memberCounter.target) <= member.guild.memberCount) {
+    //Sayaç hedefine ulaşılırsa
+    if (memberCounter.target <= member.guild.memberCount) {
 
-      member.guild.channels.cache.get(memberCounter.channel).send({
+      channel.send({
         embeds: [{
           color: client.settings.embedColors.default,
           title: `**»** Tebrikler ${member.guild.name}!`,
-          description: `**•** Başarıyla **${db.fetch(`guilds.${member.guild.id}.memberCounter.target`)}** kullanıcıya ulaştık!\n**•** Sayaç hedefini otomatik olarak ikiye katladım!`,
+          description:
+            `**•** Başarıyla **${memberCounter.target}** kullanıcıya ulaştık!\n` +
+            `**•** Sayaç hedefini otomatik olarak ikiye katladım!`,
         }]
-      })
+      });
 
-      db.set(`guilds.${member.guild.id}.memberCounter.target`, (db.fetch(`guilds.${member.guild.id}.memberCounter.target * 2)`))
+      guildData.memberCounter.target = guildData.memberCounter.target * 2;
+      await guildData.save();
 
-    }*/
+    }
 
   } catch (err) { client.logger.error(err); };
 };

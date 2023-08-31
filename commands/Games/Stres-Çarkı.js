@@ -1,17 +1,11 @@
-const Discord = require('discord.js');
 const humanize = require("humanize-duration");
 
 module.exports = {
   name: "stres-çarkı",
   description: "Stres çarkı çevirir.",
-  usage: "stres-çarkı",
   aliases: ['stresçarkı', 'fidgetspin', 'fidgetspinner', 'handspin', 'handspinner', "çark"],
   category: "Games",
-  memberPermissions: [],
-  botPermissions: ["SendMessages", "EmbedLinks"],
-  nsfw: false,
-  cooldown: false,
-  ownerOnly: false,
+  cooldown: 10000,
 
   async execute(client, message, args, data) {
 

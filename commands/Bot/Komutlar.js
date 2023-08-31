@@ -30,7 +30,7 @@ module.exports = {
     if (commandArgs) {
 
       let selectedCmd = client.commands.filter(command => command.category && command.category !== "Developer")
-        .find(cmd => (cmd.interaction || cmd).name === commandArgs || cmd.aliases.includes(commandArgs));
+        .find(cmd => (cmd.interaction || cmd).name === commandArgs || cmd.aliases?.includes(commandArgs));
 
       if (selectedCmd) {
 
@@ -79,9 +79,15 @@ module.exports = {
 
     //------------------------------KOMUT BİLGİ------------------------------//
 
-    //------------------------------Back End------------------------------//
+    //------------------------------Embeds------------------------------//
 
-    //Yetkili Komutları - Back End
+    let fieldsLinks = {
+      name: '**»** Bağlantılar',
+      value: `**•** [Destek Sunucusu](https://discord.gg/VppTU9h) • [Davet Bağlantısı](${client.settings.invite})`,
+      inline: false
+    };
+
+    //Yetkili Komutları
     let embedModeration = { fields: [] };
     let commandsModeration = [];
     await client.commands.forEach(command => {
@@ -94,9 +100,10 @@ module.exports = {
           } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2)) {
             let options = [];
             command.interaction.options.forEach(subCommand => {
-              options.push(`**•** \`/${command.interaction.name + " " + subCommand.name}\``);
+              options.push(`**•** \`/${command.interaction.name} ${subCommand.name}\``);
             });
-            //embedModeration.fields.push(`**»** ${client.capitalizeFirstLetter(command.interaction.name, "tr")}`, options.join('\n'), true);
+            if (command.interaction.name === "davet-sistemi")
+              options.push(`**•** \`/davetler\``);
             embedModeration.fields.push({
               name:
                 `**»** ${command.interaction.name.replace(/-/g, " ").toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
@@ -112,8 +119,58 @@ module.exports = {
       }
     });
     embedModeration.fields = embedModeration.fields.sort(function (a, b) { return b.value.split(/\r\n|\r|\n/).length - a.value.split(/\r\n|\r|\n/).length; });
+    embedModeration.color = client.settings.embedColors.default;
+    embedModeration.author = {
+      name: `${client.user.username} • Yetkili Komutları`,
+      icon_url: client.settings.icon,
+    };
+    embedModeration.title = `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`;
+    embedModeration.description = commandsModeration.join('');
+    embedModeration.fields.push({
+      name: "**»** Bilgi ⚠️",
+      value:
+        `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
+        `**•** Açık kaynak altyapısında bazı sistemler ve komutlar mevcut değildir.\n` +
+        `**•** Tüm sistemler ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
+        `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`,
+    });
+    embedModeration.fields.push(fieldsLinks);
+    embedModeration.fields.unshift({
+      name: '**»** Mesaj Filtreleme Sistemleri',
+      value:
+        `**•** Bu komutlar farklı bir sayfaya taşınmıştır.\n` +
+        `**•** \`Bağlantı Engel, Büyük Harf Engel, Etiket Sınırlama, Spam Koruması\``,
+      inline: false
+    });
 
-    //Eğlence Komutları - Back End
+    //Mesaj Filtreleme Sistemleri - Embed
+    let embedMessageFilters = {
+      color: client.settings.embedColors.default,
+      author: {
+        name: `${client.user.username} • Mesaj Filtreleme Sistemleri`,
+        icon_url: client.settings.icon,
+      },
+      title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
+      description:
+        `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
+        `**•** Açık kaynak altyapısında Etiket Sınırlama sistemi mevcut değildir.\n` +
+        `**•** Etiket Sınırlama sistemi ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
+        `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`,
+      fields: [
+        ...(client.commands.filter(command => command.category === "MessageFilters").map(command => ({
+          name: `**»** ${command.interaction.name.replace(/-/g, " ").toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
+            return letter.toUpperCase();
+          })}`,
+          value:
+            `**•** ${command.interaction.description}\n` +
+            command.interaction.options.map(option => `**•** \`/${command.interaction.name} ${option.name}\``).join('\n'),
+          inline: false
+        }))),
+        fieldsLinks
+      ],
+    };
+
+    //Eğlence Komutları
     let commandsFun = [];
     client.commands.forEach(command => {
       if (command.category == 'Fun') {
@@ -132,8 +189,18 @@ module.exports = {
         }
       }
     });
+    let embedFun = {
+      color: client.settings.embedColors.default,
+      author: {
+        name: `${client.user.username} • Eğlence Komutları`,
+        icon_url: client.settings.icon,
+      },
+      title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
+      description: commandsFun.join(''),
+      fields: [fieldsLinks],
+    };
 
-    //Genel Komutlar - Back End
+    //Genel Komutlar
     let commandsGeneral = [];
     client.commands.forEach(command => {
       if (command.category == 'General') {
@@ -152,8 +219,18 @@ module.exports = {
         }
       }
     });
+    let embedGeneral = {
+      color: client.settings.embedColors.default,
+      author: {
+        name: `${client.user.username} • Genel Komutlar`,
+        icon_url: client.settings.icon,
+      },
+      title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
+      description: commandsGeneral.join(''),
+      fields: [fieldsLinks],
+    };
 
-    //Oyunlar - Back End
+    //Oyunlar
     let embedGames = { fields: [] };
     let commandsGames = [];
     await client.commands.forEach(command => {
@@ -183,120 +260,6 @@ module.exports = {
         }
       }
     });
-    /*let commandsGames = [];
-    client.commands.forEach(command => {
-      if (command.category == 'Games') {
-        if (!command.interaction) {
-          commandsGames.push(`**•** \`${data.prefix}${command.name}\` - ${command.description}\n`);
-        } else {
-          if (command.interaction.type && command.interaction.type == 3) {
-            commandsGames.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
-          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0]?.type == 2)) {
-            command.interaction.options.forEach(subCommand => {
-              commandsGames.push(`**•** \`/${command.interaction.name + " " + subCommand.name}\` - ${subCommand.description}\n`);
-            });
-          } else {
-            commandsGames.push(`**•** \`/${command.interaction.name}\` - ${command.interaction.description}\n`);
-          }
-        }
-      }
-    });*/
-
-    //Botla İlgili Komutlar - Back End
-    let commandsBot = [];
-    client.commands.forEach(command => {
-      if (command.category == 'Bot') {
-        if (!command.interaction) {
-          commandsBot.push(`**•** \`${data.prefix}${command.name}\` - ${command.description}\n`);
-        } else {
-          if (command.interaction.type && command.interaction.type == 3) {
-            commandsBot.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
-          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2)) {
-            command.interaction.options.forEach(subCommand => {
-              commandsBot.push(`**•** \`/${command.interaction.name + " " + subCommand.name}\` - ${subCommand.description}\n`);
-            });
-          } else {
-            commandsBot.push(`**•** \`/${command.interaction.name}\` - ${command.interaction.description}\n`);
-          }
-        }
-      }
-    });
-
-    //------------------------------Back End------------------------------//
-
-    //------------------------------Embeds------------------------------//
-
-    let fieldsLinks = {
-      name: '**»** Bağlantılar',
-      value: `**•** [Destek Sunucusu](https://discord.gg/VppTU9h) • [Davet Bağlantısı](${client.settings.invite})`,
-      inline: false
-    };
-
-    //Yetkili Komutları - Embed
-    embedModeration.color = client.settings.embedColors.default;
-    embedModeration.author = {
-      name: `${client.user.username} • Yetkili Komutları`,
-      icon_url: client.settings.icon,
-    };
-    embedModeration.title = `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`;
-    embedModeration.description = commandsModeration.join('');
-    embedModeration.fields.push(fieldsLinks);
-    embedModeration.fields.unshift({
-      name: '**»** Mesaj Filtreleme Sistemleri',
-      value:
-        `**•** Bu komutlar farklı bir sayfaya taşınmıştır.\n` +
-        `**•** \`Bağlantı Engel, Büyük Harf Engel, Spam Koruması\``,
-      inline: false
-    });
-
-    //Mesaj Filtreleme Sistemleri - Embed
-    let embedMessageFilters = {
-      color: client.settings.embedColors.default,
-      author: {
-        name: `${client.user.username} • Mesaj Filtreleme Sistemleri`,
-        icon_url: client.settings.icon,
-      },
-      title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
-      //description: "31",
-      fields: [
-        ...(client.commands.filter(command => command.category === "MessageFilters").map(command => ({
-          name: `**»** ${command.interaction.name.replace(/-/g, " ").toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
-            return letter.toUpperCase();
-          })}`,
-          value:
-            `**•** ${command.interaction.description}\n` +
-            command.interaction.options.map(option => `**•** \`/${command.interaction.name} ${option.name}\``).join('\n'),
-          inline: false
-        }))),
-        fieldsLinks
-      ],
-    };
-
-    //Eğlence Komutları - Embed
-    let embedFun = {
-      color: client.settings.embedColors.default,
-      author: {
-        name: `${client.user.username} • Eğlence Komutları`,
-        icon_url: client.settings.icon,
-      },
-      title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
-      description: commandsFun.join(''),
-      fields: [fieldsLinks],
-    };
-
-    //Genel Komutlar - Embed
-    let embedGeneral = {
-      color: client.settings.embedColors.default,
-      author: {
-        name: `${client.user.username} • Genel Komutlar`,
-        icon_url: client.settings.icon,
-      },
-      title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
-      description: commandsGeneral.join(''),
-      fields: [fieldsLinks],
-    };
-
-    //Oyunlar - Embed
     embedGames.color = client.settings.embedColors.default;
     embedGames.author = {
       name: `${client.user.username} • Oyunlar`,
@@ -304,17 +267,15 @@ module.exports = {
     };
     embedGames.title = `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`;
     embedGames.description = commandsGames.join('');
+    embedGames.fields.push({
+      name: "**»** Bilgi ⚠️",
+      value:
+        `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
+        `**•** Açık kaynak altyapısında bazı sistemler ve komutlar mevcut değildir.\n` +
+        `**•** Tüm sistemler ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
+        `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`,
+    });
     embedGames.fields.push(fieldsLinks);
-    /*let embedGames = {
-      color: client.settings.embedColors.default,
-      author: {
-        name: `${client.user.username} • Oyunlar`,
-        icon_url: client.settings.icon,
-      },
-      title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
-      description: commandsGames.join(''),
-      fields: [fieldsLinks],
-    };*/
 
     //Müzik Komutları
     let embedMusic = {
@@ -324,17 +285,6 @@ module.exports = {
         icon_url: client.settings.icon,
       },
       title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
-      /*description: client.commands
-        .filter(command => command.category == 'Music')
-        .sort((a, b) => {
-          console.log(a);
-          if (a.interaction.name === "çal" || a.interaction.name === "ara") return -1;
-          //if (a < b) return -1;
-          //return 0;
-        })
-        .map(command => `**•** \`/${command.interaction.name}\` - ${command.interaction.description}`
-          + (command.interaction.name === "ara" ? '\n' : ''))
-        .join('\n'),*/
       fields: [
         {
           name: '**»** Şarkı Başlatma',
@@ -360,10 +310,61 @@ module.exports = {
               .join('\n'),
           inline: false
         },
-        fieldsLinks],
+        fieldsLinks
+      ],
     };
 
-    //Botla İlgili Komutlar - Embed
+    //Çekiliş Komutları
+    let embedGiveaway = {
+      color: client.settings.embedColors.default,
+      author: {
+        name: `${client.user.username} • Çekiliş`,
+        icon_url: client.settings.icon,
+      },
+      title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
+      description:
+        `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
+        `**•** Açık kaynak altyapısında Çekiliş komutları mevcut değildir.\n` +
+        `**•** Çekiliş komutları ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
+        `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`,
+      fields: [fieldsLinks],
+    };
+
+    //NraphyCoin
+    let embedNC = {
+      color: client.settings.embedColors.default,
+      author: {
+        name: `${client.user.username} • NraphyCoin`,
+        icon_url: client.settings.icon,
+      },
+      title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
+      description:
+        `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
+        `**•** Açık kaynak altyapısında NraphyCoin komutları mevcut değildir.\n` +
+        `**•** NraphyCoin komutları ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
+        `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`,
+      fields: [fieldsLinks],
+    };
+
+    //Botla İlgili Komutlar
+    let commandsBot = [];
+    client.commands.forEach(command => {
+      if (command.category == 'Bot') {
+        if (!command.interaction) {
+          commandsBot.push(`**•** \`${data.prefix}${command.name}\` - ${command.description}\n`);
+        } else {
+          if (command.interaction.type && command.interaction.type == 3) {
+            commandsBot.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
+          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2)) {
+            command.interaction.options.forEach(subCommand => {
+              commandsBot.push(`**•** \`/${command.interaction.name + " " + subCommand.name}\` - ${subCommand.description}\n`);
+            });
+          } else {
+            commandsBot.push(`**•** \`/${command.interaction.name}\` - ${command.interaction.description}\n`);
+          }
+        }
+      }
+    });
     let embedBot = {
       color: client.settings.embedColors.default,
       author: {
@@ -389,15 +390,18 @@ module.exports = {
         `📚 • Ana Sayfa\n\n` +
 
         `📘 • Yetkili Komutları (**${commandsModeration.length + embedModeration.fields.length - 2}**)\n` +
-        `᲼᲼᲼↳ Mesaj Filtreleme Sistemleri (**${embedMessageFilters.fields.length - 1}**)\n` +
+        `↳ Mesaj Filtreleme Sistemleri (**${embedMessageFilters.fields.length - 1}**)\n` +
         `📙 • Eğlence Komutları (**${commandsFun.length}**)\n` +
         `📗 • Genel Komutlar (**${commandsGeneral.length}**)\n` +
         `📕 • Oyunlar (**${commandsGames.length + embedGames.fields.length - 1}**)\n` +
         `🎵 • Müzik Komutları (**${client.commands.filter(command => command.category?.startsWith('Music')).size}**)\n` +
+        `🎉 • Çekiliş (🔒)\n` +
+        `💰 • NraphyCoin (🔒)\n` +
         `🤖 • Botla İlgili Komutlar (**${commandsBot.length}**)\n\n` +
 
+        `**[YENİ!]** Geçici Odalar Sistemi: \`/geçici-odalar Bilgi\`\n\n` +
         `Hata bildirimi veya öneriler için: \`/bildiri\`\n` +
-        `Bu bot [Nraphy Açık Kaynak Projesi](https://discord.gg/VppTU9h) ile oluşturulmuştur.`
+        `Komutların çoğu hem \`/slash\` hem de \`${data.prefix}slash\` şeklini desteklemektedir.`
         /*`${(data.user.readDateOfChanges < client.settings.updateDate) ?
           `✉️ Okunmamış yenilikler mevcut! \`/yenilikler\` yazarak okuyabilirsin!` :
           `Gelişmelerden haberdar olmak için destek sunucumuza katılabilirsiniz!`}`*/,
@@ -424,9 +428,9 @@ module.exports = {
               value: 'moderationOption',
             },
             {
-              label: '᲼᲼᲼Mesaj Filtreleme Sistemleri',
+              label: '↳ Mesaj Filtreleme Sistemleri',
               //emoji: '📘',
-              description: '᲼᲼᲼Bağlantı Engel, Spam Koruması vb.',
+              description: 'Bağlantı Engel, Spam Koruması vb.',
               value: 'messageFiltersOption',
             },
             {
@@ -454,6 +458,18 @@ module.exports = {
               value: 'musicOption',
             },
             {
+              label: 'Çekiliş Komutları',
+              emoji: '🎉',
+              //description: 'Çekiliş yapmanıza yarayan komutlar.',
+              value: 'giveawayOption',
+            },
+            {
+              label: 'NraphyCoin Komutları',
+              emoji: '💰',
+              //description: 'NraphyCoin ile ilgili tüm komutlar.',
+              value: 'NCOption',
+            },
+            {
               label: 'Bot Komutları',
               emoji: '🤖',
               description: 'Nraphy ile ilgili komutlar.',
@@ -478,8 +494,10 @@ module.exports = {
         "funOption": embedFun,
         "generalOption": embedGeneral,
         "gamesOption": embedGames,
+        "NCOption": embedNC,
         "botOption": embedBot,
         "musicOption": embedMusic,
+        "giveawayOption": embedGiveaway,
       };
 
       const reply = interaction.type === 2 ? await interaction.fetchReply() : msg;
@@ -487,9 +505,9 @@ module.exports = {
         return i.message.id === reply.id && i.deferUpdate() && i.user.id === (interaction.type === 2 ? interaction.user : interaction.author).id;
       };
 
-      var calc = (interaction.type === 2 ? interaction.channel : msg).createMessageComponentCollector({ filter, time: 1800000 });
+      var collector = (interaction.type === 2 ? interaction.channel : msg).createMessageComponentCollector({ filter, time: 1800000 });
 
-      calc.on('collect', async int => {
+      collector.on('collect', async int => {
 
         let collectedOption = row.components[0].options.find(selectMenuOption => selectMenuOption.data.value == int.values.toString());
         row.components[0].setPlaceholder(`${collectedOption.data.emoji?.name || "📘"} ${collectedOption.data.label.replaceAll("᲼", '')}`);
@@ -501,6 +519,15 @@ module.exports = {
           msg.edit({ embeds: [embedMaps[int.values.toString()]], components: [row] });
           //.catch(e => { });
         }
+
+      });
+
+      collector.on('end', collected => {
+
+        if (interaction.type === 2)
+          return interaction.editReply({ components: [] }).catch(e => { });
+        else
+          return msg.edit({ components: [] }).catch(e => { });
 
       });
 

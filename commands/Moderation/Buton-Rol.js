@@ -183,17 +183,7 @@ module.exports = {
       const getTitle = interaction.options.getString("başlık");
       const getChannel = interaction.options.getChannel("kanal") || interaction.channel;
 
-      if (getChannel.type !== 0)
-        return interaction.reply({
-          embeds: [
-            {
-              color: client.settings.embedColors.red,
-              title: `**»** Geçerli Bir Kanal Belirtmelisin!`,
-              description: `**•** Belirttiğin kanal, oda veya kategori olmamalı. Sadece yazı kanalı.`,
-            }
-          ]
-        });
-
+      if (!await client.functions.channelChecker(interaction, getChannel, this.botPermissions)) return;
       if (await roleChecker(interaction, getRole)) return;
 
       if (Object.keys(data.guild.buttonRole || {}).length >= 50)

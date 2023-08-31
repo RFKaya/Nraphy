@@ -1,45 +1,29 @@
 const { ButtonBuilder } = require('discord.js');
 
 module.exports = {
-  name: "emojiler",
-  description: "Sunucudaki emojileri listeler.",
-  usage: "emojiler",
+  interaction: {
+    name: "emojiler",
+    description: "Sunucudaki tüm emojileri listeler.",
+  },
   aliases: ["emoji"],
   category: "General",
-  memberPermissions: [],
-  botPermissions: ["SendMessages", "EmbedLinks"],
-  nsfw: false,
-  cooldown: false,
-  ownerOnly: false,
+  cooldown: 10000,
 
-  async execute(client, message, args, data) {
+  async execute(client, interaction, data, args) {
 
-    let Emojis = [];
-    let EmojisAnimated = [];
-    let EmojiCount = 0;
-    let Animated = 0;
-    let OverallEmojis = 0;
+    const emojisNormal = interaction.guild.emojis.cache.filter(emoji => !emoji.animated);
+    const emojisAnimated = interaction.guild.emojis.cache.filter(emoji => emoji.animated);
 
-    message.guild.emojis.cache.forEach((emoji) => {
-      OverallEmojis++;
-      if (emoji.animated) {
-        Animated++;
-        EmojisAnimated.push(emoji.toString());
-      } else {
-        EmojiCount++;
-        Emojis.push(emoji.toString());
-      }
-    });
-
-    if ((EmojiCount < 1) && (Animated < 1)) return message.channel.send({
-      embeds: [
-        {
-          color: client.settings.embedColors.red,
-          title: '**»** Bu Sunucuda Hiç Emoji Bulunmuyor!',
-          description: `**•** Biraz emoji eklemeyi düşünebilirsiniz.`
-        }
-      ]
-    });
+    if (!emojisNormal.size && !emojisAnimated.size)
+      return await interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            title: '**»** Bu Sunucuda Hiç Emoji Bulunmuyor!',
+            description: `**•** Biraz emoji eklemeyi düşünebilirsin.`
+          }
+        ]
+      });
 
     const embed = {
       color: client.settings.embedColors.default,
@@ -47,11 +31,13 @@ module.exports = {
         name: `${client.user.username} • Emojiler`,
         icon_url: client.settings.icon,
       },
-      title: `**»** Bu sunucuda toplam ${OverallEmojis} adet emoji bulunuyor.`,
+      title: `**»** Bu sunucuda toplam ${emojisNormal.size + emojisAnimated.size} adet emoji bulunuyor.`,
       fields: [
         {
           name: '**»** Emoji Miktarları',
-          value: `**•** Hareketsiz Emojiler: \`${EmojiCount}\`\n**•** Hareketli Emojiler: \`${Animated}\``,
+          value:
+            `**•** Hareketsiz Emojiler: \`${emojisNormal.size}\`\n` +
+            `**•** Hareketli Emojiler: \`${emojisAnimated.size}\``,
         },
       ],
       description: `**•** Emojileri görüntülemek için aşağıdaki butonları kullanabilirsiniz.`
@@ -61,29 +47,108 @@ module.exports = {
     let emojisPageButton = new ButtonBuilder().setLabel('Hareketsiz Emojiler').setCustomId("emojisPageButton").setStyle('Primary');
     let animatedPageButton = new ButtonBuilder().setLabel('Hareketli Emojiler').setCustomId("animatedPageButton").setStyle('Primary');
 
-    message.channel.send({
+    const reply = await interaction.reply({
       embeds: [embed],
       components: [
         {
           data: { type: 1 }, components: [
-            mainPageButton.setDisabled(true), emojisPageButton.setDisabled(false), animatedPageButton.setDisabled(false)
+            mainPageButton.setDisabled(true), emojisPageButton, animatedPageButton
           ]
         }
       ]
-    }).then(msg => {
+    });
 
-      const filter = i => {
-        return i.message.id === msg.id && i.deferUpdate() && i.user.id === message.author.id;
-      };
+    const replyMessage = interaction.type === 2 && await interaction.fetchReply();
+    const filter = i => {
+      return i.message.id === (interaction.type === 2 ? replyMessage : reply).id && i.deferUpdate() && i.user.id === (interaction.type === 2 ? interaction.user : interaction.author).id;
+    };
+    const collector = reply.createMessageComponentCollector({ filter, time: 600000 });
 
-      const calc = msg.createMessageComponentCollector({ filter, time: 180000 });
+    collector.on('collect', async btn => {
 
-      calc.on('collect', async btn => {
+      if (btn.customId === "mainPageButton") {
 
-        if (btn.customId === "mainPageButton") {
+        let messageContent = {
+          embeds: [embed],
+          components: [
+            {
+              type: 1, components: [
+                mainPageButton.setDisabled(true), emojisPageButton.setDisabled(false), animatedPageButton.setDisabled(false)
+              ]
+            }
+          ]
+        };
+        if (interaction.type === 2)
+          await interaction.editReply(messageContent);
+        else await reply.edit(messageContent);
 
-          msg.edit({
-            embeds: [embed],
+      } else if (btn.customId === "emojisPageButton") {
+
+        if (!emojisNormal.size) {
+          let messageContent = {
+            embeds: [
+              {
+                color: client.settings.embedColors.red,
+                author: {
+                  name: `${client.user.username} • Emojiler`,
+                  icon_url: client.settings.icon,
+                },
+                description: `**»** Bu sunucuda hiç hareketsiz emoji yok.`
+              }
+            ],
+            components: [
+              {
+                type: 1, components: [
+                  mainPageButton.setDisabled(false), emojisPageButton.setDisabled(true), animatedPageButton.setDisabled(false)
+                ]
+              }
+            ]
+          };
+          if (interaction.type === 2)
+            return await interaction.editReply(messageContent);
+          else return await reply.edit(messageContent);
+        }
+
+        const emojisNormalString = emojisNormal.map(emoji => emoji.toString()).join(' ');
+
+        let messageContent = {
+          embeds: [
+            {
+              color: client.settings.embedColors.default,
+              author: {
+                name: `${client.user.username} • Emojiler`,
+                icon_url: client.settings.icon,
+              },
+              title: `**»** Hareketsiz Emojiler (**${emojisNormal.size}**)`,
+              description: client.functions.truncate(emojisNormalString, 4000)
+            }
+          ],
+          components: [
+            {
+              type: 1, components: [
+                mainPageButton.setDisabled(false), emojisPageButton.setDisabled(true), animatedPageButton.setDisabled(false)
+              ]
+            }
+          ]
+        };
+        if (interaction.type === 2)
+          await interaction.editReply(messageContent);
+        else await reply.edit(messageContent);
+
+      } else if (btn.customId === "animatedPageButton") {
+
+        if (!emojisAnimated.size) {
+          let messageContent = {
+            embeds: [
+              {
+                color: client.settings.embedColors.red,
+                author: {
+                  name: `${client.user.username} • Emojiler`,
+                  icon_url: client.settings.icon,
+                },
+                description: `**»** Bu sunucuda hiç hareketli emoji yok.`
+              }
+            ],
             components: [
               {
                 type: 1, components: [
@@ -91,122 +156,60 @@ module.exports = {
                 ]
               }
             ]
-          });
-
-        } else if (btn.customId === "emojisPageButton") {
-
-          if (Emojis.join(' ').length > 4096) {
-            msg.edit({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  description: `**•** Hareketsiz emojiler, **4096** karakter limitini aştığı için gösterilemiyor.`
-                }
-              ],
-              components: [
-                {
-                  type: 1, components: [
-                    mainPageButton.setDisabled(false), emojisPageButton.setDisabled(true), animatedPageButton.setDisabled(false)
-                  ]
-                }
-              ]
-            });
-          } else {
-            msg.edit({
-              embeds: [
-                {
-                  color: client.settings.embedColors.default,
-                  author: {
-                    name: `${client.user.username} • Emojiler`,
-                    icon_url: client.settings.icon,
-                  },
-                  title: `**»** Hareketsiz Emojiler (**${EmojiCount}**)`,
-                  description: `${Emojis.join(' ')}`
-                }
-              ],
-              components: [
-                {
-                  type: 1, components: [
-                    mainPageButton.setDisabled(false), emojisPageButton.setDisabled(true), animatedPageButton.setDisabled(false)
-                  ]
-                }
-              ]
-            });
-          }
-
-        } else if (btn.customId === "animatedPageButton") {
-
-          if (EmojisAnimated.join(' ').length > 4096) {
-            msg.edit({
-              embeds: [
-                {
-                  color: client.settings.embedColors.red,
-                  description: `**•** Hareketli emojiler, **4096** karakter limitini aştığı için gösterilemiyor.`
-                }
-              ],
-              components: [
-                {
-                  type: 1, components: [
-                    mainPageButton.setDisabled(false), emojisPageButton.setDisabled(false), animatedPageButton.setDisabled(true)
-                  ]
-                }
-              ]
-            });
-          } else {
-            msg.edit({
-              embeds: [
-                {
-                  color: client.settings.embedColors.default,
-                  author: {
-                    name: `${client.user.username} • Emojiler`,
-                    icon_url: client.settings.icon,
-                  },
-                  title: `**»** Hareketli Emojiler (**${Animated}**)`,
-                  description: `${EmojisAnimated.join(' ')}`
-                }
-              ],
-              components: [
-                {
-                  type: 1, components: [
-                    mainPageButton.setDisabled(false), emojisPageButton.setDisabled(false), animatedPageButton.setDisabled(true)
-                  ]
-                }
-              ]
-            });
-          }
-
+          };
+          if (interaction.type === 2)
+            return await interaction.editReply(messageContent);
+          else return await reply.edit(messageContent);
         }
-      });
 
-      calc.on('end', collected => {
-        return msg.edit({
-          components: []
-        });
-      });
+        const emojisAnimatedString = emojisAnimated.map(emoji => emoji.toString()).join(' ');
+
+        let messageContent = {
+          embeds: [
+            {
+              color: client.settings.embedColors.default,
+              author: {
+                name: `${client.user.username} • Emojiler`,
+                icon_url: client.settings.icon,
+              },
+              title: `**»** Hareketli Emojiler (**${emojisAnimated.size}**)`,
+              description: client.functions.truncate(emojisAnimatedString, 4000)
+            }
+          ],
+          components: [
+            {
+              type: 1, components: [
+                mainPageButton.setDisabled(false), emojisPageButton.setDisabled(false), animatedPageButton.setDisabled(true)
+              ]
+            }
+          ]
+        };
+        if (interaction.type === 2)
+          await interaction.editReply(messageContent).catch(e => { });
+        else await reply.edit(messageContent);
+
+      }
 
     });
 
-    /*if (EmojiCount > 0) {
+    collector.on('end', async collected => {
 
-      if (Emojis.length > 1024) {
-        Embed.addField(`**»** Hareketsiz Emojiler (${EmojiCount})`, `**•** 1024 karakter limitini aştığı için gösterilemiyor.`)
-      } else {
-        Embed.addField(`**»** Hareketsiz Emojiler (${EmojiCount})`, `${Emojis}`)
-      }
+      let components = [
+        {
+          type: 1,
+          components: [mainPageButton.setDisabled(true), emojisPageButton.setDisabled(true), animatedPageButton.setDisabled(true)]
+        }
+      ];
 
-    }
+      if (interaction.type === 2)
+        return await interaction.editReply({
+          components: components
+        }).catch(e => { });
+      else return await reply.edit({
+        components: components
+      }).catch(e => { });
 
-    if (Animated > 0) {
-
-      if (EmojisAnimated.length > 1024) {
-        Embed.addField(`**»** Hareketli Emojiler (${EmojiCount})`, `**•** 1024 karakter limitini aştığı için gösterilemiyor.`)
-      } else {
-        Embed.addField(`**»** Hareketli Emojiler (${Animated})`, `${EmojisAnimated}`)
-      }
-
-    }
-
-    message.channel.send({ embeds: [Embed] });*/
+    });
 
   }
 };

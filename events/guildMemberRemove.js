@@ -29,5 +29,5 @@ module.exports = async (client, member) => {
       }
     }
 
-  } catch (err) { client.logger.error(err); };
+  } catch (err) { client.logger.error(err); }
 };

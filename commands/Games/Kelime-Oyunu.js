@@ -195,8 +195,7 @@ module.exports = {
 
       const channel = interaction.options.getChannel("kanal");
 
-      const { channelChecker } = require("../../modules/Functions");
-      if (await channelChecker(interaction, channel, ["ViewChannel", "SendMessages", "EmbedLinks"])) return;
+      if (!await client.functions.channelChecker(interaction, channel, ["ViewChannel", "SendMessages", "EmbedLinks"])) return;
 
       //Kanal Zaten Varsa (Kanal Değişikliği)
       if (wordGame?.channel && interaction.guild.channels.cache.has(wordGame.channel)) {

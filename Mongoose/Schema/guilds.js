@@ -27,7 +27,10 @@ const schema = new mongoose.Schema({
 
   campaignNews: String,
 
-  gallery: String,
+  gallery: {
+    channels: Array,
+    autoCreateThreads: Boolean
+  },
 
   inviteManager: {
     channel: String,
@@ -90,12 +93,6 @@ const schema = new mongoose.Schema({
   warns: Object,
 
   //Oyunlar
-  countingGame: {
-    channel: String,
-    number: Number,
-    setupChannel: String
-  },
-
   wordGame: {
     channel: String,
     setupChannel: String,
@@ -106,17 +103,31 @@ const schema = new mongoose.Schema({
     history: [String]
   },
 
+  countingGame: {
+    channel: String,
+    number: Number,
+    lastUserId: String,
+    writeMore: Boolean,
+    setupChannel: String
+  },
+
+  correctIncorrectGame: {
+    channelId: String,
+    setupChannel: String,
+    stats: Object,
+    lastUserId: String,
+    writeMore: Boolean,
+  },
+
 });
 
 schema.pre('save', async function () {
   //console.log("guild schema - save event");
 
-  //global.localDatabase.guilds[this.guildId] = this;
-  function funcName(client, { guildId }) {
+  global.client.shard.broadcastEval(async function updateDatabaseGuild(client, { guildId }) {
     client.guildsWaitingForSync.splice(client.guildsWaitingForSync.indexOf(guildId), 1);
     delete global.localDatabase.guilds[guildId];
-  }
-  global.client.shard.broadcastEval(funcName, { context: { guildId: this.guildId } });
+  }, { context: { guildId: this.guildId } });
 });
 
 module.exports = mongoose.model('guild', schema);

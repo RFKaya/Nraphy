@@ -166,7 +166,7 @@ module.exports = async (client, message, wordGame, guildData) => {
     }
 
     //Belirttiğin Sözcük Yakın Zamanda Kullanılmış!
-    if (((wordGame.history?.concat(wordGame?.history || []))?.slice(-200) || []).includes(küçükHarfliKelime)) {
+    if ((wordGame.history || []).includes(küçükHarfliKelime)) {
       return warner(
         message.author,
         "Belirttiğin Sözcük Yakın Zamanda Kullanılmış!",
