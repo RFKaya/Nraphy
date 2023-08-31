@@ -30,7 +30,7 @@ module.exports = {
 
     if (interaction.type === 2) await interaction.deferReply();
 
-    request(`https://nekobot.xyz/api/imagegen?type=captcha&url=${(interaction.type === 2 ? interaction.user : interaction.author).displayAvatarURL({ size: 256 })}&username=${encodeURI(text)}`, function (error, response, body) {
+    request(`https://nekobot.xyz/api/imagegen?type=captcha&url=${(interaction.type === 2 ? interaction.user : interaction.author).displayAvatarURL({ size: 256 })}&username=${encodeURI(text).replaceAll('#', '%23')}`, function (error, response, body) {
 
       if (error || !body || !JSON.parse(body).success) {
         client.logger.error(error);
@@ -46,7 +46,7 @@ module.exports = {
         };
         if (interaction.type === 2)
           return interaction.editReply(messageContent);
-        else return interaction.edit(messageContent);
+        else return interaction.reply(messageContent);
       }
 
       let messageContent = {

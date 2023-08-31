@@ -1,4 +1,9 @@
-const songlyrics = require('songlyrics').default;
+const fetch = global.fetch || require("node-fetch");
+const { parse } = require('node-html-parser');
+const getInfo = async query => {
+  const info = await fetch(`https://genius.com/api/search/multi?per_page=1&q=${encodeURI(query)}`).then(res => res.json());
+  return info.response.sections[0].hits.length ? info : null;
+};
 
 module.exports = {
   interaction: {
@@ -25,19 +30,21 @@ module.exports = {
 
     const music = interaction.options?.getString("şarkı") || args.join(" ");
 
-    if (music.length < 1) return interaction.reply({
-      embeds: [{
-        color: client.settings.embedColors.red,
-        title: "**»** Bir Şarkı İsmi Belirtmelisin!",
-        description: `**•** Örnek kullanım: \`/şarkı-sözleri Sing Me to Sleep\``
-      }]
-    });
+    if (music.length < 1)
+      return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          title: "**»** Bir Şarkı İsmi Belirtmelisin!",
+          description: `**•** Örnek kullanım: \`/şarkı-sözleri Sing Me to Sleep\``
+        }]
+      });
 
     if (interaction.type == 2) await interaction.deferReply();
 
     try {
 
-      let song = await songlyrics(music);
+      const info = await getInfo(music);
+      const song = info?.response.sections[0].hits[0].result;
 
       if (!song) {
         let message = {
@@ -55,21 +62,33 @@ module.exports = {
         else return interaction.reply(message);
       }
 
+      const document = parse(await fetch(url).then(res => res.text()));
+      const lyrics = document.querySelectorAll(
+        "div[class*='Lyrics__Container']"
+      ).map(x => {
+        x.innerHTML = x.innerHTML.replaceAll("<br>", "\n");
+        return x.text;
+      })
+        .join("\n")
+        .trim();
+
+
       let message = {
         embeds: [
           {
             color: client.settings.embedColors.default,
             //title: `**»** ${firstSong.title}`,
-            title: `**»** ${song.title} (${song.source.name})`,
-            url: song.source.link,
+            title: `**»** ${song.full_title}`,
+            url: song.url,
             author: {
               name: `${client.user.username} • Şarkı Sözleri (Lyrics)`,
               icon_url: client.settings.icon,
             },
-            description: song.lyrics,
-            /*thumbnail: {
-              url: firstSong.thumbnail,
-            },*/
+            description: lyrics,
+
+            thumbnail: {
+              url: song.song_art_image_url,
+            },
             /*timestamp: new Date(),
             footer: {
               text: `Sanatçı: ${firstSong.artist.name}`,

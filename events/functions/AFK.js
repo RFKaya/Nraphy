@@ -1,50 +1,46 @@
 const humanize = require("humanize-duration");
 
-module.exports.removeAFK = async (client, message, userData) => {
+module.exports.removeAFK = async (client, message, userCacheData) => {
 
-  if (userData?.AFK?.time) {
-    const { time, reason } = userData.AFK;
+  const userData = await client.database.fetchUser(userCacheData.userId);
 
-    let sürecik = Date.now() - time;
+  const sürecik = Date.now() - userData.AFK.time;
+  if (sürecik > 1000) {
 
-    if (sürecik > 1000) {
+    if (message.member.moderatable) message.member.setNickname(message.member.displayName.replace("[AFK]", ""), ["Nraphy AFK Sistemi"]);
 
-      let zaman = humanize(sürecik, { language: "tr", round: true, conjunction: ", ", serialComma: false });
-
-      if (message.member.moderatable) message.member.setNickname(message.member.displayName.replace("[AFK]", ""), ["Nraphy AFK Sistemi"]);
-
-      message.reply({
-        embeds: [
-          {
-            color: client.settings.embedColors.default,
-            author: {
-              name: `${message.author.username}, artık AFK değil!`,
-              icon_url: message.author.avatarURL(),
+    message.reply({
+      embeds: [
+        {
+          color: client.settings.embedColors.default,
+          author: {
+            name: `${message.author.username}, artık AFK değil!`,
+            icon_url: message.author.avatarURL(),
+          },
+          fields: [
+            {
+              name: '**»** AFK Olma Sebebi',
+              value: `**•** ${userData.AFK.reason}`,
             },
-            fields: [
-              {
-                name: '**»** AFK Olma Sebebi',
-                value: `**•** ${reason}`,
-              },
-              {
-                name: '**»** AFK Olma Süresi',
-                value: `**•** ${zaman}`,
-              },
-            ],
-          }
-        ]
-      });
+            {
+              name: '**»** AFK Olma Süresi',
+              value: `**•** ${humanize(sürecik, { language: "tr", round: true, conjunction: ", ", serialComma: false })}`,
+            },
+          ],
+        }
+      ]
+    });
 
-      userData.AFK = undefined;
-      await userData.save();
-    }
+
+    userData.AFK = undefined;
+    await userData.save();
   }
 
 };
 
-module.exports.userIsAFK = async (client, message, userData) => {
+module.exports.userIsAFK = async (client, message, mentionUserCacheData) => {
 
-  const { time, reason } = userData.AFK;
+  const { time, reason } = mentionUserCacheData.AFK;
 
   let user = message.mentions.users.first();
 
@@ -63,7 +59,7 @@ module.exports.userIsAFK = async (client, message, userData) => {
           },
           {
             name: '**»** AFK Olma Süresi',
-            value: `**•** ${humanize(Date.now() - time, { language: "tr", round: true, conjunction: ", ", serialComma: false })}`,
+            value: `**•** ${humanize(Date.now() - Date.parse(time), { language: "tr", round: true, conjunction: ", ", serialComma: false })}`,
           },
         ],
       }

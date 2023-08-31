@@ -9,24 +9,35 @@ module.exports = {
         type: 3,
         required: true
       },
+      {
+        name: "başlık",
+        description: "Anket metninin başlığını gir.",
+        type: 3,
+        required: false
+      },
+      {
+        name: "herkesten-bahset",
+        description: "@everyone'dan bahsedilsin mi?",
+        choices: [
+          { name: "Herkesten (@everyone) bahset!", value: "true" },
+          { name: "Bahsetme (Varsayılan)", value: "false" },
+        ],
+        type: 3,
+        required: false
+      },
     ]
   },
-  aliases: [],
+  interactionOnly: true,
   category: "Moderation",
-  memberPermissions: ["ManageMessages"],
-  botPermissions: ["SendMessages", "EmbedLinks"],
-  nsfw: false,
-  cooldown: false,
-  ownerOnly: false,
+  memberPermissions: ["ManageMessages", "MentionEveryone"],
+  botPermissions: ["SendMessages", "EmbedLinks", "MentionEveryone"],
+  cooldown: 3000,
 
-  async execute(client, interaction, data, args) {
+  async execute(client, interaction, data) {
 
-    if (interaction.type == 2)
-      var mesaj = interaction.options.getString("metin"),
-        user = interaction.user;
-    else
-      var mesaj = args.slice(0).join(" "),
-        user = interaction.author;
+    const mesaj = interaction.options.getString("metin"),
+      title = interaction.options.getString("başlık"),
+      pingEveryone = interaction.options.getString("herkesten-bahset");
 
     if (mesaj.length < 1)
       return interaction.channel.send({
@@ -50,7 +61,18 @@ module.exports = {
         ]
       });
 
-    if (interaction.type == 2) await interaction.reply({
+    if (title && title.length > 250)
+      return interaction.channel.send({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            title: '**»** Duyuru Başlığı Çok Uzun!',
+            description: `**•** Başlık **250** karakteri geçmemeli.`
+          }
+        ]
+      });
+
+    await interaction.reply({
       embeds: [{
         color: client.settings.embedColors.green,
         title: "**»** Başarılı!",
@@ -59,20 +81,24 @@ module.exports = {
       ephemeral: true
     });
 
-    interaction.channel.send({
-      embeds: [{
-        color: client.settings.embedColors.default,
-        author: {
-          name: `${interaction.guild.name} • Duyuru!`,
-          icon_url: interaction.guild.iconURL(),
-        },
-        description: mesaj,
-        timestamp: new Date().toISOString(),
-        footer: {
-          text: `${user.username} tarafından duyuruldu.`,
-          icon_url: user.displayAvatarURL(),
-        },
-      }]
+    return await interaction.channel.send({
+      content: pingEveryone === "true" ? "@everyone" : null,
+      embeds: [
+        {
+          color: client.settings.embedColors.default,
+          author: {
+            name: `${interaction.guild.name} • Duyuru!`,
+            icon_url: interaction.guild.iconURL(),
+          },
+          title: title || null,
+          description: mesaj,
+          timestamp: new Date().toISOString(),
+          footer: {
+            text: `${interaction.user.username} tarafından duyuruldu.`,
+            icon_url: interaction.user.displayAvatarURL(),
+          },
+        }
+      ]
     });
   }
 };

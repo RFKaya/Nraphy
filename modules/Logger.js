@@ -1,5 +1,7 @@
 const chalk = require("chalk"),
   fs = require("fs"),
+  humanize = require("humanize-duration"),
+  { ButtonBuilder } = require('discord.js'),
   dateModule = require("./Date.js"),
   capitalizeFirstLetter = ([first, ...rest], locale = "tr-TR") => first.toLocaleUpperCase(locale) + rest.join(''),
   config = require("../config.json");
@@ -41,23 +43,11 @@ exports.cmdLog = async (user, guild, type, cmdName, content) => {
   await clientData.save();
 
   //User commandUses
-  let userDataQueue = global.client.databaseQueue.users[user.id] ||= {};
-  (userDataQueue.statistics ||= {}).commandUses ||= 0;
-  (userDataQueue.statistics ||= {}).commandUses += 1;
-
-  /*var userData = await Mongoose.fetchUser(user.id);
-  userData.statistics.commandUses += 1;
-  if (userData.commandUses) {
-    userData.statistics.commandUses += userData.commandUses;
-    userData.commandUses = undefined;
-  }
-  await userData.save();*/
-
-  //You have 500 times or multiplies commandUses!
-  /*console.log(userData.commandUses);
-  if (userData.commandUses && (userData.commandUses % 500 == 0)) {
-    user.send({ content: "sa reis" });
-  }*/
+  /* await Mongoose.users.findOneAndUpdate(
+    { userId: user.id },
+    { $inc: { 'statistics.commandUses': 1 } },
+    { upsert: true, new: true }
+  ) */
 
 };
 
@@ -73,9 +63,9 @@ exports.error = async (content) => {
     //console.log(`${timestamp} ${chalk.red("ERROR")} ${content}`);
     console.log(`${timestamp} ${chalk.red("ERROR")}`);
     console.error(content);
-    if (content.requestBody?.json?.data?.embeds) console.log("error.requestBody.json.data.embeds:", content.requestBody.json.data.embeds);
-    else if (content.requestBody?.json?.embeds) console.log("error.requestBody.json.embeds:", content.requestBody.json.embeds);
-    else if (content.requestBody?.json) console.log("error.requestBody.json:", content.requestBody.json);
+    if (content?.requestBody?.json?.data?.embeds) console.log("error.requestBody.json.data.embeds:", content.requestBody.json.data.embeds);
+    else if (content?.requestBody?.json?.embeds) console.log("error.requestBody.json.embeds:", content.requestBody.json.embeds);
+    else if (content?.requestBody?.json) console.log("error.requestBody.json:", content.requestBody.json);
 
     //Log TXT
     logTXT(`${timestamp} (ERROR) Error Log\n` +
@@ -89,14 +79,6 @@ exports.error = async (content) => {
     clientData.markModified('error');
     await clientData.save();
 
-    //Webhook Log
-    global.client.clientDataCache.logQueue.push({
-      color: 0xE74C3C,
-      title: `**»** Hata Oluştu! (\`${dateNow}\`)`,
-      description: `\`\`\`${content}\`\`\``,
-    });
-
-
   } catch (error) {
 
     console.log(chalk.red("KRİTİK HATA! HATA LOGLAMA SİSTEMİNDE BİR HATA MEYDANA GELDİ!"));
@@ -109,8 +91,6 @@ exports.error = async (content) => {
 //---------------warn---------------//
 exports.warn = async (content) => {
 
-  let nowDate = new Date(),
-    logFile = `./logs/log-${nowDate.getFullYear()}.${(nowDate.getMonth() + 1)}.txt`;
   let dateNow = Date.now();
   let timestamp = dateModule.timestamp();
 
@@ -122,29 +102,15 @@ exports.warn = async (content) => {
     ` => Date Timestamp: ${dateNow}\n` +
     ` => Content: ${content}\n\n`);
 
-  //Webhook Log
-  global.client.clientDataCache.logQueue.push({
-    color: 0xFEE75C,
-    title: `**»** Uyarı! (\`${dateNow}\`)`,
-    description: `\`\`\`${content}\`\`\``,
-  });
-
 };
 
 //------------------------------⬇️ Eski ⬇️------------------------------//
-exports.log = (content, type = "log", writeFileLog = true, sendWebhookMessage = false) => {
+exports.log = (content, type = "log", writeFileLog = true) => {
 
   let timestamp = dateModule.timestamp();
 
   if (type !== "interaction" && writeFileLog)
     logTXT(`${timestamp} (${type.toUpperCase()}) ${content}\n\n`);
-
-  //Webhook Log
-  if (sendWebhookMessage)
-    global.client.clientDataCache.logQueue.push({
-      color: 0x3498DB,
-      description: `\`\`\`${content}\`\`\``,
-    });
 
   switch (type) {
     case "client": {

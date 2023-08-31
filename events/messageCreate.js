@@ -6,7 +6,6 @@ module.exports = async (client, message) => {
   if (message.system) return;
 
   const guildData = await client.database.fetchGuild(message.guild.id);
-  var userData;
 
   const prefix = guildData.prefix || client.settings.prefix;
 
@@ -23,7 +22,7 @@ module.exports = async (client, message) => {
       const cmd = client.commands.find(command => [(command.interaction || command).name, ...(command.aliases || [])].map(string => string.replaceAll('-', '').toEN()).includes(commandName));
       if (!cmd) return;
 
-      userData ||= await client.database.fetchUser(message.author.id);
+      const userData = await client.database.fetchUser(message.author.id);
 
       await require('../events/functions/cmdExecuter.js')(client, message, cmd, guildData, userData, args);
     }
@@ -35,10 +34,6 @@ module.exports = async (client, message) => {
     if (linkBlock && message.content)
       //Galeri muaf
       if (message.channel.id !== gallery) require("./functions/linkBlock")(client, message, linkBlock, false);
-
-    //Galeri
-    if (gallery && message.channel.id == gallery)
-      require("./functions/gallery.js")(client, message, gallery);
 
     //Spam Koruması
     const spamProtection = guildData.spamProtection;
@@ -60,32 +55,33 @@ module.exports = async (client, message) => {
       return;
     userCache.lastMessage = Date.now();
 
-    //Prefixim & Soru-Sor
-    if (message.content === `<@!${client.user.id}>` || message.content === `<@${client.user.id}>` || message.content === `<@&${client.user.id}>`) {
+    const userCacheData = await client.database.fetchUserInCache(message.author.id);
 
-      message.channel.send({
+    //Prefixim & Soru-Sor & Oto-Cevap (3'ü aynı anda çalışmayacak şekilde)
+    if (message.content === `<@!${client.user.id}>` || message.content === `<@${client.user.id}>` || message.content === `<@&${client.user.id}>`) {
+      //Prefixim
+
+      message.reply({
         embeds: [{
           color: client.settings.embedColors.default,
           description: `**»** Prefixim \`${prefix}\` • \`${prefix}komutlar\` yazarak tüm komutlara ulaşabilirsin.`
         }]
-      }).catch(e => { });
+      }).catch(() => { });
 
     }
-
-    userData ||= await client.database.fetchUser(message.author.id, false);
 
     //AFK
-    if (userData?.AFK?.time) {
+    if (userCacheData?.AFK?.time) {
       client.logger.log(`AFK SİSTEMİ TETİKLENDİ! • ${message.guild.name} (${message.guild.id})`);
-      require("./functions/AFK.js").removeAFK(client, message, userData);
+      require("./functions/AFK.js").removeAFK(client, message, userCacheData);
     }
     if (message.mentions.users.first()) {
-      let mentionUserData = await client.database.fetchUser(message.mentions.users.first().id, false);
-      if (mentionUserData?.AFK?.time) {
+      const mentionUserCacheData = await client.database.fetchUserInCache(message.mentions.users.first().id);
+      if (mentionUserCacheData?.AFK?.time) {
         client.logger.log(`AFK SİSTEMİ TETİKLENDİ! • ${message.guild.name} (${message.guild.id})`);
-        require("./functions/AFK.js").userIsAFK(client, message, mentionUserData);
+        require("./functions/AFK.js").userIsAFK(client, message, mentionUserCacheData);
       }
     }
 
-  } catch (err) { client.logger.error(err); };
+  } catch (err) { client.logger.error(err); }
 };

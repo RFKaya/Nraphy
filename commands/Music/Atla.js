@@ -42,6 +42,17 @@ module.exports = {
         }]
       });
 
+    const guildDataCache = client.guildDataCache[interaction.guild.id] || (client.guildDataCache[interaction.guild.id] = {});
+    if (guildDataCache?.games?.musicQuiz || queue.songs[0].metadata.isMusicQuiz)
+      return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          description:
+            "**»** Müzik tahmini oyunu sırasında bu komutu kullanamazsın.\n" +
+            "**•** 60 saniye içerisinde doğru tahmin yapılmazsa zaten otomatik atlanır."
+        }]
+      });
+
     try {
 
       await queue.skip();
@@ -57,13 +68,56 @@ module.exports = {
 
       if (error.errorCode === "NO_UP_NEXT") {
 
-        return interaction.reply({
+        /* return interaction.reply({
           embeds: [{
             color: client.settings.embedColors.red,
             title: "**»** Sırada Bir Şarkı Yok Ki!",
             description: "**•** Tabii `/bitir` yazarsan burayı terk edebilirim 🥺"
           }]
-        });
+        }); */
+
+        const { buttonConfirmation } = require("../../modules/Functions");
+        const buttonConfirmationResult = await buttonConfirmation(
+          interaction,
+          [
+            {
+              color: client.settings.embedColors.default,
+              title: "**»** Sırada Bir Şarkı Yok Ki!",
+              description: "**•** Oynatma bitirilsin mi?"
+            }
+          ]
+        );
+
+        if (interaction.type === 2 ? !buttonConfirmationResult : !buttonConfirmationResult.status) {
+          let messageContent = {
+            embeds: [
+              {
+                color: client.settings.embedColors.red,
+                description: "**•** Hiçbir eylem yapmadım."
+              }
+            ],
+            components: []
+          };
+
+          if (interaction.type === 2)
+            return interaction.editReply(messageContent).catch(error => { });
+          else return buttonConfirmationResult.reply?.edit(messageContent).catch(error => { });
+        }
+
+        queue.stop();
+
+        let messageContent = {
+          embeds: [{
+            color: client.settings.embedColors.default,
+            title: "**»** Oynatma Sonlandırıldı!",
+            description: `**•** Şarkı sırası temizlendi ve oynatma bitirildi.`
+          }],
+          components: []
+        };
+
+        if (interaction.type === 2)
+          return interaction.editReply(messageContent).catch(error => { });
+        else return buttonConfirmationResult.reply?.edit(messageContent).catch(error => { });
 
       } else {
 

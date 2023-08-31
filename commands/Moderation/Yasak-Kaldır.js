@@ -1,7 +1,16 @@
 module.exports = {
-  name: "yasak-kaldır",
-  description: "Belirttiğiniz kişinin banını kaldırır.",
-  usage: "yasak-kaldır <ID>",
+  interaction: {
+    name: "yasak-kaldır",
+    description: "Belirttiğiniz kişinin yasağını kaldırır.",
+    options: [
+      {
+        name: "kullanıcı",
+        description: "Bir kullanıcı ID'si ya da etiketi gir.",
+        type: 6,
+        required: true
+      },
+    ]
+  },
   aliases: ["unban", "un-ban", "yasakkaldır", "yasağı-kaldır", "yasağıkaldır"],
   category: "Moderation",
   memberPermissions: ["BanMembers"],
@@ -10,103 +19,147 @@ module.exports = {
   cooldown: false,
   ownerOnly: false,
 
-  async execute(client, message, args, data) {
+  async execute(client, interaction, data, args) {
 
     // No args
-    if (!args[0]) {
-      return message.channel.send({
+    if (interaction.type !== 2 && !args[0]) {
+      return interaction.reply({
         embeds: [
           {
             color: client.settings.embedColors.red,
             title: '**»** Yasağının Kaldırılmasını İstediğin Üyeyi Belirtmelisin!',
-            description: `**•** Örnek kullanım: \`${data.prefix}yasağı-kaldır <ID>\``
+            description: `**•** Örnek kullanım: \`/yasak-kaldır <ID>\``
           }
         ]
       });
     }
 
     //Harfli ID
-    if (isNaN(args[0])) {
-      return message.channel.send({
+    if (interaction.type !== 2 && !args[0]) {
+      return interaction.reply({
         embeds: [
           {
             color: client.settings.embedColors.red,
-            title: '**»** Yasağını Kaldıracağın Üyeyi ID İle Belirtlemlisin!',
-            description: `**•** Örnek kullanım: \`${data.prefix}yasağı-kaldır 700959962452459550\``
+            title: '**»** Yasağını Kaldıracağın Üyeyi ID İle Belirtlmelisin!',
+            description: `**•** Örnek kullanım: \`/yasak-kaldır 700959962452459550\``
           }
         ]
       });
     }
 
-    let user = args[0];
+    const user = interaction.type == 2
+      ? interaction.options.getUser("kullanıcı")
+      : client.users.cache.get(args[0]);
+
+    if (!user)
+      return interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            title: '**»** Yasağını Kaldırmak İstediğin Üyeyi Bulamadım!',
+            description: interaction.type == 2
+              ? `**•** Hatalı bir kullanıcı belirttin. Lütfen sadece ID girerek dene.`
+              : `**•** Bu komutu \`/yasak-kaldır\` (Slash) şeklinde kullanarak tekrar dene.`
+          }
+        ]
+      });
+
+    const userBan = await interaction.guild.bans.fetch(user.id).catch(() => { });
 
     //Zaten yasaklı değil.
-    let ban = await message.guild.bans.fetch();
-    if (!ban.get(user)) return message.channel.send({
-      embeds: [
-        {
-          color: client.settings.embedColors.red,
-          title: '**»** Yasağını Kaldırmak İstediğin Üyeyi Bulamadım!',
-          description: `**•** Belirttiğin üye zaten yasaklı değil ya da hatalı ID girdin.`
-        }
-      ]
-    });
-
-    let member = await client.users.fetch(user);
-    let banUser = await message.guild.bans.fetch(user);
+    //const guildBans = await interaction.guild.bans.fetch();
+    //if (!guildBans.get(user.id))
+    if (!userBan)
+      return interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            //title: '**»** Yasağını Kaldırmak İstediğin Kullanıcıyı Bulamadım!',
+            description: `**»** Belirttiğin kullanıcı zaten yasaklı değil.`
+          }
+        ]
+      });
 
     const { buttonConfirmation } = require("../../modules/Functions");
     const buttonConfirmationResult = await buttonConfirmation(
-      message,
+      interaction,
       [
         {
           color: client.settings.embedColors.default,
           author: {
-            name: `${member.tag} kullanıcısının yasağını kaldırmak istiyor musun?`,
-            icon_url: member.displayAvatarURL(),
+            name: `${user.tag} kullanıcısının yasağını kaldırmak istiyor musun?`,
+            icon_url: user.displayAvatarURL(),
           },
         }
       ]
     );
 
-    if (!buttonConfirmationResult.status)
-      return buttonConfirmationResult.reply.edit({
+    if (interaction.type === 2 ? !buttonConfirmationResult : !buttonConfirmationResult.status) {
+      let messageContent = {
         embeds: [
           {
             color: client.settings.embedColors.red,
             title: '**»** Yasak Kaldırma İşlemini İptal Ettim!',
-            description: `**•** Madem iptal edecektin, neden uğraştırıyorsun bizi?`
+            description: `**•** Madem iptal edecektin, neden uğraştırıyorsun beni?`
           }
         ],
         components: []
-      }).catch(error => { });
+      };
 
-    await message.guild.members.unban(member);
+      if (interaction.type === 2)
+        return interaction.editReply(messageContent).catch(() => { });
+      else return buttonConfirmationResult.reply?.edit(messageContent).catch(() => { });
+    }
 
-    return buttonConfirmationResult.reply.edit({
+    await interaction.guild.members.unban(user.id)
+      .catch(err => {
+        client.logger.error(err);
+
+        let messageContent = {
+          embeds: [
+            {
+              color: client.settings.embedColors.red,
+              title: '**»** Bir Hata Oluştu!',
+              description: `**•** Nedenini ben de bilmiyorum ki.`
+            }
+          ],
+          components: []
+        };
+
+        if (interaction.type === 2)
+          return interaction.editReply(messageContent).catch(() => { });
+        else return buttonConfirmationResult.reply?.edit(messageContent).catch(() => { });
+      });
+
+    //Reply Message
+    let messageContent = {
       embeds: [
         {
           color: client.settings.embedColors.green,
           author: {
-            name: `${member.tag} kullanıcısının yasağı kaldırıldı!`,
-            icon_url: member.displayAvatarURL(),
+            name: `${user.tag} kullanıcısının yasağı kaldırıldı!`,
+            icon_url: user.displayAvatarURL(),
           },
           //title: '**»** Rauqq#3916 kullanıcısının yasağı kaldırıldı!',
           fields: [
             {
               name: '**»** Yasaklanma Sebebi',
-              value: `**•** ${banUser.reason ? banUser.reason : "Hiçbir sebep verilmedi"}`,
+              value: `**•** ${userBan.reason ? client.functions.truncate(userBan.reason, 1000) : "Sebep belirtilmemiş."}`,
             },
           ],
           timestamp: new Date(),
           footer: {
-            text: `${message.author.username} tarafından kaldırıldı.`,
-            icon_url: message.author.displayAvatarURL(),
+            text: `${interaction.type == 2 ? interaction.user.username : interaction.author.username} tarafından kaldırıldı.`,
+            icon_url: interaction.type == 2 ? interaction.user.displayAvatarURL() : interaction.author.displayAvatarURL(),
           },
         }
       ],
       components: []
-    });
+    };
+
+    if (interaction.type === 2)
+      await interaction.editReply(messageContent).catch(() => { });
+    else await buttonConfirmationResult.reply?.edit(messageContent).catch(() => { });
 
   }
 };

@@ -15,7 +15,7 @@ module.exports = async (client, member) => {
     if (autoRole?.role) {
       client.logger.log(`OTO-ROL TETİKLENDİ! • ${member.guild.name} (${member.guild.id})`);
       require('./functions/autoRole.js')(client, member, autoRole, guildData);
-    };
+    }
 
     //Sayaç & Davet Sistemi
     if (memberCounter?.channel && inviteManager?.channel && memberCounter.channel === inviteManager.channel) {
@@ -37,5 +37,5 @@ module.exports = async (client, member) => {
 
     }
 
-  } catch (err) { client.logger.error(err); };
+  } catch (err) { client.logger.error(err); }
 };

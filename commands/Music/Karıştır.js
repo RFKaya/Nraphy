@@ -40,6 +40,15 @@ module.exports = {
         }]
       });
 
+    const guildDataCache = client.guildDataCache[interaction.guild.id] || (client.guildDataCache[interaction.guild.id] = {});
+    if (guildDataCache?.games?.musicQuiz || queue.songs[0].metadata.isMusicQuiz)
+      return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          description: "**»** Müzik tahmini oyunu sırasında bu komutu kullanamazsın."
+        }]
+      });
+
     if (queue.songs.length <= 2)
       return interaction.reply({
         embeds: [{

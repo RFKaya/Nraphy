@@ -6,13 +6,9 @@ module.exports = {
     description: "Sunucunun bilgilerini verir.",
     options: [],
   },
-  aliases: ['server', 'server-bilgi', 'sbilgi', 'serverbilgi', 'sunucubilgi', 'sb', "sunucu", "sv", "sw", "svinfo"],
+  aliases: ['server', 'server-bilgi', 'sbilgi', 'serverbilgi', 'sb', "sunucu", "sv", "sw", "svinfo"],
   category: "General",
-  memberPermissions: [],
-  botPermissions: ["SendMessages", "EmbedLinks"],
-  nsfw: false,
-  cooldown: false,
-  ownerOnly: false,
+  cooldown: 10000,
 
   async execute(client, interaction, data) {
 
@@ -40,7 +36,7 @@ module.exports = {
         if (warnData.length) warns_warns += warnData.length;
       }
 
-    interaction.reply({
+    return await interaction.reply({
       embeds: [
         {
           color: client.settings.embedColors.default,
@@ -79,56 +75,24 @@ module.exports = {
               name: '**»** Emojiler',
               value:
                 emojis
-                  ? `**•** ${emojis}... \n**•** \`${data.prefix}emojiler\``
+                  ? `**•** ${emojis}... \n**•** \`/emojiler\``
                   : `**•** \`Bu sunucuda hiç emoji yok.\``,
             },
             {
               name: '**»** Uyarılar',
               value: `**•** \`${warns_warns ? `${warns_users} Kullanıcı, ${warns_warns} Uyarı` : `Bu sunucuda hiçbir kullanıcı uyarılmamış.`}\``,
             },
+            {
+              name: `**»** Nraphy Boost Durumu ${data.guild.NraphyBoost?.users?.length ? ":rocket:" : ""}`,
+              value:
+                data.guild.NraphyBoost?.users?.length
+                  ? `**•** \`${data.guild.NraphyBoost?.users.map(userId => interaction.guild.members.cache.get(userId)?.user.tag || userId).join(', ')}\` tarafından güçlendiriliyor!`
+                  : `**•** Bu sunucuyu kimse güçlendirmiyor. \`/boost Bilgi\``,
+            },
           ]
         }
       ]
     });
-
-    /*var aylar = {
-      "01": "Ocak",
-      "02": "Şubat",
-      "03": "Mart",
-      "04": "Nisan",
-      "05": "Mayıs",
-      "06": "Haziran",
-      "07": "Temmuz",
-      "08": "Ağustos",
-      "09": "Eylül",
-      "10": "Ekim",
-      "11": "Kasım",
-      "12": "Aralık"
-    };*/
-
-    /*var region = {
-      "us-central": "Amerika :flag_us:",
-      "us-east": "Doğu Amerika :flag_us:",
-      "us-south": "Güney Amerika :flag_us:",
-      "us-west": "Batı Amerika :flag_us:",
-      "europe": "Avrupa :flag_eu:",
-      "singapore": "Singapur :flag_sg:",
-      "london": "Londra :flag_gb:",
-      "japan": "Japonya :flag_jp:",
-      "russia": "Rusya :flag_ru:",
-      "hongkong": "Hong Kong :flag_hk:",
-      "brazil": "Brezilya :flag_br:",
-      "singapore": "Singapur :flag_sg:",
-      "sydney": "Sidney :flag_au:",
-      "southafrica": "Güney Afrika :flag_za:",
-      "india": "Hindistan :flag_in:"
-    };
-    .addField('**»** Sunucu Bölgesi', "**•** " + region[message.guild.region])*/
-
-    //var yasaklı = await message.guild.fetchBans().then(b => b.size);
-
-    //if (message.member.hasPermission("BanMembers")) sunucuBilgiEmbed.addField('**»** Üyeler (' + message.guild.memberCount + ')', '<:uye:729300539900428344> ' +  üye + ' Üye • <:bot:729300535433363456> ' + bot + ' Bot • <:yasakli:758361815595221012> ' + yasaklı + ' Yasaklı', true)
-    //if (message.member.hasPermission("BanMembers")) return message.channel.send(sunucuBilgiEmbed)
 
   }
 };

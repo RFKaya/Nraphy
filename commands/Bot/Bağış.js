@@ -17,17 +17,18 @@ module.exports = {
   async execute(client, interaction, data) {
 
     return interaction.reply({
+      content: "<https://github.com/RFKaya/Nraphy>",
       embeds: [
         {
           color: client.settings.embedColors.default,
           title: '**»** Canın Sağ Olsun Kardeeş! 💖',
-          description: '**•** Valla ihtiyaç yok, düşünmen yeterli 😇',
+          description: '**•** Nraphy GitHub projemizi yıldızlayarak destek olabilirsin 😇',
         }
       ],
       components: [
         {
           data: { type: 1 }, components: [
-            new ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/QvaDHvuYVm`).setStyle('Link')
+            new ButtonBuilder().setLabel('Nraphy GitHub Projesi').setURL(`https://github.com/RFKaya/Nraphy`).setStyle('Link')
           ]
         },
       ]

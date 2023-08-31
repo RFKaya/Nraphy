@@ -4,6 +4,10 @@ const schema = new mongoose.Schema({
 
   userId: { type: String, unique: true },
   registeredAt: { type: Number, default: Date.now },
+  blacklist: {
+    status: Boolean,
+    reason: String
+  },
   readDateOfChanges: { type: Number, default: 0 },
 
   about: { type: String, default: null },
@@ -54,18 +58,20 @@ const schema = new mongoose.Schema({
     lastRemind: { type: Date, default: null }
   }
 
-});
+}/* , { timestamps: true } */);
 
 schema.pre('save', async function () {
   //console.log("user schema - save event");
   //if (!this.userId) return;
 
-  //let thisDoc = { ...this._doc };
-  function funcName(client, { userId }) {
-    delete global.localDatabase.users[userId];
-  }
-  global.client.shard.broadcastEval(funcName, { context: { userId: this.userId } });
+  /* global.client.shard.broadcastEval(async function updateDatabaseUser(client, { userId }) {
+    //delete global.localDatabase.users[userId];
+    if (global.localDatabase.users[userId])
+      global.localDatabase.users[userId] = await client.database.users.findOne({ userId });
+  }, { context: { userId: this.userId } }); */
   //global.database.usersCache[this.userId] = this;//{ ...global.databaseCache[this.userId], ...thisDoc };
+
+  await global.redis_users.set(this.userId, JSON.stringify(this));
 });
 
 module.exports = mongoose.model('user', schema);

@@ -40,6 +40,17 @@ module.exports = {
         }]
       });
 
+    const guildDataCache = client.guildDataCache[interaction.guild.id] || (client.guildDataCache[interaction.guild.id] = {});
+    if (guildDataCache?.games?.musicQuiz || queue.songs[0].metadata.isMusicQuiz)
+      return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          description:
+            "**»** Müzik tahmini oyunu sırasında sırayı bitiremezsin.\n" +
+            "**•** Oyunu başlatan oyuncu veya sunucu yetkilileri oyun kanalına `Bitir` yazarak bitirebilirler."
+        }]
+      });
+
     queue.stop();
 
     return interaction.reply({

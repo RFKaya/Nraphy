@@ -12,7 +12,7 @@ module.exports = {
     ]
   },
   aliases: ['invites'],
-  category: "Moderation",
+  //category: "Moderation",
   memberPermissions: [],
   botPermissions: ["SendMessages", "EmbedLinks"],
   nsfw: false,

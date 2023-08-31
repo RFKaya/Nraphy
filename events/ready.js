@@ -2,13 +2,34 @@ const { ButtonBuilder, WebhookClient } = require('discord.js'),
   tcpPortUsed = require('tcp-port-used'),
   topgg = require(`@top-gg/sdk`),
   random = require("random"),
-  axios = require('axios');
+  axios = require('axios'),
+  fs = require("fs");
 
 module.exports = async (client) => {
+
+  if (!client.shard)
+    return client.logger.error(`Bu bot ShardingManager ile çalışacak şekilde tasarlanmıştır! Lütfen doğrudan client.js'i çalıştırmayın, shard.js'i çalıştırın.`);
 
   client.logger.ready(`Client ready in shard ${client.shard.ids[0] + 1}!`);
 
   try {
+
+    //------------------------------Command Loader------------------------------//
+
+    if (client.shard.ids[0] == 0) {
+
+      const { REST } = require('@discordjs/rest');
+      const { Routes } = require('discord-api-types/v9');
+      const rest = new REST({ version: '9' })
+        .setToken(client.config.token);
+
+      await rest.put(Routes.applicationCommands(client.user.id), {
+        body: client.commands.filter(command => command.interaction).map(command => command.interaction)
+      });//.then(() => client.logger.log("Successfully reloaded ${data.length} application (/) commands."));
+
+    }
+
+    //------------------------------Command Loader------------------------------//
 
     //------------------------------Logging------------------------------//
     setInterval(() => {
@@ -38,22 +59,6 @@ module.exports = async (client) => {
         })();
       }
 
-      //Client logları
-
-      let gönderilecekLoglar_Client = client.clientDataCache.logQueue?.splice(0, 10);
-      if (!gönderilecekLoglar_Client.length) return;
-
-      if (client.config.clientLogsWebhookURL) {
-
-        let webhookClient_Client = new WebhookClient({ url: client.config.clientLogsWebhookURL });
-        webhookClient_Client.send({ embeds: gönderilecekLoglar_Client })
-          .catch(async error => client.logger.error(error));
-      } else {
-
-        client.logger.log("config.js üzerindeki \"clientLogsWebhookURL\" tanımlanmadığı için bir grup log, webhook ile gönderilmedi!", "log", false);
-
-      }
-
     }, 1000);
     //------------------------------Logging------------------------------//
 
@@ -65,19 +70,27 @@ module.exports = async (client) => {
 
     //------------------------------Mongoose------------------------------//
 
-    //------------------------------Oynuyor------------------------------//
+    //------------------------------Presence------------------------------//
 
-    await client.user.setPresence({
-      activities: [{
-        name: client.settings.presences[0],
-        type: 2, //5
-      }],
-      //status: "online", //online, idle, dnd
-    });//.catch(console.error);
+    function setPresence() {
 
-    //------------------------------Oynuyor------------------------------//
+      const presence = client.settings.presences[Math.floor(Math.random() * client.settings.presences.length)];
 
-    //------------------------------Presence Yenileme & Otomatik Yeniden Başlatmalar & GIBIRNet Abonesi Rolü------------------------------//
+      client.user.setPresence({
+        activities: [{
+          name: presence,
+          type: 4
+        }],
+      });//.catch(console.error);
+
+    };
+
+    setPresence();
+    setInterval(async function () { setPresence(); }, 600000);
+
+    //------------------------------Presence------------------------------//
+
+    //------------------------------Otomatik Yeniden Başlatmalar------------------------------//
 
     setInterval(async function () {
 
@@ -111,22 +124,7 @@ module.exports = async (client) => {
           function (err) {
             if (err) return console.log(err);
           });
-        process.exit(0);
       };
-
-      //Bot Durum
-      let randomPresence;
-
-      let nowDate = new Date();
-      if (nowDate.getDate() == 19 && (nowDate.getMonth() + 1) == 5) randomPresence = "❤️ #19Mayıs";
-      else randomPresence = client.settings.presences[Math.floor(Math.random() * client.settings.presences.length)];
-
-      client.user.setPresence({
-        activities: [{
-          name: randomPresence,
-          type: 2
-        }],
-      });//.catch(console.error);
 
     }, 600000);
 
@@ -138,7 +136,16 @@ module.exports = async (client) => {
       };
     }, 300000);
 
-    //------------------------------Presence Yenileme & Otomatik Yeniden Başlatmalar & GIBIRNet Abonesi Rolü------------------------------//
+    //------------------------------Otomatik Yeniden Başlatmalar------------------------------//
+
+    //------------------------------Bot İstatistik------------------------------//
+
+    /*var clientData = await client.database.fetchClientData(global.clientDataId);
+    clientData.crash += 1;
+    clientData.markModified('crash');
+    await clientData.save();*/
+
+    //------------------------------Bot İstatistik------------------------------//
 
     //------------------------------Davet Sistemi------------------------------//
 

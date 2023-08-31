@@ -1,7 +1,11 @@
 module.exports = async (client, interaction) => {
 
-  if (interaction.type !== 2)
-    client.logger.interaction(`user: ${interaction.user.tag} (${interaction.user.id}), type: ${interaction.type}, customId: ${interaction.customId}`);
+  /* if (interaction.type !== 2)
+    client.logger.interaction(`user: ${interaction.user.tag} (${interaction.user.id}), type: ${interaction.type}, customId: ${interaction.customId}`); */
+
+  //Embed Oluşturma
+  if (interaction.type == 5 && interaction.customId == "createEmbed")
+    return require("../commands/Moderation/Embed.js").getModal(client, interaction);
 
   if (!interaction.guild)
     return interaction.reply({ content: ":x: | Etkileşim komutları maalesef DM'de kullanılamamaktadır." });

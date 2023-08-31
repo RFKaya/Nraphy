@@ -13,7 +13,7 @@ module.exports = {
       },
     ]
   },
-  aliases: ['kullanıcı', 'kb', 'kullanıcı-bilgi', 'k-b', 'profil', 'kullanıcıbilgi'],
+  aliases: ['kullanıcı', 'kb', 'kullanıcı-bilgi', 'k-b', 'kullanıcıbilgi'],
   category: "General",
   memberPermissions: [],
   botPermissions: ["SendMessages", "EmbedLinks"],

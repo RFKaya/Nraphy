@@ -1,4 +1,5 @@
 const { ButtonBuilder } = require('discord.js');
+const permissionsMap = require("../utils/Permissions.json");
 
 module.exports = {
 
@@ -18,20 +19,18 @@ module.exports = {
       ]
     });
 
-    if (interaction.type === 0) {
+    if (interaction.type === 2) {
 
+      const replyMessage = await interaction.fetchReply();
       const filter = i => {
-        return i.message.id === reply.id && i.deferUpdate() && i.user.id === (confirmatoryUserId || interaction.author.id);
+        return i.message.id === replyMessage.id && i.deferUpdate() && i.user.id === (confirmatoryUserId || interaction.user.id);
       };
 
-      return reply.awaitMessageComponent({ filter, time: 180000 })
-        .then(btn => {
-          if (btn.customId === "confirmButton") return { reply, status: true };
-          else if (btn.customId === "denyButton") return { reply, status: false };
-        })
+      return replyMessage.awaitMessageComponent({ filter, time: 180000 })
+        .then(btn => btn.customId === "confirmButton" ? true : btn.customId === "denyButton" && false)
         .catch(err => {
 
-          return { reply, status: false };
+          return false;
 
           /*interaction.editReply({
               embeds: [
@@ -45,18 +44,20 @@ module.exports = {
 
         });
 
-    } else if (interaction.type === 2) {
+    } else {
 
-      const replyMessage = await interaction.fetchReply();
       const filter = i => {
-        return i.message.id === replyMessage.id && i.deferUpdate() && i.user.id === (confirmatoryUserId || interaction.user.id);
+        return i.message.id === reply.id && i.deferUpdate() && i.user.id === (confirmatoryUserId || interaction.author.id);
       };
 
-      return replyMessage.awaitMessageComponent({ filter, time: 180000 })
-        .then(btn => btn.customId === "confirmButton" ? true : btn.customId === "denyButton" && false)
+      return reply.awaitMessageComponent({ filter, time: 180000 })
+        .then(btn => {
+          if (btn.customId === "confirmButton") return { reply, status: true };
+          else if (btn.customId === "denyButton") return { reply, status: false };
+        })
         .catch(err => {
 
-          return false;
+          return { reply, status: false };
 
           /*interaction.editReply({
               embeds: [
@@ -219,23 +220,23 @@ module.exports = {
     return;
   },
 
-  channelChecker: async function (interaction, channel, permissions, supportsChannelTypeFive = true) {
+  channelChecker: async function (interaction, channel, permissions) {
 
-    const permissionsMap = require("../utils/Permissions.json");
-
-    /*if (!channel)
-      return interaction.reply({
+    if (!channel) {
+      interaction.reply({
         embeds: [
           {
             color: interaction.client.settings.embedColors.red,
             title: '**»** Geçerli Bir Kanal Belirtmelisin!',
-            description: `**•** Örnek kullanım: \`${data.prefix}kelime-oyunu #kelime-oyunu\``
+            description: `**•** Belirt işte. Uğraştırma beni :rage:`
           }
         ]
-      });*/
+      });
+      return false;
+    }
 
-    if (!interaction.guild.channels.cache.has(channel.id))
-      return interaction.reply({
+    if (!interaction.guild.channels.cache.has(channel.id)) {
+      interaction.reply({
         embeds: [
           {
             color: interaction.client.settings.embedColors.red,
@@ -244,9 +245,11 @@ module.exports = {
           }
         ]
       });
+      return false;
+    }
 
-    if (channel.type != 0 && (!supportsChannelTypeFive || channel.type != 5))
-      return interaction.reply({
+    if (!channel.isTextBased() || channel.isVoiceBased()) {
+      interaction.reply({
         embeds: [
           {
             color: interaction.client.settings.embedColors.red,
@@ -255,8 +258,38 @@ module.exports = {
           }
         ],
       });
+      return false;
+    }
 
-    for await (let permission of permissions) {
+    if (permissions) {
+      let missedClientPerms = [];
+      for await (let permission of permissions) {
+        if (!channel.permissionsFor(interaction.guild.members.me).has(permission)) {
+          missedClientPerms.push(permissionsMap[permission]);
+        }
+      }
+      if (missedClientPerms.length) {
+        interaction.reply({
+          embeds: [
+            {
+              color: interaction.client.settings.embedColors.red,
+              author: {
+                name: `#${channel.name} Kanalında Gereken İzinlere Sahip Değilim!`,
+                icon_url: interaction.guild.iconURL(),
+              },
+              fields: [
+                {
+                  name: '**»** İhtiyacım Olan İzinler;',
+                  value: "**•** " + missedClientPerms.map((p) => `${p}`).join("\n**•** "),
+                },
+              ]
+            }
+          ]
+        });
+        return false;
+      }
+    }
+    /* for await (let permission of permissions) {
       if (!channel.permissionsFor(interaction.guild.members.me).has(permission)) {
         return interaction.reply({
           embeds: [
@@ -268,10 +301,14 @@ module.exports = {
           ]
         });
       }
-    }
+    } */
 
-    return false;
+    return true;
 
   },
+
+  truncate: function (source, size) {
+    return source.length > size ? source.slice(0, size - 1) + "…" : source;
+  }
 
 };

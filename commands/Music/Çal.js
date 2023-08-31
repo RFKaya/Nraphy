@@ -47,30 +47,26 @@ module.exports = {
         }]
       });
 
-    const queue = client.distube.getQueue(interaction.guild);
-
-    if (!data.guildIsBoosted && queue?.songs.length > 200)
-      return interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.red,
-          description:
-            `**»** Şarkı sırası tamamen dolu. Daha fazla şarkı ekleyemezsin.\n` +
-            `**•** **Nraphy Boost** ile bu limiti sınırsıza çıkarabilirsin! \`/boost bilgi\``
-        }]
-      });
-
     if (interaction.type === 2)
       await interaction.deferReply();
     else await interaction.react('✅').catch(e => { });
 
-    await client.distube.play(interaction.member.voice.channel, music, {
-      member: interaction.member,
-      textChannel: interaction.channel,
-      voiceChannel: interaction.member.voice.channel,
-      metadata: {
-        commandMessage: interaction
-      }
-    }).catch(error => require('../../events/distube/functions/errorHandler.js')(client, error, interaction.channel, interaction));
+    try {
+
+      await client.distube.play(interaction.member.voice.channel, music, {
+        member: interaction.member,
+        textChannel: interaction.channel,
+        voiceChannel: interaction.member.voice.channel,
+        metadata: {
+          commandMessage: interaction
+        }
+      });
+
+    } catch (error) {
+
+      require('../../events/distube/functions/errorHandler.js')(client, error, interaction.channel, interaction);
+
+    }
 
   },
 };

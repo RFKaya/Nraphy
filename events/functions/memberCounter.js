@@ -2,9 +2,11 @@ const permissions = require("../../utils/Permissions.json");
 
 module.exports = async (client, member, memberCounter, guildData, event) => {
 
+  const channel = member.guild.channels.cache.get(memberCounter.channel);
+
   try {
 
-    if (!member.guild.channels.cache.has(memberCounter.channel)) {
+    if (!channel) {
 
       client.logger.log(`Sayaç kanalı bulunamadı, sunucudaki sayaç sıfırlanıyor... • ${member.guild.name} (${member.guild.id})`);
       guildData.memberCounter = undefined;
@@ -24,7 +26,7 @@ module.exports = async (client, member, memberCounter, guildData, event) => {
 
     let clientPerms = [];
     ["ViewChannel", "SendMessages", "EmbedLinks"].forEach((perm) => {
-      if (!member.guild.channels.cache.get(memberCounter.channel).permissionsFor(member.guild.members.me).has(perm)) {
+      if (!channel.permissionsFor(member.guild.members.me).has(perm)) {
         clientPerms.push(permissions[perm]);
       }
     });
@@ -42,7 +44,7 @@ module.exports = async (client, member, memberCounter, guildData, event) => {
             name: `Sayaç Sistemini Çalıştırabilmem İçin Gereken İzinlere Sahip Değilim!`,
             icon_url: member.guild.iconURL(),
           },
-          description: `**»** ${member.guild.channels.cache.get(memberCounter.channel)} kanalında yeterli yetkiye sahip olmadığım için sayaç sistemini sıfırladım.`,
+          description: `**»** ${channel} kanalında yeterli yetkiye sahip olmadığım için sayaç sistemini sıfırladım.`,
           fields: [
             {
               name: '**»** İhtiyacım Olan İzinler;',
@@ -65,23 +67,27 @@ module.exports = async (client, member, memberCounter, guildData, event) => {
 
     if (member.user.bot) joinEmbed.author.name += ` (Bot 🤖)`;
 
-    member.guild.channels.cache.get(memberCounter.channel).send({
+    channel.send({
       embeds: [joinEmbed]
     });
 
-    /*if (Number(memberCounter.target) <= member.guild.memberCount) {
+    //Sayaç hedefine ulaşılırsa
+    if (memberCounter.target <= member.guild.memberCount) {
 
-      member.guild.channels.cache.get(memberCounter.channel).send({
+      channel.send({
         embeds: [{
           color: client.settings.embedColors.default,
           title: `**»** Tebrikler ${member.guild.name}!`,
-          description: `**•** Başarıyla **${db.fetch(`guilds.${member.guild.id}.memberCounter.target`)}** kullanıcıya ulaştık!\n**•** Sayaç hedefini otomatik olarak ikiye katladım!`,
+          description:
+            `**•** Başarıyla **${memberCounter.target}** kullanıcıya ulaştık!\n` +
+            `**•** Sayaç hedefini otomatik olarak ikiye katladım!`,
         }]
-      })
+      });
 
-      db.set(`guilds.${member.guild.id}.memberCounter.target`, (db.fetch(`guilds.${member.guild.id}.memberCounter.target * 2)`))
+      guildData.memberCounter.target = guildData.memberCounter.target * 2;
+      await guildData.save();
 
-    }*/
+    }
 
   } catch (err) { client.logger.error(err); };
 };

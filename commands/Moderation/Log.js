@@ -64,7 +64,17 @@ module.exports = {
               {
                 name: '**»** Log Sistemi Hangi Olayları Bildirir?',
                 value:
-                  `**•** Mesaj Düzenleme ve Silme (İçerikleriyle birlikte)`
+                  `**•** Mesaj Düzenleme ve Silme (İçerikleriyle birlikte)\n` +
+                  `**•** Kanal Oluşturma, Düzenleme ve Silme\n` +
+                  `**•** Rol Oluşturma, Düzenleme ve Silme\n` +
+                  `**•** Emoji Oluşturma, Düzenleme ve Silme\n` +
+                  `**•** Değiştirilen üye kullanıcı adları\n` +
+                  `**•** Üyeye rol ekleme, rol alma\n` +
+                  `**•** Üyeye zamanaşımı uygulama, zamanaşımı kaldırma\n` +
+                  `**•** Üye yasaklama, yasak kaldırma\n` +
+                  `**•** Sesli odalara katılma, ayrılma\n` +
+                  `**•** Sunucu üzerinde yapılan değişiklikler\n` +
+                  `**•** Yakında daha fazla olay bildirir hâle gelecek.`,
               },
               {
                 name: '**»** Log Sistemi Nasıl Açılır?',
@@ -91,8 +101,7 @@ module.exports = {
       const getChannel = interaction.options.getChannel("kanal");
 
       //Kanal Kontrol
-      const { channelChecker } = require("../../modules/Functions");
-      if (await channelChecker(interaction, getChannel, ["ViewChannel", "SendMessages", "EmbedLinks", "ManageChannels", "ManageWebhooks"], false)) return;
+      if (!await client.functions.channelChecker(interaction, getChannel, ["ViewChannel", "SendMessages", "EmbedLinks", "ManageChannels", "ManageWebhooks"])) return;
 
       await interaction.deferReply();
 

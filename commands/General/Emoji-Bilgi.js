@@ -1,9 +1,18 @@
 const humanize = require("humanize-duration");
 
 module.exports = {
-  name: "emoji-bilgi",
-  description: "Emoji hakkında bilgi verir.",
-  usage: "emoji-bilgi",
+  interaction: {
+    name: "emoji-bilgi",
+    description: "Seçtiğiniz emoji hakkında bilgi verir.",
+    options: [
+      {
+        name: "emoji",
+        description: "Bir emoji adı ya da ID'si gir.",
+        type: 3,
+        required: false
+      },
+    ]
+  },
   aliases: ["emojiinfo", "emojibilgi", "emojinfo", "emoji-info"],
   category: "General",
   memberPermissions: [],
@@ -12,67 +21,67 @@ module.exports = {
   cooldown: false,
   ownerOnly: false,
 
-  async execute(client, message, args, data) {
+  async execute(client, interaction, data, args) {
 
-    let emojiname = args[0];
-
-    if (!emojiname) return message.channel.send({
-      embeds: [
-        {
-          color: client.settings.embedColors.red,
-          title: '**»** Bir Emoji, Adı ya da ID\'si Girmelisin!',
-          description: `**•** Örnek kullanım: \`${data.prefix}emoji-bilgi <Emoji/ID/İsim>\``
-        }
-      ]
-    });
+    const emojiname = interaction.type === 2 ? interaction.options.getString("emoji") : args[0];
+    if (!emojiname)
+      return interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            title: '**»** Bir Emoji Adı ya da ID\'si Girmelisin!',
+            description: `**•** Örnek kullanım: \`/emoji-bilgi <Emoji/İsim/ID>\``
+          }
+        ]
+      });
 
     const emoji =
-      message.guild.emojis.cache.find(emoji => emoji.name.toLowerCase() === `${emojiname.toLowerCase()}`) ||
-      message.guild.emojis.cache.find(emoji => emoji.id === `${emojiname}`) ||
-      message.guild.emojis.cache.find(emoji => `<:${emoji.name}:${emoji.id}>` == `${emojiname}`);
+      interaction.guild.emojis.cache.find(emoji => emoji.name.toLowerCase() === `${emojiname.toLowerCase()}`) ||
+      interaction.guild.emojis.cache.find(emoji => emoji.id === `${emojiname}`) ||
+      interaction.guild.emojis.cache.find(emoji => `<:${emoji.name}:${emoji.id}>` === `${emojiname}` || `<a:${emoji.name}:${emoji.id}>` === `${emojiname}`);
 
-    if (!emoji) return message.channel.send({
+    if (!emoji)
+      return interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            title: '**»** Sunucuda Bulunan Bir Emoji Adı ya da ID\'si Girmelisin!',
+            description: `**•** Örnek kullanım: \`/emoji-bilgi NraphyLogo\``
+          }
+        ]
+      });
+
+    return await interaction.reply({
       embeds: [
         {
-          color: client.settings.embedColors.red,
-          title: '**»** Bir Emoji Adı ya da ID\'si Girmelisin!',
-          description: `**•** Örnek kullanım: \`${data.prefix}emoji-bilgi NraphyLogo\``
+          color: client.settings.embedColors.default,
+          author: {
+            name: `${client.user.username} • Emoji Bilgi`,
+            icon_url: client.settings.icon,
+          },
+          title: `**»** ${emoji.name}`,
+          thumbnail: {
+            url: emoji.url,
+          },
+          fields: [
+            {
+              name: "**»** ID",
+              value: `**•** ${emoji.id}`,
+              inline: false,
+            },
+            {
+              name: "**»** Emoji Bağlantısı",
+              value: `**•** ${emoji.url}`,
+              inline: false,
+            },
+            {
+              name: "**»** Oluşturulma Tarihi",
+              value: `**•** <t:${(emoji.createdAt.getTime() / 1000).toFixed(0)}:f> • (\`${humanize(Date.now() - emoji.createdAt.getTime(), { language: "tr", round: true, largest: 4 })}\`)`,
+              inline: false,
+            },
+          ]
         }
       ]
-    });
-
-    var timestamp = Date.now() - emoji.createdAt.getTime();
-    var oluşturulmatarihi = humanize(timestamp, { language: "tr", round: true, largest: 4 });
-
-    message.channel.send({
-      embeds: [{
-        color: client.settings.embedColors.default,
-        author: {
-          name: `${client.user.username} • Emoji Bilgi`,
-          icon_url: client.settings.icon,
-        },
-        title: `**»** ${emoji.name}`,
-        thumbnail: {
-          url: emoji.url,
-        },
-        fields: [
-          {
-            name: "**»** ID",
-            value: `**•** ${emoji.id}`,
-            inline: false,
-          },
-          {
-            name: "**»** Emoji Bağlantısı",
-            value: `**•** ${emoji.url}`,
-            inline: false,
-          },
-          {
-            name: "**»** Oluşturulma Tarihi",
-            value: `**•** <t:${(emoji.createdAt.getTime() / 1000).toFixed(0)}:f> • (\`${oluşturulmatarihi}\`)`,
-            inline: false,
-          },
-        ]
-      }]
     });
 
   }

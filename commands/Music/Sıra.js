@@ -4,7 +4,7 @@ module.exports = {
     description: "Şarkı sırasını gösterir.",
     options: []
   },
-  aliases: ["queue"],
+  aliases: ["queue", "kuyruk"],
   category: "Music",
   memberPermissions: [],
   botPermissions: ["SendMessages", "EmbedLinks"],
@@ -37,6 +37,15 @@ module.exports = {
         embeds: [{
           color: client.settings.embedColors.red,
           description: "**»** Şu anda bir şarkı çalmıyor."
+        }]
+      });
+
+    const guildDataCache = client.guildDataCache[interaction.guild.id] || (client.guildDataCache[interaction.guild.id] = {});
+    if (guildDataCache?.games?.musicQuiz || queue.songs[0].metadata.isMusicQuiz)
+      return interaction.reply({
+        embeds: [{
+          color: client.settings.embedColors.red,
+          description: "**»** Müzik tahmini oyunu sırasında bu komutu kullanamazsın."
         }]
       });
 

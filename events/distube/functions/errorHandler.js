@@ -6,7 +6,18 @@ module.exports = async (client, error, channel, interaction) => {
 
   try {
 
-    if (error.errorCode === 'VOICE_MISSING_PERMS') {
+    if (error.errorCode === 'SOUNDCLOUD_PLUGIN_NO_RESULT') {
+
+      messageContent = {
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            description: "**»** SoundCloud üzerinde böyle bir şarkı bulunmadı."
+          }
+        ],
+      };
+
+    } else if (error.errorCode === 'VOICE_MISSING_PERMS') {
 
       messageContent = {
         embeds: [

@@ -7,6 +7,8 @@ module.exports = {
         name: "ses",
         description: "1-200 arası bir seviye gir. (%100'den fazlası ses kalitesini düşürebilir)",
         type: 4,
+        max_value: 200,
+        min_value: 0,
         required: true
       },
     ]
