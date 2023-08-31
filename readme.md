@@ -4,7 +4,7 @@
 </p>
 
 # Nraphy - Discord Bot Altyapısı (Discord js v14)
-Nraphy altyapısı, Discord Türkiye'deki en kapsamlı ve gelişmiş bot altyapısıdır. 
+Discord'daki en iyi Türkçe bot altyapısı! 
 - En güncel discord.js sürümü (v14) ve slash komutları ile geride bırakmaz. 
 - Önbellekleme sistemiyle modifiye edilmiş MongoDB veritabanı ile hiç olmadığı kadar hızlı 🚀
 
