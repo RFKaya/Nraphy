@@ -24,12 +24,6 @@ module.exports.fetchGuild = async guildId =>
 
 module.exports.fetchUser = async (userId) =>
   await userSchema.findOne({ userId }) || await userSchema.create({ userId });
-module.exports.fetchUserInCache = async (userId) => {
-  const userCacheData = await global.redis_users.get(userId);
-  if (userCacheData)
-    return JSON.parse(userCacheData);
-  else return null;
-};
 
 module.exports.pushDatabaseQueue = async (client) => {
 
