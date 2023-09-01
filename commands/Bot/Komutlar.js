@@ -38,7 +38,6 @@ module.exports = {
           embeds: [
             {
               color: client.settings.embedColors.default,
-              //title: '**»** Botun davet bağlantısına ulaşmak için buraya tıkla!',
               author: {
                 name: `${client.user.username} • Komut Bilgisi`,
                 icon_url: client.settings.icon,
