@@ -71,7 +71,7 @@ schema.pre('save', async function () {
   }, { context: { userId: this.userId } }); */
   //global.database.usersCache[this.userId] = this;//{ ...global.databaseCache[this.userId], ...thisDoc };
 
-  await global.redis_users.set(this.userId, JSON.stringify(this));
+  //await global.redis_users.set(this.userId, JSON.stringify(this));
 });
 
 module.exports = mongoose.model('user', schema);

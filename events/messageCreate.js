@@ -55,7 +55,7 @@ module.exports = async (client, message) => {
       return;
     userCache.lastMessage = Date.now();
 
-    const userCacheData = await client.database.fetchUserInCache(message.author.id);
+    const userCacheData = await client.database.fetchUser(message.author.id);
 
     //Prefixim & Soru-Sor & Oto-Cevap (3'ü aynı anda çalışmayacak şekilde)
     if (message.content === `<@!${client.user.id}>` || message.content === `<@${client.user.id}>` || message.content === `<@&${client.user.id}>`) {
@@ -76,7 +76,7 @@ module.exports = async (client, message) => {
       require("./functions/AFK.js").removeAFK(client, message, userCacheData);
     }
     if (message.mentions.users.first()) {
-      const mentionUserCacheData = await client.database.fetchUserInCache(message.mentions.users.first().id);
+      const mentionUserCacheData = await client.database.fetchUser(message.mentions.users.first().id);
       if (mentionUserCacheData?.AFK?.time) {
         client.logger.log(`AFK SİSTEMİ TETİKLENDİ! • ${message.guild.name} (${message.guild.id})`);
         require("./functions/AFK.js").userIsAFK(client, message, mentionUserCacheData);

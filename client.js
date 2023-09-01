@@ -166,17 +166,6 @@ mongoose.connect(client.config.mongooseToken, {
   console.log('Unable to connect to MongoDB Database.\nError: ' + err);
 });
 
-//------------------------------Redis------------------------------//
-const Redis = require('ioredis');
-
-/* global.redis_guilds = new Redis();
-global.redis_guilds.select(0); */
-
-global.redis_users = new Redis();
-global.redis_users.select(1);
-
-//global.redis_users.flushall();
-
 //------------------------------Client------------------------------//
 client.on("disconnect", () => client.logger.error("Bot is disconnecting..."));
 client.on("reconnecting", () => client.logger.error("Bot reconnecting..."));
