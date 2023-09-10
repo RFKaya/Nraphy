@@ -58,11 +58,7 @@ Botu kullanıma hazırlamak için aşağıdaki adımları izle
 Eğer bu yazıyı okuyorsanız güncelleme desteği devam etmektedir. Güncellemeyi keseceksem de tam burada bildiririm. Her güncelleme için birkaç ayda bir yoklamakta fayda var. Projeyi yıldızlayarak katkıda bulunabilirsiniz!
 
 ## 💞 Yardıma İhtiyacın Olursa
-- Bu metni baştan sona kadar okuduysan,
-- Projenin ham (düzenlenmemiş) hâliyle ilgili destek alacaksan,
-- Sorunun Mongo/NodeJS kaynaklı olmadığından eminsen,
-- Emeksizce ve bilgisizce bot sahibi olma peşindekilerden değilsen,
-[Nraphy Discord Sunucusu](https://discord.gg/JhasTMZr2A)'na katılabilir ve destek alabilirsin.
+Profilinde "developer" ibaresi bulunurken en basit kod hataları için yardım isteyenler, sunucumuzda rahatsızlık verdikleri için Discord sunucumuzda artık destek sağlayamıyoruz. Projenin kendisinde bir hata varsa Pull Request/Issue oluşturabilirsin. Emekçi kardeşlerimin yolu açık olsun 🫡
 
 ## ❤️ Ayrıca Teşekkürler
 Aşağıdaki kişilere, projelere ve aklıma gelmeyen daha nice kaynağa, emeklerinden dolayı teşekkürlerimi sunuyorum. (Aklıma geldikçe dahasını da ekleyeceğim)
