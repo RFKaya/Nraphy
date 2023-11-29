@@ -83,7 +83,7 @@ module.exports = {
         ]
       });
 
-    await interaction.channel.setRateLimitPerUser(limit, `Nraphy • Yavaş-Mod (Slowmode) Ayarlama Sistemi (${interaction.user.tag} tarafından ayarlandı.)`);
+    await interaction.channel.setRateLimitPerUser(limit, `kanove • Yavaş-Mod (Slowmode) Ayarlama Sistemi (${interaction.user.tag} tarafından ayarlandı.)`);
 
     if (limit == 0)
       return await interaction.reply({

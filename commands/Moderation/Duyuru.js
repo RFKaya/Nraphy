@@ -45,7 +45,7 @@ module.exports = {
           {
             color: client.settings.embedColors.red,
             title: '**»** Bir Duyuru Metni Belirtmelisin!',
-            description: `**•** Örnek kullanım: \`/duyuru Nraphy'e vote atmayanları dövüyolarmıs!\``
+            description: `**•** Örnek kullanım: \`/duyuru kanove'ye vote atmayanları dövüyolarmıs!\``
           }
         ]
       });

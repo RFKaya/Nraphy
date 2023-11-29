@@ -1,0 +1,1255 @@
+[27 Kasım 2023 • 20:10:14] (WARN) 
+ => Date Timestamp: 1701115814806
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[27 Kasım 2023 • 20:10:14] (WARN) 
+ => Date Timestamp: 1701115814806
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[27 Kasım 2023 • 20:10:14] (WARN) 
+ => Date Timestamp: 1701115814806
+ => Content: https://discord.gg/kanov44
+
+[27 Kasım 2023 • 20:10:19] (ERROR) Error Log
+ => ID: 1701115819026
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[27 Kasım 2023 • 20:20:19] (ERROR) Error Log
+ => ID: 1701116419026
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[27 Kasım 2023 • 20:30:19] (ERROR) Error Log
+ => ID: 1701117019027
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[27 Kasım 2023 • 20:40:19] (ERROR) Error Log
+ => ID: 1701117619027
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[27 Kasım 2023 • 20:50:19] (ERROR) Error Log
+ => ID: 1701118219027
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[27 Kasım 2023 • 21:00:19] (ERROR) Error Log
+ => ID: 1701118819027
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[27 Kasım 2023 • 21:10:14] (WARN) 
+ => Date Timestamp: 1701119414806
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[27 Kasım 2023 • 21:10:14] (WARN) 
+ => Date Timestamp: 1701119414807
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[27 Kasım 2023 • 21:10:14] (WARN) 
+ => Date Timestamp: 1701119414808
+ => Content: https://discord.gg/kanov44
+
+[27 Kasım 2023 • 21:10:19] (ERROR) Error Log
+ => ID: 1701119419028
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[27 Kasım 2023 • 21:20:19] (ERROR) Error Log
+ => ID: 1701120019027
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[27 Kasım 2023 • 21:30:19] (ERROR) Error Log
+ => ID: 1701120619028
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[27 Kasım 2023 • 21:40:19] (ERROR) Error Log
+ => ID: 1701121219028
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[27 Kasım 2023 • 21:50:19] (ERROR) Error Log
+ => ID: 1701121819028
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[27 Kasım 2023 • 22:00:19] (ERROR) Error Log
+ => ID: 1701122419029
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 06:00:59] (CLIENT) Loading Client...
+
+[28 Kasım 2023 • 06:01:05] (READY) Client ready in shard 1!
+
+[28 Kasım 2023 • 06:11:06] (ERROR) Error Log
+ => ID: 1701151866210
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 06:21:06] (ERROR) Error Log
+ => ID: 1701152466210
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 06:31:06] (ERROR) Error Log
+ => ID: 1701153066211
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 06:41:06] (ERROR) Error Log
+ => ID: 1701153666211
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 06:43:56] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Temizle
+
+[28 Kasım 2023 • 06:51:06] (ERROR) Error Log
+ => ID: 1701154266212
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 06:52:31] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Log
+
+[28 Kasım 2023 • 06:53:37] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Bağlantı-engel
+
+[28 Kasım 2023 • 06:54:05] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Spam-koruması
+
+[28 Kasım 2023 • 06:54:20] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Spam-koruması
+
+[28 Kasım 2023 • 06:56:56] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Emoji-bilgi
+
+[28 Kasım 2023 • 06:57:34] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Ayarlar
+
+[28 Kasım 2023 • 06:59:08] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Kelime-oyunu
+
+[28 Kasım 2023 • 07:00:33] (CMD) (MESSAGE)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Nsfw
+ => Content: !nsfw
+
+[28 Kasım 2023 • 07:01:02] (WARN) 
+ => Date Timestamp: 1701154862312
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[28 Kasım 2023 • 07:01:02] (WARN) 
+ => Date Timestamp: 1701154862312
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[28 Kasım 2023 • 07:01:02] (WARN) 
+ => Date Timestamp: 1701154862313
+ => Content: https://discord.gg/kanov44
+
+[28 Kasım 2023 • 07:01:06] (ERROR) Error Log
+ => ID: 1701154866212
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 07:02:44] (CMD) (MESSAGE)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: AFK
+ => Content: !afk
+
+[28 Kasım 2023 • 07:03:03] (CMD) (MESSAGE)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: AFK
+ => Content: !afk uyuyor amq
+
+[28 Kasım 2023 • 07:03:09] (LOG) AFK SİSTEMİ TETİKLENDİ! • kanoV44 (1172773192893476924)
+
+[28 Kasım 2023 • 07:03:09] (LOG) AFK SİSTEMİ TETİKLENDİ! • kanoV44 (1172773192893476924)
+
+[28 Kasım 2023 • 07:06:41] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Ses
+
+[28 Kasım 2023 • 07:07:03] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Ara
+
+[28 Kasım 2023 • 07:10:43] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Temizle
+
+[28 Kasım 2023 • 07:11:06] (ERROR) Error Log
+ => ID: 1701155466213
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 07:11:47] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Temizle
+
+[28 Kasım 2023 • 07:11:48] (DEBUG) [object Object]
+
+[28 Kasım 2023 • 07:12:12] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Temizle
+
+[28 Kasım 2023 • 07:12:14] (DEBUG) [object Object]
+
+[28 Kasım 2023 • 07:12:17] (DEBUG) [object Object]
+
+[28 Kasım 2023 • 07:21:06] (ERROR) Error Log
+ => ID: 1701156066213
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 07:31:06] (ERROR) Error Log
+ => ID: 1701156666213
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 07:41:06] (ERROR) Error Log
+ => ID: 1701157266214
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 07:51:06] (ERROR) Error Log
+ => ID: 1701157866215
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 08:01:02] (WARN) 
+ => Date Timestamp: 1701158462313
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[28 Kasım 2023 • 08:01:02] (WARN) 
+ => Date Timestamp: 1701158462313
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[28 Kasım 2023 • 08:01:02] (WARN) 
+ => Date Timestamp: 1701158462313
+ => Content: https://discord.gg/kanov44
+
+[28 Kasım 2023 • 08:01:06] (ERROR) Error Log
+ => ID: 1701158466215
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 08:11:06] (ERROR) Error Log
+ => ID: 1701159066216
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 08:21:06] (ERROR) Error Log
+ => ID: 1701159666217
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 08:31:06] (ERROR) Error Log
+ => ID: 1701160266218
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 08:41:06] (ERROR) Error Log
+ => ID: 1701160866218
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 08:51:06] (ERROR) Error Log
+ => ID: 1701161466219
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 09:01:02] (WARN) 
+ => Date Timestamp: 1701162062313
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[28 Kasım 2023 • 09:01:02] (WARN) 
+ => Date Timestamp: 1701162062313
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[28 Kasım 2023 • 09:01:02] (WARN) 
+ => Date Timestamp: 1701162062313
+ => Content: https://discord.gg/kanov44
+
+[28 Kasım 2023 • 09:01:06] (ERROR) Error Log
+ => ID: 1701162066219
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 09:11:06] (ERROR) Error Log
+ => ID: 1701162666219
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 09:17:56] (CMD) (INTERACTION)
+ => User: eraykew (966015396446605362)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Kelime-oyunu
+
+[28 Kasım 2023 • 09:21:06] (ERROR) Error Log
+ => ID: 1701163266220
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 09:26:42] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Ara
+
+[28 Kasım 2023 • 09:31:06] (ERROR) Error Log
+ => ID: 1701163866219
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 09:41:06] (ERROR) Error Log
+ => ID: 1701164466219
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 09:51:06] (ERROR) Error Log
+ => ID: 1701165066219
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 10:01:02] (WARN) 
+ => Date Timestamp: 1701165662314
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[28 Kasım 2023 • 10:01:02] (WARN) 
+ => Date Timestamp: 1701165662314
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[28 Kasım 2023 • 10:01:02] (WARN) 
+ => Date Timestamp: 1701165662314
+ => Content: https://discord.gg/kanov44
+
+[28 Kasım 2023 • 10:01:06] (ERROR) Error Log
+ => ID: 1701165666219
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 10:11:06] (ERROR) Error Log
+ => ID: 1701166266221
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 10:21:06] (ERROR) Error Log
+ => ID: 1701166866221
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 10:31:06] (ERROR) Error Log
+ => ID: 1701167466222
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 10:41:06] (ERROR) Error Log
+ => ID: 1701168066223
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 10:51:06] (ERROR) Error Log
+ => ID: 1701168666224
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 11:01:02] (WARN) 
+ => Date Timestamp: 1701169262313
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[28 Kasım 2023 • 11:01:02] (WARN) 
+ => Date Timestamp: 1701169262313
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[28 Kasım 2023 • 11:01:02] (WARN) 
+ => Date Timestamp: 1701169262313
+ => Content: https://discord.gg/kanov44
+
+[28 Kasım 2023 • 11:01:06] (ERROR) Error Log
+ => ID: 1701169266224
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 11:11:06] (ERROR) Error Log
+ => ID: 1701169866224
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 11:21:06] (ERROR) Error Log
+ => ID: 1701170466225
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 11:31:06] (ERROR) Error Log
+ => ID: 1701171066226
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 11:41:06] (ERROR) Error Log
+ => ID: 1701171666226
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 11:51:06] (ERROR) Error Log
+ => ID: 1701172266226
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 12:01:02] (WARN) 
+ => Date Timestamp: 1701172862314
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[28 Kasım 2023 • 12:01:02] (WARN) 
+ => Date Timestamp: 1701172862314
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[28 Kasım 2023 • 12:01:02] (WARN) 
+ => Date Timestamp: 1701172862314
+ => Content: https://discord.gg/kanov44
+
+[28 Kasım 2023 • 12:01:06] (ERROR) Error Log
+ => ID: 1701172866227
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 12:11:06] (ERROR) Error Log
+ => ID: 1701173466228
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 12:21:06] (ERROR) Error Log
+ => ID: 1701174066228
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 12:31:06] (ERROR) Error Log
+ => ID: 1701174666229
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 12:41:06] (ERROR) Error Log
+ => ID: 1701175266229
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 13:16:15] (CLIENT) Loading Client...
+
+[28 Kasım 2023 • 13:16:22] (READY) Client ready in shard 1!
+
+[28 Kasım 2023 • 13:26:22] (ERROR) Error Log
+ => ID: 1701177982750
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 13:36:22] (ERROR) Error Log
+ => ID: 1701178582749
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 13:44:19] (CMD) (MESSAGE)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Nsfw
+ => Content: !nsfw boobs 10
+
+[28 Kasım 2023 • 13:46:22] (ERROR) Error Log
+ => ID: 1701179182751
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 13:56:22] (ERROR) Error Log
+ => ID: 1701179782751
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 14:06:22] (ERROR) Error Log
+ => ID: 1701180382751
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 14:16:18] (WARN) 
+ => Date Timestamp: 1701180978413
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[28 Kasım 2023 • 14:16:18] (WARN) 
+ => Date Timestamp: 1701180978414
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[28 Kasım 2023 • 14:16:18] (WARN) 
+ => Date Timestamp: 1701180978414
+ => Content: https://discord.gg/kanov44
+
+[28 Kasım 2023 • 14:16:22] (ERROR) Error Log
+ => ID: 1701180982752
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 14:21:12] (CMD) (MESSAGE)
+ => User: wexycnm (1116033743350669395)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Nsfw
+ => Content: !nsfw 4k 10
+
+[28 Kasım 2023 • 14:26:22] (ERROR) Error Log
+ => ID: 1701181582752
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 14:36:22] (ERROR) Error Log
+ => ID: 1701182182753
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 14:39:52] (CMD) (INTERACTION)
+ => User: erennq1z_ (1165290722539352116)
+ => Guild: (Dinosauria) #BAKIM (1104392839812612217)
+ => CMD: Ara
+
+[28 Kasım 2023 • 17:20:17] (CLIENT) Loading Client...
+
+[28 Kasım 2023 • 17:20:24] (READY) Client ready in shard 1!
+
+[28 Kasım 2023 • 17:30:25] (ERROR) Error Log
+ => ID: 1701192625144
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 17:40:25] (ERROR) Error Log
+ => ID: 1701193225145
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 17:48:10] (CMD) (INTERACTION)
+ => User: erennq1z_ (1165290722539352116)
+ => Guild: (Dinosauria) #BAKIM (1104392839812612217)
+ => CMD: Ara
+
+[28 Kasım 2023 • 17:48:50] (CMD) (INTERACTION)
+ => User: luffyi787 (896721683728203786)
+ => Guild: (Dinosauria) #BAKIM (1104392839812612217)
+ => CMD: Ara
+
+[28 Kasım 2023 • 17:49:11] (CMD) (INTERACTION)
+ => User: luffyi787 (896721683728203786)
+ => Guild: (Dinosauria) #BAKIM (1104392839812612217)
+ => CMD: Ara
+
+[28 Kasım 2023 • 17:50:25] (ERROR) Error Log
+ => ID: 1701193825145
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 17:56:18] (CMD) (INTERACTION)
+ => User: erennq1z_ (1165290722539352116)
+ => Guild: (Dinosauria) #BAKIM (1104392839812612217)
+ => CMD: Ara
+
+[28 Kasım 2023 • 17:56:40] (CMD) (INTERACTION)
+ => User: erennq1z_ (1165290722539352116)
+ => Guild: (Dinosauria) #BAKIM (1104392839812612217)
+ => CMD: Ara
+
+[28 Kasım 2023 • 17:57:02] (CMD) (INTERACTION)
+ => User: erennq1z_ (1165290722539352116)
+ => Guild: (Dinosauria) #BAKIM (1104392839812612217)
+ => CMD: Ara
+
+[28 Kasım 2023 • 17:58:48] (CMD) (INTERACTION)
+ => User: erennq1z_ (1165290722539352116)
+ => Guild: (Dinosauria) #BAKIM (1104392839812612217)
+ => CMD: Çal
+
+[28 Kasım 2023 • 18:00:25] (ERROR) Error Log
+ => ID: 1701194425145
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 18:10:25] (ERROR) Error Log
+ => ID: 1701195025144
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 18:20:20] (WARN) 
+ => Date Timestamp: 1701195620742
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[28 Kasım 2023 • 18:20:20] (WARN) 
+ => Date Timestamp: 1701195620742
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[28 Kasım 2023 • 18:20:20] (WARN) 
+ => Date Timestamp: 1701195620742
+ => Content: https://discord.gg/kanov44
+
+[28 Kasım 2023 • 18:20:25] (ERROR) Error Log
+ => ID: 1701195625145
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 18:30:25] (ERROR) Error Log
+ => ID: 1701196225144
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 18:40:25] (ERROR) Error Log
+ => ID: 1701196825144
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 18:50:25] (ERROR) Error Log
+ => ID: 1701197425145
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 19:00:25] (ERROR) Error Log
+ => ID: 1701198025146
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 19:10:25] (ERROR) Error Log
+ => ID: 1701198625146
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 19:20:20] (WARN) 
+ => Date Timestamp: 1701199220741
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[28 Kasım 2023 • 19:20:20] (WARN) 
+ => Date Timestamp: 1701199220741
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[28 Kasım 2023 • 19:20:20] (WARN) 
+ => Date Timestamp: 1701199220742
+ => Content: https://discord.gg/kanov44
+
+[28 Kasım 2023 • 19:20:25] (ERROR) Error Log
+ => ID: 1701199225147
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 19:30:25] (ERROR) Error Log
+ => ID: 1701199825148
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 19:40:25] (ERROR) Error Log
+ => ID: 1701200425149
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 19:50:25] (ERROR) Error Log
+ => ID: 1701201025149
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 20:00:25] (ERROR) Error Log
+ => ID: 1701201625150
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 20:10:25] (ERROR) Error Log
+ => ID: 1701202225150
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 20:20:20] (WARN) 
+ => Date Timestamp: 1701202820742
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[28 Kasım 2023 • 20:20:20] (WARN) 
+ => Date Timestamp: 1701202820743
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[28 Kasım 2023 • 20:20:20] (WARN) 
+ => Date Timestamp: 1701202820743
+ => Content: https://discord.gg/kanov44
+
+[28 Kasım 2023 • 20:20:25] (ERROR) Error Log
+ => ID: 1701202825151
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 20:30:25] (ERROR) Error Log
+ => ID: 1701203425152
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 20:40:25] (ERROR) Error Log
+ => ID: 1701204025152
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 20:50:25] (ERROR) Error Log
+ => ID: 1701204625151
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 21:00:25] (ERROR) Error Log
+ => ID: 1701205225152
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[28 Kasım 2023 • 21:10:25] (ERROR) Error Log
+ => ID: 1701205825152
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 07:50:46] (CLIENT) Loading Client...
+
+[29 Kasım 2023 • 07:50:55] (READY) Client ready in shard 1!
+
+[29 Kasım 2023 • 08:00:55] (ERROR) Error Log
+ => ID: 1701244855963
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 08:10:55] (ERROR) Error Log
+ => ID: 1701245455963
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 09:21:30] (CLIENT) Loading Client...
+
+[29 Kasım 2023 • 09:21:39] (READY) Client ready in shard 1!
+
+[29 Kasım 2023 • 09:31:40] (ERROR) Error Log
+ => ID: 1701250300855
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 09:41:40] (ERROR) Error Log
+ => ID: 1701250900856
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 09:51:40] (ERROR) Error Log
+ => ID: 1701251500856
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 10:01:40] (ERROR) Error Log
+ => ID: 1701252100856
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 10:11:40] (ERROR) Error Log
+ => ID: 1701252700857
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 10:21:35] (WARN) 
+ => Date Timestamp: 1701253295194
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[29 Kasım 2023 • 10:21:35] (WARN) 
+ => Date Timestamp: 1701253295194
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[29 Kasım 2023 • 10:21:35] (WARN) 
+ => Date Timestamp: 1701253295195
+ => Content: https://discord.gg/kanov44
+
+[29 Kasım 2023 • 10:21:40] (ERROR) Error Log
+ => ID: 1701253300857
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 10:31:40] (ERROR) Error Log
+ => ID: 1701253900857
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 10:41:40] (ERROR) Error Log
+ => ID: 1701254500858
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 10:51:40] (ERROR) Error Log
+ => ID: 1701255100858
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 11:01:40] (ERROR) Error Log
+ => ID: 1701255700858
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 11:11:40] (ERROR) Error Log
+ => ID: 1701256300859
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 11:21:35] (WARN) 
+ => Date Timestamp: 1701256895193
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[29 Kasım 2023 • 11:21:35] (WARN) 
+ => Date Timestamp: 1701256895194
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[29 Kasım 2023 • 11:21:35] (WARN) 
+ => Date Timestamp: 1701256895194
+ => Content: https://discord.gg/kanov44
+
+[29 Kasım 2023 • 11:21:40] (ERROR) Error Log
+ => ID: 1701256900858
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 11:31:40] (ERROR) Error Log
+ => ID: 1701257500859
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 11:41:40] (ERROR) Error Log
+ => ID: 1701258100859
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 11:51:40] (ERROR) Error Log
+ => ID: 1701258700859
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 12:01:40] (ERROR) Error Log
+ => ID: 1701259300860
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 12:11:40] (ERROR) Error Log
+ => ID: 1701259900860
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 12:21:35] (WARN) 
+ => Date Timestamp: 1701260495195
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[29 Kasım 2023 • 12:21:35] (WARN) 
+ => Date Timestamp: 1701260495195
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[29 Kasım 2023 • 12:21:35] (WARN) 
+ => Date Timestamp: 1701260495195
+ => Content: https://discord.gg/kanov44
+
+[29 Kasım 2023 • 12:21:40] (ERROR) Error Log
+ => ID: 1701260500860
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 12:31:40] (ERROR) Error Log
+ => ID: 1701261100860
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 12:34:43] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Davet
+
+[29 Kasım 2023 • 12:35:35] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: FAFNIR #G3N (1127312317835640845)
+ => CMD: Davet-sistemi
+
+[29 Kasım 2023 • 12:36:40] (LOG) DAVET SİSTEMİ TETİKLENDİ! • FAFNIR #G3N (1127312317835640845)
+
+[29 Kasım 2023 • 12:37:12] (LOG) DAVET SİSTEMİ TETİKLENDİ! • FAFNIR #G3N (1127312317835640845)
+
+[29 Kasım 2023 • 12:41:40] (ERROR) Error Log
+ => ID: 1701261700860
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 12:51:40] (ERROR) Error Log
+ => ID: 1701262300861
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 12:57:17] (LOG) DAVET SİSTEMİ TETİKLENDİ! • FAFNIR #G3N (1127312317835640845)
+
+[29 Kasım 2023 • 13:01:40] (ERROR) Error Log
+ => ID: 1701262900860
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 13:09:15] (CMD) (MESSAGE)
+ => User: wexycnm (1116033743350669395)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Nsfw
+ => Content: !nsfw pgif
+
+[29 Kasım 2023 • 13:09:21] (CMD) (MESSAGE)
+ => User: wexycnm (1116033743350669395)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Nsfw
+ => Content: !nsfw pgif
+
+[29 Kasım 2023 • 13:09:28] (CMD) (MESSAGE)
+ => User: wexycnm (1116033743350669395)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Nsfw
+ => Content: !nsfw pgif
+
+[29 Kasım 2023 • 13:11:40] (ERROR) Error Log
+ => ID: 1701263500861
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 13:16:24] (LOG) DAVET SİSTEMİ TETİKLENDİ! • FAFNIR #G3N (1127312317835640845)
+
+[29 Kasım 2023 • 13:21:35] (WARN) 
+ => Date Timestamp: 1701264095195
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[29 Kasım 2023 • 13:21:35] (WARN) 
+ => Date Timestamp: 1701264095196
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[29 Kasım 2023 • 13:21:35] (WARN) 
+ => Date Timestamp: 1701264095196
+ => Content: https://discord.gg/kanov44
+
+[29 Kasım 2023 • 13:21:40] (ERROR) Error Log
+ => ID: 1701264100861
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 13:31:40] (ERROR) Error Log
+ => ID: 1701264700862
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 13:41:40] (ERROR) Error Log
+ => ID: 1701265300863
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 13:49:50] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Sunucu-bilgi
+
+[29 Kasım 2023 • 13:49:59] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Emojiler
+
+[29 Kasım 2023 • 13:50:49] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Spotify
+
+[29 Kasım 2023 • 13:51:10] (CMD) (INTERACTION)
+ => User: meme_world.1 (1168821102252920833)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Döviz
+
+[29 Kasım 2023 • 13:51:40] (ERROR) Error Log
+ => ID: 1701265900864
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 13:52:32] (CMD) (INTERACTION)
+ => User: kanove1913 (1114618539123413105)
+ => Guild: kanoV44 (1172773192893476924)
+ => CMD: Ara
+
+[29 Kasım 2023 • 13:58:18] (CMD) (INTERACTION)
+ => User: erennq1z_ (1165290722539352116)
+ => Guild: (Dinosauria) #BAKIM (1104392839812612217)
+ => CMD: Çal
+
+[29 Kasım 2023 • 13:58:29] (CMD) (INTERACTION)
+ => User: erennq1z_ (1165290722539352116)
+ => Guild: (Dinosauria) #BAKIM (1104392839812612217)
+ => CMD: Durdur
+
+[29 Kasım 2023 • 14:01:40] (ERROR) Error Log
+ => ID: 1701266500864
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 14:11:40] (ERROR) Error Log
+ => ID: 1701267100865
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+
+[29 Kasım 2023 • 14:21:35] (WARN) 
+ => Date Timestamp: 1701267695196
+ => Content: kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.
+
+[29 Kasım 2023 • 14:21:35] (WARN) 
+ => Date Timestamp: 1701267695196
+ => Content: .gg/kanov44 için kurulmuştur.
+
+[29 Kasım 2023 • 14:21:35] (WARN) 
+ => Date Timestamp: 1701267695197
+ => Content: https://discord.gg/kanov44
+
+[29 Kasım 2023 • 14:21:40] (ERROR) Error Log
+ => ID: 1701267700866
+ => Content: Error: Cannot find module '../commands/Bot/Komutlar.js'
+Require stack:
+- /workspaces/Nraphy/events/ready.js
+- /workspaces/Nraphy/client.js
+

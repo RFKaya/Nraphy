@@ -126,7 +126,7 @@ module.exports = {
         fields: [
         {
           name: `**»** Sorumluluk Reddi Beyanı`,
-          value: `**•** \`Nraphy görüntülenen döviz kurlarının doğruluğunu garanti edemez ve hiçbir sorumluluk kabul etmemektedir. Döviz kurlarındaki değişikliklerden etkilenebilecek işlemleri yapmadan önce geçerli kurları doğrulamanız gerekir.\``,
+          value: `**•** \`kanove görüntülenen döviz kurlarının doğruluğunu garanti edemez ve hiçbir sorumluluk kabul etmemektedir. Döviz kurlarındaki değişikliklerden etkilenebilecek işlemleri yapmadan önce geçerli kurları doğrulamanız gerekir.\``,
           inline: false
         }
       ]
@@ -159,7 +159,7 @@ module.exports = {
     icon_url: client.settings.icon
     },
     title: `**»** **${exchangeRate.isim} (${exchangeRate.kur})** `,
-    //description: `**• Sorumluluk Reddi Beyanı:** Nraphy görüntülenen döviz kurlarının doğruluğunu garanti edemez ve hiçbir sorumluluk kabul etmemektedir. Döviz kurlarındaki değişikliklerden etkilenebilecek işlemleri yapmadan önce, geçerli kurları doğrulamanız gerekir.`,
+    //description: `**• Sorumluluk Reddi Beyanı:** kanove görüntülenen döviz kurlarının doğruluğunu garanti edemez ve hiçbir sorumluluk kabul etmemektedir. Döviz kurlarındaki değişikliklerden etkilenebilecek işlemleri yapmadan önce, geçerli kurları doğrulamanız gerekir.`,
     fields: [
     {
       name: `**»** Alış`,
@@ -173,7 +173,7 @@ module.exports = {
     },
     {
       name: `**»** Sorumluluk Reddi Beyanı`,
-      value: `**•** \`Nraphy görüntülenen döviz kurlarının doğruluğunu garanti edemez ve hiçbir sorumluluk kabul etmemektedir. Döviz kurlarındaki değişikliklerden etkilenebilecek işlemleri yapmadan önce geçerli kurları doğrulamanız gerekir.\``,
+      value: `**•** \`kanove görüntülenen döviz kurlarının doğruluğunu garanti edemez ve hiçbir sorumluluk kabul etmemektedir. Döviz kurlarındaki değişikliklerden etkilenebilecek işlemleri yapmadan önce geçerli kurları doğrulamanız gerekir.\``,
       inline: false
     }
     ],

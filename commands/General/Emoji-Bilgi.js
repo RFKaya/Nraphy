@@ -46,7 +46,7 @@ module.exports = {
           {
             color: client.settings.embedColors.red,
             title: '**»** Sunucuda Bulunan Bir Emoji Adı ya da ID\'si Girmelisin!',
-            description: `**•** Örnek kullanım: \`/emoji-bilgi NraphyLogo\``
+            description: `**•** Örnek kullanım: \`/emoji-bilgi kanovemoji\``
           }
         ]
       });

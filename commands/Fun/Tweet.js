@@ -26,7 +26,7 @@ module.exports = {
     const text = interaction.type === 2 ? interaction.options.getString("yazı") : args.join(" ");
 
     const { messageChecker } = require("../../modules/Functions");
-    if (!await messageChecker(interaction, text, "tweet Nraphy öz botumdur!")) return;
+    if (!await messageChecker(interaction, text, "tweet loxnov44 öz botumdur!")) return;
 
     if (interaction.type === 2) await interaction.deferReply();
 

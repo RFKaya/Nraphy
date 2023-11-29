@@ -114,11 +114,6 @@ module.exports = async (client, interaction, cmd, guildData, userData, args = nu
       });
     }
 
-    //---------------Vote---------------//
-    if (cmd.voteRequired && client.config.topggToken) {
-
-      let topgg = require(`@top-gg/sdk`);
-      let topggapi = new topgg.Api(client.config.topggToken);
 
       //Topgg API bozuksa
       let topggStatus = client.clientDataCache.topggStatus;
@@ -131,35 +126,6 @@ module.exports = async (client, interaction, cmd, guildData, userData, args = nu
             .catch(error => topggStatus = ({ status: false, lastCheck: Date.now() }));
         }
       }
-
-      //Topgg API çalışıyorsa
-      else if (!data.premium && !(await topggapi.hasVoted(user.id)
-        .catch(error => {
-          client.logger.error(`Topgg Error: "${error}" - 15 dakikalığına topgg api muaf aktif edildi!`);
-          topggStatus = ({ status: false, lastCheck: Date.now() });
-        })
-      )) {
-        return interaction.reply({
-          embeds: [{
-            color: client.settings.embedColors.red,
-            title: '**»** Bu Komutu Kullanmak İçin **TOP.GG** Üzerinden Oy Vermelisin!',
-            url: 'https://top.gg/bot/700959962452459550/vote',
-            description:
-              `**•** Oy vermek için aşağıdaki butonu kullanabilir ya da mesaj başlığına tıklayabilirsin.\n` +
-              `**•** Ya da en iyisi Nraphy Premium abonesi olabilirsin. \`/premium Bilgi\``,
-          }],
-          components: [
-            {
-              type: 1, components: [
-                new Discord.ButtonBuilder().setLabel('Oy Bağlantısı (TOP.GG)').setURL("https://top.gg/bot/700959962452459550/vote").setStyle('Link')
-              ]
-            },
-          ],
-          ephemeral: true
-        });
-      }
-
-    }
 
     //---------------Cooldown---------------//
     const userDataCache_lastCmds = userDataCache.lastCmds || (userDataCache.lastCmds = {});
@@ -176,7 +142,7 @@ module.exports = async (client, interaction, cmd, guildData, userData, args = nu
               `**»** Bu komutu tekrar kullanabilmen için **${Math.ceil((userDataCache_lastCmds_thisCmd + cmdCooldown - Date.now()) / 1000)} saniye** beklemelisin.`
               :
               `**»** Bu komutu tekrar kullanabilmen için **${Math.ceil((userDataCache_lastCmds_thisCmd + cmdCooldown - Date.now()) / 1000)} saniye** beklemelisin.\n` +
-              `**•** Nraphy Premium ile bekleme sürelerini kısaltabilirsin. \`/premium Bilgi\``
+              `**•** kanove Premium ile bekleme sürelerini kısaltabilirsin. \`/premium Bilgi\``
         }],
         ephemeral: true
       });

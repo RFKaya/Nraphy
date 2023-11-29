@@ -128,10 +128,10 @@ module.exports = {
     embedModeration.fields.push({
       name: "**»** Bilgi ⚠️",
       value:
-      `**•** ~ Bu bot "kanove1913" tarafından oluşturulup, tüm hakları saklıdır..\n` +
-        `**•** • Bu bot discord.gg/kanoV44 icin kurulmuştur..\n` +
-        `**•** • KANOVE'YE İTAAT EDİN!.\n` +
-        `**•** • Sunucu düzenini bozmayın.`,
+      `**•** BU BOT kanove1913 TARAFINDAN OLUŞTURULMUŞTUR.\n` +
+      `**•** BOTU SUNUCUNUZA EKLEYİP KULLANABİLİRSİNİZ.\n` +
+      `**•** SUNUCU DÜZENİNİ BOZUCAK HAREKETLERDE BULUNMAYIN.\n` +
+      `**•** KANOVEYE İTAAT EDİN!`,
     });
     embedModeration.fields.push(fieldsLinks);
     embedModeration.fields.unshift({
@@ -151,10 +151,10 @@ module.exports = {
       },
       title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
       description:
-      `**•** ~ Bu bot "kanove1913" tarafından oluşturulup, tüm hakları saklıdır..\n` +
-        `**•** • Bu bot discord.gg/kanoV44 icin kurulmuştur..\n` +
-        `**•** • KANOVE'YE İTAAT EDİN!.\n` +
-        `**•** • Sunucu düzenini bozmayın.`,
+      `**•** BU BOT kanove1913 TARAFINDAN OLUŞTURULMUŞTUR.\n` +
+        `**•** BOTU SUNUCUNUZA EKLEYİP KULLANABİLİRSİNİZ.\n` +
+        `**•** SUNUCU DÜZENİNİ BOZUCAK HAREKETLERDE BULUNMAYIN.\n` +
+        `**•** KANOVEYE İTAAT EDİN!`,
       fields: [
         ...(client.commands.filter(command => command.category === "MessageFilters").map(command => ({
           name: `**»** ${command.interaction.name.replace(/-/g, " ").toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
@@ -269,10 +269,10 @@ module.exports = {
     embedGames.fields.push({
       name: "**»** Bilgi ⚠️",
       value:
-      `**•** ~ Bu bot "kanove1913" tarafından oluşturulup, tüm hakları saklıdır..\n` +
-        `**•** • Bu bot discord.gg/kanoV44 icin kurulmuştur..\n` +
-        `**•** • KANOVE'YE İTAAT EDİN!.\n` +
-        `**•** • Sunucu düzenini bozmayın.`,
+      `**•** BU BOT kanove1913 TARAFINDAN OLUŞTURULMUŞTUR.\n` +
+      `**•** BOTU SUNUCUNUZA EKLEYİP KULLANABİLİRSİNİZ.\n` +
+      `**•** SUNUCU DÜZENİNİ BOZUCAK HAREKETLERDE BULUNMAYIN.\n` +
+      `**•** KANOVEYE İTAAT EDİN!`,
     });
     embedGames.fields.push(fieldsLinks);
 
@@ -322,28 +322,13 @@ module.exports = {
       },
       title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
       description:
-      `**•** ~ Bu bot "kanove1913" tarafından oluşturulup, tüm hakları saklıdır..\n` +
-      `**•** • Bu bot discord.gg/kanoV44 icin kurulmuştur..\n` +
-      `**•** • KANOVE'YE İTAAT EDİN!.\n` +
-      `**•** • Sunucu düzenini bozmayın.`,
+      `**•** BU BOT kanove1913 TARAFINDAN OLUŞTURULMUŞTUR.\n` +
+      `**•** BOTU SUNUCUNUZA EKLEYİP KULLANABİLİRSİNİZ.\n` +
+      `**•** SUNUCU DÜZENİNİ BOZUCAK HAREKETLERDE BULUNMAYIN.\n` +
+      `**•** KANOVEYE İTAAT EDİN!`,
       fields: [fieldsLinks],
     };
 
-    //NraphyCoin
-    let embedNC = {
-      color: client.settings.embedColors.default,
-      author: {
-        name: `${client.user.username} • NraphyCoin`,
-        icon_url: client.settings.icon,
-      },
-      title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
-      description:
-      `**•** ~ Bu bot "kanove1913" tarafından oluşturulup, tüm hakları saklıdır..\n` +
-      `**•** • Bu bot discord.gg/kanoV44 icin kurulmuştur..\n` +
-      `**•** • KANOVE'YE İTAAT EDİN!.\n` +
-      `**•** • Sunucu düzenini bozmayın.`,
-      fields: [fieldsLinks],
-    };
 
     //Botla İlgili Komutlar
     let commandsBot = [];
@@ -396,7 +381,7 @@ module.exports = {
         `🎵 • Müzik Komutları (**${client.commands.filter(command => command.category?.startsWith('Music')).size}**)\n` +
         `🤖 • Botla İlgili Komutlar (**${commandsBot.length}**)\n\n` +
 
-        `Bu bot [LOXNOV44](https://discord.gg/kanov44/) için oluşturulmuştur.\n` +
+        `Bu bot [kanov44](https://discord.gg/kanov44) için oluşturulmuştur.\n` +
         `Komutların çoğu hem \`/slash\` hem de \`${data.prefix}slash\` şeklini desteklemektedir.`
         /*`${(data.user.readDateOfChanges < client.settings.updateDate) ?
           `✉️ Okunmamış yenilikler mevcut! \`/yenilikler\` yazarak okuyabilirsin!` :
@@ -456,7 +441,7 @@ module.exports = {
             {
               label: 'Bot Komutları',
               emoji: '🤖',
-              description: 'Nraphy ile ilgili komutlar.',
+              description: 'kanove ile ilgili komutlar.',
               value: 'botOption',
             },
           ])

@@ -58,7 +58,7 @@ client.settings = {
     blue: 0x3498DB,
     darkGrey: 0x979C9F
   },
-  invite: "https://discord.com/api/oauth2/authorize?client_id=1177706934162432110&permissions=8&scope=bot"
+  invite: "https://discord.com/api/oauth2/authorize?client_id=1178635636941525092&permissions=8&scope=bot"
 };
 
 //------------------------------Client Tanımları------------------------------//

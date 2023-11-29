@@ -83,7 +83,7 @@ module.exports = {
               value: `**•** \`${warns_warns ? `${warns_users} Kullanıcı, ${warns_warns} Uyarı` : `Bu sunucuda hiçbir kullanıcı uyarılmamış.`}\``,
             },
             {
-              name: `**»** Nraphy Boost Durumu ${data.guild.NraphyBoost?.users?.length ? ":rocket:" : ""}`,
+              name: `**»** kanov Boost Durumu ${data.guild.NraphyBoost?.users?.length ? ":rocket:" : ""}`,
               value:
                 data.guild.NraphyBoost?.users?.length
                   ? `**•** \`${data.guild.NraphyBoost?.users.map(userId => interaction.guild.members.cache.get(userId)?.user.tag || userId).join(', ')}\` tarafından güçlendiriliyor!`

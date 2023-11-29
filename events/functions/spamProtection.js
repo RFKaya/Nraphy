@@ -76,7 +76,7 @@ module.exports = async (client, message, spamProtection) => {
 
         if (parseInt(userDatake.msgCount) >= (LIMIT + 5)) {
           //message.reply("dur sana bi mute atim de gör.");
-          message.member.timeout(60000, "Nraphy Bot • Spam Koruması")
+          message.member.timeout(60000, "kanove Bot • Spam Koruması")
             .then(message.channel.send({
               embeds: [
                 {

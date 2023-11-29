@@ -99,7 +99,7 @@ module.exports = async (client, error, channel, interaction) => {
         components: [
           {
             type: 1, components: [
-              new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link')
+              new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/kanov44").setStyle('Link')
             ]
           },
         ]
@@ -122,7 +122,7 @@ module.exports = async (client, error, channel, interaction) => {
         components: [
           {
             type: 1, components: [
-              new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link')
+              new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/kanov44").setStyle('Link')
             ]
           },
         ]
@@ -146,7 +146,7 @@ module.exports = async (client, error, channel, interaction) => {
         components: [
           {
             type: 1, components: [
-              new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link')
+              new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/kanov44").setStyle('Link')
             ]
           },
         ]

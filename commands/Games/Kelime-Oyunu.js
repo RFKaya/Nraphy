@@ -172,7 +172,7 @@ module.exports = {
               },
               {
                 name: '**»** Ekstra Bilgi',
-                value: `**•** Kelime oyununun daha adil bir oyun olabilmesi adına bazı korumalar ekledik. Nraphy, kelime oyununun sabote edildiğini fark ederse ilgili oyuncular hakkında ya da oyun üzerinde bazı aksiyonlar alabilir.`,
+                value: `**•** Kelime oyununun daha adil bir oyun olabilmesi adına bazı korumalar ekledik. kanove, kelime oyununun sabote edildiğini fark ederse ilgili oyuncular hakkında ya da oyun üzerinde bazı aksiyonlar alabilir.`,
               },
               {
                 name: '**»** Tüm Bunlara Rağmen Ben Anlamadım Arkadaş!',

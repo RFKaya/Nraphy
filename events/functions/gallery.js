@@ -17,7 +17,7 @@ module.exports = async (client, message, gallery) => {
         url.endsWith(".mp3"))
     ) {
 
-      message.delete({ reason: `Nraphy • Galeri Sistemi` })
+      message.delete({ reason: `kanove • Galeri Sistemi` })
         .catch(e => { });
 
       //Uyarı Metni
@@ -53,7 +53,7 @@ module.exports = async (client, message, gallery) => {
         const userCache = client.userDataCache[message.author.id] || (client.userDataCache[message.author.id] = {});
         if (!userCache?.lastWarn || Date.now() - userCache.lastWarn > 500) {
           userCache.lastWarn = Date.now();
-          await message.startThread({ name: "Nraphy • Galeri Sistemi" });
+          await message.startThread({ name: "kanove • Galeri Sistemi" });
         }
 
       }

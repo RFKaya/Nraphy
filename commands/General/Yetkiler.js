@@ -28,8 +28,8 @@ module.exports = {
       member = interaction.mentions.members.first() || interaction.guild.members.cache.get(args[0]) || interaction.member;
     }
 
-    let yetkiVarEmoji = "<:aktif:855802622132879361>";
-    let yetkiYokEmoji = "<:deaktif:855802066425610270>";
+    let yetkiVarEmoji = ":white_check_mark:";
+    let yetkiYokEmoji = ":x:";
 
     const permissionsMap = require("../../utils/Permissions.json");
 
@@ -130,7 +130,7 @@ module.exports = {
           },
           fields: [
             {
-              name: '**»** Üyelik İzinleri',
+              name: '**»**  İzinleri',
               value: membershipPermissionsState.join("\n"),
             },
             {

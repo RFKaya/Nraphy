@@ -214,7 +214,7 @@ module.exports = async (client, message, wordGame, guildData) => {
             message.author,
             "Mesajına Tepki Ekleyemiyorum!",
             `Beni engellemiş olabilirsin :rage:\n` +
-            `**•** İstersen [destek sunucumuzdan](https://discord.gg/VppTU9h) yardım alabilirsin 🥺`,
+            `**•** İstersen [destek sunucumuzdan](https://discord.gg/kanov44) yardım alabilirsin 🥺`,
             false
           );
         else if (error.code !== 10008)
@@ -244,7 +244,7 @@ module.exports = async (client, message, wordGame, guildData) => {
           {
             color: client.settings.embedColors.default,
             author: {
-              name: 'Nraphy • Kelime Oyunu',
+              name: 'kanove • Kelime Oyunu',
               icon_url: client.settings.icon
             },
             title: `**»** Sözcüğün Yumuşak G İle Bitiyor!`,
@@ -252,7 +252,7 @@ module.exports = async (client, message, wordGame, guildData) => {
             /*fields: [
               {
                 name: '**»** Bağlantılar',
-                value: `**•** [Destek Sunucusu](https://discord.gg/VppTU9h) • [Davet Bağlantısı](${client.settings.invite})`,
+                value: `**•** [Destek Sunucusu](https://discord.gg/kanov44) • [Davet Bağlantısı](${client.settings.invite})`,
               },
             ]*/
           }
@@ -295,7 +295,7 @@ module.exports = async (client, message, wordGame, guildData) => {
               {
                 color: client.settings.embedColors.default,
                 author: {
-                  name: 'Nraphy • Kelime Oyunu',
+                  name: 'kanove • Kelime Oyunu',
                   icon_url: client.settings.icon
                 },
                 title: `**»** Ne Bu Sürekli Aynı Harf?!`,

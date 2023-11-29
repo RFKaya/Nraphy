@@ -7,7 +7,7 @@ module.exports.removeAFK = async (client, message, userCacheData) => {
   const sürecik = Date.now() - userData.AFK.time;
   if (sürecik > 1000) {
 
-    if (message.member.moderatable) message.member.setNickname(message.member.displayName.replace("[AFK]", ""), ["Nraphy AFK Sistemi"]);
+    if (message.member.moderatable) message.member.setNickname(message.member.displayName.replace("[AFK]", ""), ["kanove AFK Sistemi"]);
 
     message.reply({
       embeds: [

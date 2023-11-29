@@ -79,7 +79,7 @@ module.exports = {
               {
                 name: '**»** Ek Bilgiler',
                 value:
-                  `**•** Nraphy'nin, ayarladığınız sayaç kanalını görebilme ve mesaj yazma yetkisi olduğuna emin olun. Aksi hâlde sayaç sistemi otomatik olarak sıfırlanacaktır.`
+                  `**•** kanove'nin, ayarladığınız sayaç kanalını görebilme ve mesaj yazma yetkisi olduğuna emin olun. Aksi hâlde sayaç sistemi otomatik olarak sıfırlanacaktır.`
               },
             ],
           }

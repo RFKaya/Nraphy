@@ -62,8 +62,18 @@ module.exports = {
               `**•** \`${data.prefix}nsfw gonewild\` \n` +
               `**•** \`${data.prefix}nsfw pgif\` \n` +
               `**•** \`${data.prefix}nsfw pussy\` \n` +
-              `**•** \`${data.prefix}nsfw thigh\` \n\n` +
-              `**•** Hentai NSFW içerikleri: \`hass, hmidriff, hentai, hneko, hkitsune, hanal, hthigh, hboobs\` \n\n` +
+               `**•** \`${data.prefix}nsfw thigh\` \n` +
+
+               `**•** hentai içerik; \n\n` +
+            
+              `**•** \`${data.prefix}nsfw hass\` \n` +
+              `**•** \`${data.prefix}nsfw hmidriff\` \n` +
+              `**•** \`${data.prefix}nsfw hentai\` \n` +
+              `**•** \`${data.prefix}nsfw hneko\` \n` +
+              `**•** \`${data.prefix}nsfw hkitsune\` \n` +
+              `**•** \`${data.prefix}nsfw hanal\` \n` +
+              `**•** \`${data.prefix}nsfw hthigh\` \n` +
+              `**•** \`${data.prefix}nsfw hboobs\` \n` +
 
               `**•** Not: Mesajının sonunda miktar belirterek tek seferde birden fazla içerik talep edebilirsin. \n\n` +
 
