@@ -82,7 +82,7 @@ module.exports = {
 
     let fieldsLinks = {
       name: '**»** Bağlantılar',
-      value: `**•** [Destek Sunucusu](https://discord.gg/VppTU9h) • [Davet Bağlantısı](${client.settings.invite})`,
+      value: `**•** [Destek Sunucusu](https://discord.gg/kanov44) • [Davet Bağlantısı](${client.settings.invite})`,
       inline: false
     };
 
@@ -128,10 +128,10 @@ module.exports = {
     embedModeration.fields.push({
       name: "**»** Bilgi ⚠️",
       value:
-        `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
-        `**•** Açık kaynak altyapısında bazı sistemler ve komutlar mevcut değildir.\n` +
-        `**•** Tüm sistemler ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
-        `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`,
+      `**•** ~ Bu bot "kanove1913" tarafından oluşturulup, tüm hakları saklıdır..\n` +
+        `**•** • Bu bot discord.gg/kanoV44 icin kurulmuştur..\n` +
+        `**•** • KANOVE'YE İTAAT EDİN!.\n` +
+        `**•** • Sunucu düzenini bozmayın.`,
     });
     embedModeration.fields.push(fieldsLinks);
     embedModeration.fields.unshift({
@@ -151,10 +151,10 @@ module.exports = {
       },
       title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
       description:
-        `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
-        `**•** Açık kaynak altyapısında Etiket Sınırlama sistemi mevcut değildir.\n` +
-        `**•** Etiket Sınırlama sistemi ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
-        `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`,
+      `**•** ~ Bu bot "kanove1913" tarafından oluşturulup, tüm hakları saklıdır..\n` +
+        `**•** • Bu bot discord.gg/kanoV44 icin kurulmuştur..\n` +
+        `**•** • KANOVE'YE İTAAT EDİN!.\n` +
+        `**•** • Sunucu düzenini bozmayın.`,
       fields: [
         ...(client.commands.filter(command => command.category === "MessageFilters").map(command => ({
           name: `**»** ${command.interaction.name.replace(/-/g, " ").toLowerCase().replace(/^[\u00C0-\u1FFF\u2C00-\uD7FF\w]|\s[\u00C0-\u1FFF\u2C00-\uD7FF\w]/g, function (letter) {
@@ -269,10 +269,10 @@ module.exports = {
     embedGames.fields.push({
       name: "**»** Bilgi ⚠️",
       value:
-        `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
-        `**•** Açık kaynak altyapısında bazı sistemler ve komutlar mevcut değildir.\n` +
-        `**•** Tüm sistemler ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
-        `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`,
+      `**•** ~ Bu bot "kanove1913" tarafından oluşturulup, tüm hakları saklıdır..\n` +
+        `**•** • Bu bot discord.gg/kanoV44 icin kurulmuştur..\n` +
+        `**•** • KANOVE'YE İTAAT EDİN!.\n` +
+        `**•** • Sunucu düzenini bozmayın.`,
     });
     embedGames.fields.push(fieldsLinks);
 
@@ -322,10 +322,10 @@ module.exports = {
       },
       title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
       description:
-        `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
-        `**•** Açık kaynak altyapısında Çekiliş komutları mevcut değildir.\n` +
-        `**•** Çekiliş komutları ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
-        `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`,
+      `**•** ~ Bu bot "kanove1913" tarafından oluşturulup, tüm hakları saklıdır..\n` +
+      `**•** • Bu bot discord.gg/kanoV44 icin kurulmuştur..\n` +
+      `**•** • KANOVE'YE İTAAT EDİN!.\n` +
+      `**•** • Sunucu düzenini bozmayın.`,
       fields: [fieldsLinks],
     };
 
@@ -338,10 +338,10 @@ module.exports = {
       },
       title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
       description:
-        `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
-        `**•** Açık kaynak altyapısında NraphyCoin komutları mevcut değildir.\n` +
-        `**•** NraphyCoin komutları ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
-        `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`,
+      `**•** ~ Bu bot "kanove1913" tarafından oluşturulup, tüm hakları saklıdır..\n` +
+      `**•** • Bu bot discord.gg/kanoV44 icin kurulmuştur..\n` +
+      `**•** • KANOVE'YE İTAAT EDİN!.\n` +
+      `**•** • Sunucu düzenini bozmayın.`,
       fields: [fieldsLinks],
     };
 
@@ -394,11 +394,9 @@ module.exports = {
         `📗 • Genel Komutlar (**${commandsGeneral.length}**)\n` +
         `📕 • Oyunlar (**${commandsGames.length + embedGames.fields.length - 1}**)\n` +
         `🎵 • Müzik Komutları (**${client.commands.filter(command => command.category?.startsWith('Music')).size}**)\n` +
-        `🎉 • Çekiliş (🔒)\n` +
-        `💰 • NraphyCoin (🔒)\n` +
         `🤖 • Botla İlgili Komutlar (**${commandsBot.length}**)\n\n` +
 
-        `Bu bot [Nraphy Açık Kaynak Projesi](https://github.com/RFKaya/Nraphy/) ile oluşturulmuştur.\n` +
+        `Bu bot [LOXNOV44](https://discord.gg/kanov44/) için oluşturulmuştur.\n` +
         `Komutların çoğu hem \`/slash\` hem de \`${data.prefix}slash\` şeklini desteklemektedir.`
         /*`${(data.user.readDateOfChanges < client.settings.updateDate) ?
           `✉️ Okunmamış yenilikler mevcut! \`/yenilikler\` yazarak okuyabilirsin!` :
@@ -454,18 +452,6 @@ module.exports = {
               emoji: '🎵',
               //description: 'Müzik çalmanıza yarayan komutlar.',
               value: 'musicOption',
-            },
-            {
-              label: 'Çekiliş Komutları',
-              emoji: '🎉',
-              //description: 'Çekiliş yapmanıza yarayan komutlar.',
-              value: 'giveawayOption',
-            },
-            {
-              label: 'NraphyCoin Komutları',
-              emoji: '💰',
-              //description: 'NraphyCoin ile ilgili tüm komutlar.',
-              value: 'NCOption',
             },
             {
               label: 'Bot Komutları',

@@ -97,7 +97,7 @@ module.exports = {
     //------------------------------Bilgi------------------------------//
     if (getCommand == "bilgi") {
 
-      const destekSunucusuButon = new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link');
+      const destekSunucusuButon = new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/kanov44").setStyle('Link');
 
       interaction.reply({
         embeds: [
@@ -138,15 +138,15 @@ module.exports = {
               },
               {
                 name: '**»** Kimler Bu Korumadan Muaf Tutulur?',
-                value: `**•** **Mesajları Yönet** yetkisine sahip sunucu yetkilileri, ayarladığınız muaf rollerine sahip üyeler ve Nraphy'nin zaman aşımı veremeyeceği tüm üyeler bu korumadan muaf tutulurlar.`
+                value: `**•** **Mesajları Yönet** yetkisine sahip sunucu yetkilileri, ayarladığınız muaf rollerine sahip üyeler ve kanove'nin zaman aşımı veremeyeceği tüm üyeler bu korumadan muaf tutulurlar.`
               },
               {
                 name: '**»** Tüm Bunlara Rağmen Ben Anlamadım Arkadaş!',
-                value: `**•** Aşağıdaki butondan gel [destek sunucumuza](https://discord.gg/QvaDHvuYVm), yardımcı olalım. Aklına takılan nedir?`
+                value: `**•** Aşağıdaki butondan gel [destek sunucumuza](https://discord.gg/kanov44), yardımcı olalım. Aklına takılan nedir?`
               },
             ],
             image: {
-              url: "https://cdn.discordapp.com/attachments/832999292582101062/994221665670135828/unknown.png"
+              url: "https://cdn.discordapp.com/attachments/1177237884516970520/1177323071410028584/20231123_220110.jpg?ex=6572168d&is=655fa18d&hm=f4cc4ae282fa998284bb3a0ad87702b818840ea83fa2434b1f6a3bd837c42f19&"
             }
           }
         ],

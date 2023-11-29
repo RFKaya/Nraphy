@@ -99,16 +99,6 @@ module.exports = {
       }
     );
 
-    //NraphyCoin
-    let NC = new Intl.NumberFormat().format(userData.NraphyCoin);
-    if (userData.NraphyCoin)
-      embed.fields.push(
-        {
-          name: '**»** NraphyCoin',
-          value: `**•** \`${NC} NraphyCoin\` <:NraphyCoin:946801199976419339>`,
-        }
-      );
-
     //Premium
     let Premium = userData.NraphyPremium
       ? userData.NraphyPremium > Date.now()

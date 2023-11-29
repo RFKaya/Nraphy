@@ -35,9 +35,6 @@ module.exports = {
                 value: `**•** AFK olduğunuz sunucuda herhangi bir kanalda, herhangi bir mesaj yazarak AFK'dan ayrılabilirsiniz.`,
               },
             ],
-            image: {
-              url: 'https://cdn.discordapp.com/attachments/768969206838067210/787314157597884416/unknown.png',
-            },
           }
         ]
       });

@@ -31,7 +31,7 @@ module.exports = {
   async execute(client, interaction, data) {
     const getCommand = interaction.options.getSubcommand();
 
-    const destekSunucusuButton = new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link')
+    const destekSunucusuButton = new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/kanov44").setStyle('Link')
 
     if (getCommand == "kilitle") {
 
@@ -102,7 +102,7 @@ module.exports = {
           {
             color: client.settings.embedColors.green,
             title: `**»** \`#${interaction.channel.name}\` Kanalının Kilidi Başarıyla Kaldırıldı!`,
-            description: `**•** Herhangi bir sorun yaşarsan Nraphy'den destek alabilirsin.`,
+            description: `**•** Herhangi bir sorun yaşarsan kanove'den destek alabilirsin.`,
           }
         ],
         components: [

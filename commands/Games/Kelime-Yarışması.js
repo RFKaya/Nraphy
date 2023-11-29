@@ -90,7 +90,7 @@ module.exports = {
           {
             color: client.settings.embedColors.red,
             title: '**»** Meydan Okuma Kabul Edilmedi!',
-            description: `**•** Üzgünüm, istersen [destek sunucumuza](https://discord.gg/VppTU9h) katılıp orada birilerini bulabilirsin.`
+            description: `**•** Üzgünüm, istersen [destek sunucumuza](https://discord.gg/kanov44) katılıp orada birilerini bulabilirsin.`
           }
         ],
         components: []

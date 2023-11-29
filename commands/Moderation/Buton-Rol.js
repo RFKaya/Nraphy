@@ -199,7 +199,7 @@ module.exports = {
           ],
           components: [
             {
-              type: 1, components: [new Discord.ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/QvaDHvuYVm`).setStyle('Link')]
+              type: 1, components: [new Discord.ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/kanov44`).setStyle('Link')]
             },
           ]
         });
@@ -272,7 +272,7 @@ module.exports = {
         ],
         components: [
           {
-            type: 1, components: [new Discord.ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/QvaDHvuYVm`).setStyle('Link')]
+            type: 1, components: [new Discord.ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/kanov44`).setStyle('Link')]
           },
         ]
       });
@@ -287,12 +287,12 @@ module.exports = {
               title: '**»** Hiç Buton Rol Mesajı Oluşturulmamış Ki!',
               description:
                 `**•** Hemen \`/buton-rol Oluştur\` komutuyla bir buton rol mesajı oluşturmalısın.\n` +
-                `**•** "Nasıl yapacağım anlamadım ki?" diyorsan [destek sunucumuza](https://discord.gg/QvaDHvuYVm) katılabilirsin.`
+                `**•** "Nasıl yapacağım anlamadım ki?" diyorsan [destek sunucumuza](https://discord.gg/kanov44) katılabilirsin.`
             }
           ],
           components: [
             {
-              type: 1, components: [new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link')]
+              type: 1, components: [new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/kanov44").setStyle('Link')]
             },
           ]
         });

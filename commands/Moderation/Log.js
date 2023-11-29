@@ -90,7 +90,7 @@ module.exports = {
               },
             ],
             image: {
-              url: "https://cdn.discordapp.com/attachments/892082183710330950/994300796638347445/unknown.png"
+              url: "https://cdn.discordapp.com/attachments/1177237884516970520/1177321675109449850/20231123_215535.jpg?ex=65721540&is=655fa040&hm=6874e31f474c7160b9dea11fa22c7a9016b42ade296f91eb549df86dcbbf7219&"
             }
           }
         ],
@@ -118,19 +118,19 @@ module.exports = {
           components: [
             {
               data: { type: 1 }, components: [
-                new ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/QvaDHvuYVm`).setStyle('Link')
+                new ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/kanov44`).setStyle('Link')
               ]
             },
           ]
         });
 
       const webhook = await getChannel.createWebhook({
-        name: 'Nraphy Logger',
-        avatar: 'https://media.discordapp.net/attachments/727501328519004200/910108789796110346/Nraphy-Test-Logo-Kare.png',
-        reason: `Nraphy Log Sistemi • ${interaction.user.tag} tarafından açıldı.`
+        name: 'kanove Logger',
+        avatar: 'https://cdn.discordapp.com/attachments/1176955287299690578/1176965806463127612/kanove.jpg?ex=6570c9d3&is=655e54d3&hm=2781f0a1cb7893c69e428f0a5da9b5b504fbb112e8f62e2f3522bbd640d868f7&',
+        reason: `kanove Log Sistemi • ${interaction.user.tag} tarafından açıldı.`
       }).catch(err => {
         client.logger.error(err);
-        return interaction.editReply(`Log kanalını ayarlayamadım. Yetkilerimle ilgili bir sorun olabilir. Çözemezsen destek sunucumuzda bildirebilirsin.\n\nhttps://discord.gg/QvaDHvuYVm`);
+        return interaction.editReply(`Log kanalını ayarlayamadım. Yetkilerimle ilgili bir sorun olabilir. Çözemezsen destek sunucumuzda bildirebilirsin.\n\nhttps://discord.gg/kanov44`);
       });
 
       data.guild.logger.webhook = webhook.url;

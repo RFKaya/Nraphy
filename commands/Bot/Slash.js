@@ -60,7 +60,7 @@ module.exports = {
       components: [
         {
           data: { type: 1 }, components: [
-            new ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/QvaDHvuYVm`).setStyle('Link')
+            new ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/kanov44`).setStyle('Link')
           ]
         },
       ]

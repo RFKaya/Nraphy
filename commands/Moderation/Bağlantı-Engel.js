@@ -119,7 +119,7 @@ module.exports = {
     //------------------------------Bilgi------------------------------//
     if (getCommand == "bilgi") {
 
-      const destekSunucusuButon = new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link');
+      const destekSunucusuButon = new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/kanov44").setStyle('Link');
 
       interaction.reply({
         embeds: [
@@ -165,7 +165,7 @@ module.exports = {
               },
               {
                 name: '**»** Tüm Bunlara Rağmen Ben Anlamadım Arkadaş!',
-                value: `**•** Aşağıdaki butondan gel [destek sunucumuza](https://discord.gg/QvaDHvuYVm), yardımcı olalım. Aklına takılan nedir?`
+                value: `**•** Aşağıdaki butondan gel [destek sunucumuza](https://discord.gg/kanov44), yardımcı olalım. Aklına takılan nedir?`
               },
             ],
           }

@@ -15,15 +15,7 @@ module.exports = {
 
   async execute(client, interaction, args, data) {
 
-    return interaction.reply({
-      embeds: [
-        {
-          color: client.settings.embedColors.yellow,
-          title: '**»** Önemli Uyarı!',
-          description: `**•** NSFW komutu kalıcı olarak kullanıma kapatılmıştır! ⚠️`
-        }
-      ]
-    });
+//kestiğin kodun yeri
 
     let nsfwContents = ["hass", "hmidriff", "pgif", "4k", "hentai", "hneko", "hkitsune", "anal", "hanal", "gonewild", "ass", "pussy", "thigh", "hthigh", "boobs", "hboobs"];
     let nsfw = args[0];

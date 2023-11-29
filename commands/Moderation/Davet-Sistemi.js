@@ -96,12 +96,12 @@ module.exports = {
               {
                 name: '**»** Ek Bilgiler',
                 value:
-                  `**•** Nraphy'nin, ayarladığınız davet kanalını görebilme ve mesaj yazma yetkisi olduğuna emin olun. Aksi hâlde davet sistemi otomatik olarak sıfırlanacaktır.\n` +
+                  `**•** kanov44'ün, ayarladığınız davet kanalını görebilme ve mesaj yazma yetkisi olduğuna emin olun. Aksi hâlde davet sistemi otomatik olarak sıfırlanacaktır.\n` +
                   `**•** Sadece sunucuya katılan üyeler için çalışır. Sunucudan ayrılan bir üye olduğunda bildirmez.`
               },
             ],
             image: {
-              url: 'https://media.discordapp.net/attachments/801418986809589771/873909005834129479/unknown.png',
+              url: 'https://cdn.discordapp.com/attachments/1177237884516970520/1177319745842851900/20231123_214613.jpg?ex=65721374&is=655f9e74&hm=60b12064cf149e4f2ea6bf1545f440eec90293ed5172c1e552dddd1665dffc60&',
             },
           }
         ]

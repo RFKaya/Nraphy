@@ -45,11 +45,11 @@ global.client = client;
 //------------------------------Ayarlar------------------------------//
 client.settings = {
   presences: [
-    "📌 Nraphy Altyapısı"
+    "SAHİBİM kanove1913'TÜR"
   ],
-  prefix: "n!",
-  owner: "700385307077509180",
-  icon: "https://cdn.discordapp.com/attachments/801418986809589771/975048501912272997/Narpitti.png",
+  prefix: "!",
+  owner: "1114618539123413105",
+  icon: "https://cdn.discordapp.com/avatars/1114618539123413105/a_894cd8d9266d5f5367ff771bce3020f8.gif?size=1024",
   embedColors: {
     default: 0xEB1C5A, //"eb1c5a" (Nraphy), "00ffb8" (Test),
     green: 0x2ECC71,
@@ -58,7 +58,7 @@ client.settings = {
     blue: 0x3498DB,
     darkGrey: 0x979C9F
   },
-  invite: "https://discord.com/oauth2/authorize?client_id=700959962452459550&permissions=8&redirect_uri=https://discord.gg/VppTU9h&scope=applications.commands%20bot&response_type=code"
+  invite: "https://discord.com/api/oauth2/authorize?client_id=1177706934162432110&permissions=8&scope=bot"
 };
 
 //------------------------------Client Tanımları------------------------------//
@@ -259,7 +259,7 @@ String.prototype.toEN = function () {
 
 //------------------------------GitHub------------------------------//
 setInterval(() => {
-  client.logger.warn("Nraphy GitHub projesinde onbinlerce satırlık emek bulunmaktadır.");
-  client.logger.warn("GitHub üzerinden projemizi yıldızlayarak projeye destek olabilirsiniz.");
-  client.logger.warn("https://github.com/RFKaya/Nraphy/");
+  client.logger.warn("kullanımı basit ve aşırı kolay bir bottur iyi kullanmalar.");
+  client.logger.warn(".gg/kanov44 için kurulmuştur.");
+  client.logger.warn("https://discord.gg/kanov44");
 }, 3600000);

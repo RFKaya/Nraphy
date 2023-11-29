@@ -35,7 +35,7 @@ module.exports = {
       const display = new Array(cevap.length).fill('_');
       while (cevap.length !== confirmation.length && point < 8) {
         await message.channel.send(
-          `${displayText === null ? '**Nraphy Adam Asmaca**!' : displayText ? '**Çok iyisin!**' : '**Yanlış Harf!**'}\n` +
+          `${displayText === null ? '**kanove Adam Asmaca**!' : displayText ? '**Çok iyisin!**' : '**Yanlış Harf!**'}\n` +
           `**Kelime:**    \`${display.join(' ')}\`\n` +
           `**Yanlış Harfler:** ${yanlış.join(', ') || 'Yok'}\n` +
           `\`\`\`\n` +

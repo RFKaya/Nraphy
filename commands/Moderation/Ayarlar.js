@@ -4,7 +4,7 @@ const { ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder } = require('di
 module.exports = {
   interaction: {
     name: "ayarlar",
-    description: "Sunucunun Nraphy ayarlarını gösterir.",
+    description: "Sunucunun ayarlarını gösterir.",
     options: []
   },
   interactionOnly: true,
@@ -91,13 +91,13 @@ module.exports = {
               `**•** \`${caughtProblems.join('\`\n**•** \`')}\`\n\n` +
 
               `**•** Ayarları görmek için lütfen komutu tekrar kullanın.\n` +
-              `**•** Bir sorun olduğunu düşünüyorsanız [destek sunucumuza](https://discord.gg/QvaDHvuYVm) gelebilirsiniz.`
+              `**•** Bir sorun olduğunu düşünüyorsanız [destek sunucumuza](https://discord.gg/kanov44) gelebilirsiniz.`
           }
         ],
         components: [
           {
             type: 1, components: [
-              new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link')
+              new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/kanov44").setStyle('Link')
             ]
           },
         ]
@@ -133,15 +133,15 @@ module.exports = {
           name: '**»** Log Sistemi',
           value:
             `**•** ${loggerChannel ? `Kanal: ${interaction.guild.channels.cache.get(loggerChannel)}` : `\`Kapalı\``}\n` +
-            `**•** Log sisteminin nihai sürümü yalnızca Resmî Nraphy botunda mevcuttur.`,
+            `**•** NABER PİSLİK.`,
         },
         {
           name: '**»** Bilgi ⚠️',
           value:
-            `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
-            `**•** Açık kaynak altyapısında aşağıdaki sistemler mevcut değildir.\n` +
-            `**•** Bu sistemler ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
-            `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)\n\n` +
+            `**•** Bu bot kanove1913 tarafından oluşturulmuştur.\n` +
+            `**•** O GERÇEK BİR KRAL EMAANNN.\n` +
+            `**•** HERŞEYİ İSTİOSANIZ KANOVEYE YAZINIZ CANLARIM.\n` +
+            `**•** [KANOVEYE İTAAT EDİN SİKERİM)\n\n` +
 
             `**•** İsim Temizleme Sistemi\n` +
             `**•** Kampanya Haber\n` +
@@ -188,12 +188,6 @@ module.exports = {
               value: 'buttonRolePageOption',
               //description: '',
               emoji: '📘'
-            },
-            {
-              label: 'Çekilişler',
-              value: 'giveawaysPageOption',
-              //description: '',
-              emoji: '🎉'
             },
             {
               label: 'Oyunlar Sayfası',
@@ -312,7 +306,7 @@ module.exports = {
                     `**•** Roller: ${spamProtection?.exempts?.roles?.length > 0
                       ? spamProtection.exempts.roles.map(role => interaction.guild.roles.cache.get(role)).join(`, `)
                       : `\`Muaf rol yok\``}\n` +
-                    `**•** Ek: \`"Mesajları Yönet" yetkisine sahip üyeler\`, \`Nraphy'nin zaman aşımı veremeyeceği üyeler\``
+                    `**•** Ek: \`"Mesajları Yönet" yetkisine sahip üyeler\`, \`kanove'nin zaman aşımı veremeyeceği üyeler\``
                 },
               ],
             }
@@ -347,10 +341,10 @@ module.exports = {
                 icon_url: interaction.guild.iconURL(),
               },
               description:
-                `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
-                `**•** Açık kaynak altyapısında Çekiliş komutları mevcut değildir.\n` +
-                `**•** Çekiliş komutları ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
-                `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`
+                `**•** Bu bot kanove1913 tarafından oluşturulmuştur.\n` +
+                `**•** O GERÇEK BİR KRAL EMAANNN.\n` +
+                `**•** HERŞEYİ İSTİOSANIZ KANOVEYE YAZINIZ CANLARIM.\n` +
+                `**•** KANOVEYE İTAAT EDİN SİKERİM`
             }
           ],
           components: [row]
@@ -377,19 +371,19 @@ module.exports = {
                 },
                 {
                   name: '**»** Sayı Saymaca Oyunu 🔒',
-                  value: `**•** \`Bu oyun yalnızca Resmî Nraphy botunda mevcuttur\``,
+                  value: `**•** \`NABER PİSLİKKKK\``,
                 },
                 {
                   name: '**»** Tuttu Tutmadı Oyunu 🔒',
-                  value: `**•** \`Bu oyun yalnızca Resmî Nraphy botunda mevcuttur\``,
+                  value: `**•** \`NABER PİSLİKKKK\``,
                 },
                 {
                   name: '**»** Bilgi ⚠️',
                   value:
-                    `**•** Bu bot Nraphy açık kaynak altyapısı kullanılarak oluşturulmuştur.\n` +
-                    `**•** Açık kaynak altyapısında \`/sıralama\` komutu mevcut değildir.\n` +
-                    `**•** Sıralama komutu ve daha fazlası Resmî Nraphy botunda mevcuttur.\n` +
-                    `**•** [Nraphy'i sunucuna eklemek için buraya tıkla!](https://top.gg/bot/700959962452459550/)`,
+                    `**•** Bu bot kanove1913 tarafından oluşturulmuştur.\n` +
+                    `**•**  O GERÇEK BİR KRAL EMAANNN.\n` +
+                    `**•** HERŞEYİ İSTİOSANIZ KANOVEYE YAZINIZ CANLARIM.\n` +
+                    `**•** KANOVEYE İTAAT EDİN SİKERİM`,
                 },
               ],
             }
