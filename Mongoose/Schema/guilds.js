@@ -6,7 +6,7 @@ const schema = new mongoose.Schema({
   registeredAt: { type: Number, default: Date.now },
 
   //Nraphy Verileri
-  prefix: { type: String },
+  prefix: String,
   NraphyBoost: {
     users: Array
   },
@@ -45,7 +45,8 @@ const schema = new mongoose.Schema({
   },
 
   logger: {
-    webhook: String
+    webhook: String,
+    smartFilters: Boolean
   },
 
   memberCounter: {

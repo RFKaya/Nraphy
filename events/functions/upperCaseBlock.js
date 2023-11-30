@@ -55,7 +55,7 @@ module.exports = async (client, message, guildData) => {
 
     if ((upperCase / text.length * 100) < (guildData.upperCaseBlock.rate || 70)) return;
 
-    message.delete().catch(e => { });
+    message.delete().catch(() => { });
 
     //---------------Warner---------------//
 

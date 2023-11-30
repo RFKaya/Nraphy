@@ -38,6 +38,7 @@ module.exports = {
           embeds: [
             {
               color: client.settings.embedColors.default,
+              //title: '**»** Botun davet bağlantısına ulaşmak için buraya tıkla!',
               author: {
                 name: `${client.user.username} • Komut Bilgisi`,
                 icon_url: client.settings.icon,
@@ -96,7 +97,7 @@ module.exports = {
         } else {
           if (command.interaction.type && command.interaction.type == 3) {
             commandsModeration.push(`**•** \`${command.interaction.name}\` - (Uygulama)\n`);
-          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2)) {
+          } else if ((command.interaction.options && command.interaction.options.length > 0) && (command.interaction.options[0].type == 1 || command.interaction.options[0].type == 2) && command.interaction.name !== "prefix") {
             let options = [];
             command.interaction.options.forEach(subCommand => {
               options.push(`**•** \`/${command.interaction.name} ${subCommand.name}\``);
@@ -346,7 +347,7 @@ module.exports = {
     };
 
     //Botla İlgili Komutlar
-    let commandsBot = [];
+    /* let commandsBot = [];
     client.commands.forEach(command => {
       if (command.category == 'Bot') {
         if (!command.interaction) {
@@ -363,7 +364,7 @@ module.exports = {
           }
         }
       }
-    });
+    }); */
     let embedBot = {
       color: client.settings.embedColors.default,
       author: {
@@ -371,7 +372,12 @@ module.exports = {
         icon_url: client.settings.icon,
       },
       title: `Bir komut hakkında bilgi almak için \`/komutlar <Komut>\` yazabilirsiniz.`,
-      description: commandsBot.join(''),
+      description: client.commands
+        .filter(command => command.category == 'Bot')
+        .map(command => (command.interaction.options[0]?.type == 1 || command.interaction.options[0]?.type == 2)
+          ? command.interaction.options.map(option => `**•** \`/${command.interaction.name} ${option.name}\` - ${option.description}`).join('\n')
+          : `**•** \`/${command.interaction.name}\` - ${command.interaction.description}`)
+        .join('\n'),
       fields: [fieldsLinks],
     };
 
@@ -396,10 +402,10 @@ module.exports = {
         `🎵 • Müzik Komutları (**${client.commands.filter(command => command.category?.startsWith('Music')).size}**)\n` +
         `🎉 • Çekiliş (🔒)\n` +
         `💰 • NraphyCoin (🔒)\n` +
-        `🤖 • Botla İlgili Komutlar (**${commandsBot.length}**)\n\n` +
+        `🤖 • Botla İlgili Komutlar (**${client.commands.filter(command => command.category?.startsWith('Bot')).size}**)\n\n` +
 
         `Bu bot [Nraphy Açık Kaynak Projesi](https://github.com/RFKaya/Nraphy/) ile oluşturulmuştur.\n` +
-        `Komutların çoğu hem \`/slash\` hem de \`${data.prefix}slash\` şeklini desteklemektedir.`
+        `Bu botun nihai sürümü yalnızca Resmî Nraphy botunda mevcuttur.`
         /*`${(data.user.readDateOfChanges < client.settings.updateDate) ?
           `✉️ Okunmamış yenilikler mevcut! \`/yenilikler\` yazarak okuyabilirsin!` :
           `Gelişmelerden haberdar olmak için destek sunucumuza katılabilirsiniz!`}`*/,
@@ -512,10 +518,10 @@ module.exports = {
 
         if (interaction.type === 2) {
           interaction.editReply({ embeds: [embedMaps[int.values.toString()]], components: [row] });
-          //.catch(e => { });
+          //.catch(() => { });
         } else {
           msg.edit({ embeds: [embedMaps[int.values.toString()]], components: [row] });
-          //.catch(e => { });
+          //.catch(() => { });
         }
 
       });
@@ -523,9 +529,9 @@ module.exports = {
       collector.on('end', collected => {
 
         if (interaction.type === 2)
-          return interaction.editReply({ components: [] }).catch(e => { });
+          return interaction.editReply({ components: [] }).catch(() => { });
         else
-          return msg.edit({ components: [] }).catch(e => { });
+          return msg.edit({ components: [] }).catch(() => { });
 
       });
 

@@ -3,17 +3,17 @@ const { ButtonBuilder } = require('discord.js');
 module.exports = {
   interaction: {
     name: "log",
-    description: "Log sistemiyle ilgili tüm komutlar. (Beta)",
+    description: "Log sistemiyle ilgili tüm komutlar.",
     options: [
       {
         name: "bilgi",
-        description: "Log sistemi hakkında bilgi verir. (Beta)",
+        description: "Log sistemi hakkında bilgi verir.",
         type: 1,
         options: []
       },
       {
         name: "ayarla",
-        description: "Log sisteminin kanalını ayarlar. (Beta)",
+        description: "Log sisteminin kanalını ayarlar.",
         type: 1,
         options: [
           {
@@ -25,8 +25,25 @@ module.exports = {
         ]
       },
       {
+        name: "akıllı-filtreler",
+        description: "Gereksiz sayılabilecek logları (Bot mesajlarını vb.) görmezden gelir.",
+        type: 1,
+        options: [
+          {
+            name: "işlem",
+            description: "Akıllı filtreler açılsın mı?",
+            choices: [
+              { name: "Aç", value: "ac" },
+              { name: "Kapat", value: "kapat" }
+            ],
+            type: 3,
+            required: true
+          },
+        ]
+      },
+      {
         name: "kapat",
-        description: "Log sistemini kapatır. (Beta)",
+        description: "Log sistemini kapatır.",
         type: 1,
         options: []
       },
@@ -37,10 +54,7 @@ module.exports = {
   category: "Moderation",
   memberPermissions: ["Administrator"],
   botPermissions: ["SendMessages", "EmbedLinks", "ManageGuild", "ViewAuditLog", "ManageWebhooks"],
-  nsfw: false,
   cooldown: 10000,
-  ownerOnly: false,
-  voteRequired: true,
 
   async execute(client, interaction, data) {
 
@@ -53,7 +67,7 @@ module.exports = {
           {
             color: client.settings.embedColors.default,
             author: {
-              name: `${client.user.username} • Log Sistemi (Beta)`,
+              name: `${client.user.username} • Log Sistemi`,
               icon_url: client.settings.icon,
             },
             fields: [
@@ -64,29 +78,23 @@ module.exports = {
               {
                 name: '**»** Log Sistemi Hangi Olayları Bildirir?',
                 value:
-                  `**•** Mesaj Düzenleme ve Silme (İçerikleriyle birlikte)\n` +
-                  `**•** Kanal Oluşturma, Düzenleme ve Silme\n` +
-                  `**•** Rol Oluşturma, Düzenleme ve Silme\n` +
-                  `**•** Emoji Oluşturma, Düzenleme ve Silme\n` +
-                  `**•** Değiştirilen üye kullanıcı adları\n` +
-                  `**•** Üyeye rol ekleme, rol alma\n` +
-                  `**•** Üyeye zamanaşımı uygulama, zamanaşımı kaldırma\n` +
-                  `**•** Üye yasaklama, yasak kaldırma\n` +
-                  `**•** Sesli odalara katılma, ayrılma\n` +
-                  `**•** Sunucu üzerinde yapılan değişiklikler\n` +
-                  `**•** Yakında daha fazla olay bildirir hâle gelecek.`,
+                  `**•** \`Mesaj düzenleme ve silme (İçerikleriyle birlikte)\`\n` +
+                  `**•** Log sisteminin nihai sürümü yalnızca Resmî Nraphy botunda mevcuttur.`,
               },
               {
-                name: '**»** Log Sistemi Nasıl Açılır?',
-                value: `**•** \`/log ayarla\` komutuyla log kanalını ayarlayabilirsiniz.`,
+                name: '**»** Gereksiz Birçok Logdan Kurtulmak İstiyorum!',
+                value:
+                  `**•** O zaman sana akıllı filtreleri verelim. Akıllı filtreleri açarsan aşağıdaki loglar bildirilmeyecek, böylelikle log kanalın gereksiz yere meşgul edilmeyecek.\n\n` +
+
+                  `**•** \`Botlara ait mesajlar (Silinme, düzenlenme)\`\n` +
+                  //`**•** \`Log kanalında gönderilen mesajlar (Silinme, düzenlenme)\`\n` +
+                  `**•** \`Şimdilik bu kadar.\``,
               },
               {
-                name: '**»** Log Sistemi Nasıl Kapatılır?',
-                value: `**•** Log sistemini kapatma seçeneğini eklemeye üşendim. Beta zaten sıkıntı yok. Şimdilik log kanalını ayarladığınız Webhook'u kanal ayarlarından silerek kapatabilirsiniz.`,
-              },
-              {
-                name: '**»** Madem Hazır Değildi Neden Çıkardın Başımıza Bu Log Sistemini?',
-                value: `**•** Bunun için bana kızmayın üzülürüm. Log sistemi bir anda olacak iş değil, yavaşça ve sizin önerilerinizle geliştirilecek. Bu yüzden \`/bildir\` komutuyla bug/öneri bildirileri yapmayı unutmayın. Anlayışınız için teşekkürler.`,
+                name: '**»** Log Sistemi Nasıl Açılır/Kapatılır?',
+                value:
+                  `**•** \`/log Ayarla\` komutuyla log kanalını ayarlayabilirsin.\n` +
+                  `**•** \`/log Kapat\` komutuyla kapatabilirsin.`,
               },
             ],
             image: {
@@ -112,7 +120,7 @@ module.exports = {
             {
               color: client.settings.embedColors.red,
               title: '**»** O Kanalda Zaten Bu Sistem Aktif!',
-              description: `**•** Bir sorun mu var? Destek sunucumuza gelebilirsin \:)`
+              description: `**•** Bir sorun mu var? Destek sunucumuza gelebilirsin :)`
             }
           ],
           components: [
@@ -133,8 +141,8 @@ module.exports = {
         return interaction.editReply(`Log kanalını ayarlayamadım. Yetkilerimle ilgili bir sorun olabilir. Çözemezsen destek sunucumuzda bildirebilirsin.\n\nhttps://discord.gg/QvaDHvuYVm`);
       });
 
-      data.guild.logger.webhook = webhook.url;
-      data.guild.markModified('logger.webhook');
+      data.guild.logger = { webhook: webhook.url, smartFilters: true };
+      data.guild.markModified('logger');
       await data.guild.save();
 
       return interaction.editReply({
@@ -143,10 +151,107 @@ module.exports = {
             color: client.settings.embedColors.green,
             title: `**»** Log Sistemi \`#${getChannel.name}\` Kanalına Ayarlandı!`,
             url: getChannel.url,
-            description: `**•** Bir mesaj yazıp silerek log sistemini deneyebilirsin \:)`
+            description:
+              `**•** Bir mesaj yazıp silerek log sistemini deneyebilirsin :)\n\n` +
+
+              `**•** **Not:** Log sistemi önemli bir kanaldır. Kanalın, sadece yetkililer tarafından görülebilecek şekilde kısıtlandığından emin ol. Ayrıca kötü niyetli yetkililer, logları yok etmek isteyebileceği için hiçbir yetkiliye log kanalında mesaj silme yetkisinin verilmemesi tavsiye edilir.`
           }
         ]
       });
+
+    } else if (getCommand == "akıllı-filtreler") {
+
+      if (!data.guild.logger.webhook)
+        return interaction.reply({
+          embeds: [
+            {
+              color: client.settings.embedColors.red,
+              title: '**»** Log Sistemi Kapalıyken Akıllı Filtreleri Ne Yapacaksın?',
+              description: `**•** Bir sorun mu var? Destek sunucumuza gelebilirsin :)`
+            }
+          ],
+          components: [
+            {
+              data: { type: 1 }, components: [
+                new ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/QvaDHvuYVm`).setStyle('Link')
+              ]
+            },
+          ]
+        });
+
+      const getOperation = interaction.options.getString("işlem");
+      if (getOperation == "ac") {
+
+        if (data.guild.logger.smartFilters)
+          return interaction.reply({
+            embeds: [
+              {
+                color: client.settings.embedColors.red,
+                title: '**»** Akıllı Filtreler Zaten Açık!',
+                description: `**•** Bir sorun mu var? Destek sunucumuza gelebilirsin :)`
+              }
+            ],
+            components: [
+              {
+                data: { type: 1 }, components: [
+                  new ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/QvaDHvuYVm`).setStyle('Link')
+                ]
+              },
+            ]
+          });
+
+        data.guild.logger.smartFilters = true;
+        await data.guild.save();
+
+        return interaction.reply({
+          embeds: [
+            {
+              color: client.settings.embedColors.green,
+              title: `**»** Log Sistemi Üzerinde Akıllı Filtreler Açıldı!`,
+              description:
+                `**•** Artık aşağıdaki türden logları otomatik olarak filtreleyeceğim:\n\n` +
+
+                `**•** Botlara ait mesajlar (Silinme, düzenlenme)\n` +
+                //`**•** Log kanalında gönderilen mesajlar (Silinme, düzenlenme)\n` +
+                `**•** Şimdilik bu kadar.`,
+            }
+          ]
+        });
+
+      } else if (getOperation == "kapat") {
+
+        if (!data.guild.logger.smartFilters)
+          return interaction.reply({
+            embeds: [
+              {
+                color: client.settings.embedColors.red,
+                title: '**»** Akıllı Filtreler Zaten Kapalı!',
+                description: `**•** Bir sorun mu var? Destek sunucumuza gelebilirsin :)`
+              }
+            ],
+            components: [
+              {
+                data: { type: 1 }, components: [
+                  new ButtonBuilder().setLabel('Destek Sunucusu').setURL(`https://discord.gg/QvaDHvuYVm`).setStyle('Link')
+                ]
+              },
+            ]
+          });
+
+        data.guild.logger.smartFilters = false;
+        await data.guild.save();
+
+        return interaction.reply({
+          embeds: [
+            {
+              color: client.settings.embedColors.green,
+              title: `**»** Log Sistemi Üzerinde Akıllı Filtreler Kapatıldı!`,
+              description: `**•** Artık bazı logları otomatik olarak filtrelemeyeceğim.`
+            }
+          ]
+        });
+
+      }
 
     } else if (getCommand == "kapat") {
 

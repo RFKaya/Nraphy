@@ -88,7 +88,7 @@ module.exports = {
             color: client.settings.embedColors.yellow,
             title: "**»** Bir Takım Problemlerle Karşılaşıldı!",
             description:
-              `**•** \`${caughtProblems.join('\`\n**•** \`')}\`\n\n` +
+              `**•** \`${caughtProblems.join('`\n**•** `')}\`\n\n` +
 
               `**•** Ayarları görmek için lütfen komutu tekrar kullanın.\n` +
               `**•** Bir sorun olduğunu düşünüyorsanız [destek sunucumuza](https://discord.gg/QvaDHvuYVm) gelebilirsiniz.`
@@ -132,7 +132,10 @@ module.exports = {
         {
           name: '**»** Log Sistemi',
           value:
-            `**•** ${loggerChannel ? `Kanal: ${interaction.guild.channels.cache.get(loggerChannel)}` : `\`Kapalı\``}\n` +
+            (loggerChannel ?
+              `**•** Kanal: ${interaction.guild.channels.cache.get(loggerChannel)}\n` +
+              `**•** Akıllı Filtreler: \`${logger.smartFilters ? "Açık" : "Kapalı (/log akıllı-filtreler aç)"}\``
+              : `**•** \`Kapalı\``) +
             `**•** Log sisteminin nihai sürümü yalnızca Resmî Nraphy botunda mevcuttur.`,
         },
         {
@@ -403,7 +406,7 @@ module.exports = {
     collector.on('end', collected => {
       return interaction.editReply({
         components: []
-      }).catch(e => { });
+      }).catch(() => { });
     });
 
   }

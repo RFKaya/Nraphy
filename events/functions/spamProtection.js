@@ -96,5 +96,5 @@ module.exports = async (client, message, spamProtection) => {
       }
     }
 
-  } catch (err) { client.logger.error(err); };
+  } catch (err) { client.logger.error(err); }
 };

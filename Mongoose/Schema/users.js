@@ -8,6 +8,7 @@ const schema = new mongoose.Schema({
     status: Boolean,
     reason: String
   },
+  blockDMAnnouncements: Boolean,
   readDateOfChanges: { type: Number, default: 0 },
 
   about: { type: String, default: null },

@@ -118,7 +118,7 @@ module.exports = {
     }
 
     //Üye, o kullanıcıyı tekmeleyebilir mi?
-    if (toKickMember.roles.highest.rawPosition >= interaction.member.roles.highest.rawPosition)
+    if ((interaction.type === 2 ? interaction.user : interaction.author).id != interaction.guild.ownerId && toKickMember.roles.highest.rawPosition >= interaction.member.roles.highest.rawPosition)
       return interaction.reply({
         embeds: [
           {
@@ -171,8 +171,26 @@ module.exports = {
       };
 
       if (interaction.type === 2)
-        return interaction.editReply(messageContent).catch(error => { });
-      else return buttonConfirmationResult.reply?.edit(messageContent).catch(error => { });
+        return interaction.editReply(messageContent).catch(() => { });
+      else return buttonConfirmationResult.reply?.edit(messageContent).catch(() => { });
+
+    } else {
+      let messageContent = {
+        embeds: [
+          {
+            color: client.settings.embedColors.default,
+            author: {
+              name: `${toKickMember.user.username} kullanıcısı tekmeleniyor...`,
+              icon_url: toKickMember.displayAvatarURL(),
+            },
+          }
+        ],
+        components: []
+      };
+
+      if (interaction.type === 2)
+        await interaction.editReply(messageContent).catch(() => { });
+      else await buttonConfirmationResult.reply?.edit(messageContent).catch(() => { });
     }
 
     let dmMesaj_status = dmMesaj && await toKickMember.send({
@@ -195,7 +213,7 @@ module.exports = {
           icon_url: (interaction.type === 2 ? interaction.user : interaction.author).displayAvatarURL(),
         },
       }]
-    }).catch(error => { });
+    }).catch(() => { });
 
     //Kick
     await interaction.guild.members.kick(toKickMember)//, { reason: reason })
@@ -214,8 +232,8 @@ module.exports = {
         };
 
         if (interaction.type === 2)
-          return interaction.editReply(messageContent).catch(error => { });
-        else return buttonConfirmationResult.reply?.edit(messageContent).catch(error => { });
+          return interaction.editReply(messageContent).catch(() => { });
+        else return buttonConfirmationResult.reply?.edit(messageContent).catch(() => { });
       });
 
     //Reply Message
@@ -246,8 +264,8 @@ module.exports = {
     };
 
     if (interaction.type === 2)
-      await interaction.editReply(messageContent).catch(error => { });
-    else await buttonConfirmationResult.reply?.edit(messageContent).catch(error => { });
+      await interaction.editReply(messageContent).catch(() => { });
+    else await buttonConfirmationResult.reply?.edit(messageContent).catch(() => { });
 
     data.user.statistics.kickedUsers += 1;
     await data.user.save();

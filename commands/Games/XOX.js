@@ -110,7 +110,7 @@ module.exports = {
           }
         ],
         components: []
-      }).catch(error => { });
+      }).catch(() => { });
 
     }
 

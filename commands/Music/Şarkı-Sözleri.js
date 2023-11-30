@@ -1,9 +1,5 @@
-const fetch = global.fetch || require("node-fetch");
-const { parse } = require('node-html-parser');
-const getInfo = async query => {
-  const info = await fetch(`https://genius.com/api/search/multi?per_page=1&q=${encodeURI(query)}`).then(res => res.json());
-  return info.response.sections[0].hits.length ? info : null;
-};
+const { lyricsExtractor } = require('@discord-player/extractor');
+const lyricsFinder = lyricsExtractor();
 
 module.exports = {
   interaction: {
@@ -20,11 +16,7 @@ module.exports = {
   },
   aliases: ['şarkısözleri', 'lyrics', "sözler", "lyric"],
   category: "Music",
-  memberPermissions: [],
-  botPermissions: ["SendMessages", "EmbedLinks"],
-  nsfw: false,
   cooldown: 3000,
-  ownerOnly: false,
 
   async execute(client, interaction, data, args) {
 
@@ -41,69 +33,9 @@ module.exports = {
 
     if (interaction.type == 2) await interaction.deferReply();
 
-    try {
+    const lyrics = await lyricsFinder.search(music).catch(() => null);
 
-      const info = await getInfo(music);
-      const song = info?.response.sections[0].hits[0].result;
-
-      if (!song) {
-        let message = {
-          embeds: [
-            {
-              color: client.settings.embedColors.red,
-              title: '**»** Şarkı Sözleri Bulunamadı!',
-              description: `**•** Farklı bir başlık girmeyi deneyebilir misin?`
-            }
-          ]
-        };
-
-        if (interaction.type == 2)
-          return interaction.editReply(message);
-        else return interaction.reply(message);
-      }
-
-      const document = parse(await fetch(url).then(res => res.text()));
-      const lyrics = document.querySelectorAll(
-        "div[class*='Lyrics__Container']"
-      ).map(x => {
-        x.innerHTML = x.innerHTML.replaceAll("<br>", "\n");
-        return x.text;
-      })
-        .join("\n")
-        .trim();
-
-
-      let message = {
-        embeds: [
-          {
-            color: client.settings.embedColors.default,
-            //title: `**»** ${firstSong.title}`,
-            title: `**»** ${song.full_title}`,
-            url: song.url,
-            author: {
-              name: `${client.user.username} • Şarkı Sözleri (Lyrics)`,
-              icon_url: client.settings.icon,
-            },
-            description: lyrics,
-
-            thumbnail: {
-              url: song.song_art_image_url,
-            },
-            /*timestamp: new Date(),
-            footer: {
-              text: `Sanatçı: ${firstSong.artist.name}`,
-              icon_url: firstSong.artist.thumbnail,
-            },*/
-          }
-        ]
-      };
-
-      if (interaction.type == 2)
-        return interaction.editReply(message);
-      else return interaction.reply(message);
-
-    } catch (error) {
-
+    if (!lyrics) {
       let message = {
         embeds: [
           {
@@ -117,8 +49,31 @@ module.exports = {
       if (interaction.type == 2)
         return interaction.editReply(message);
       else return interaction.reply(message);
-
     }
+
+    const trimmedLyrics = lyrics.lyrics.substring(0, 1997);
+
+    let message = {
+      embeds: [
+        {
+          color: client.settings.embedColors.default,
+          title: `**»** ${lyrics.title}`,
+          url: lyrics.url,
+          author: {
+            name: `${client.user.username} • Şarkı Sözleri (Lyrics)`,
+            icon_url: client.settings.icon,
+          },
+          description: trimmedLyrics,
+          thumbnail: {
+            url: lyrics.thumbnail
+          },
+        }
+      ]
+    };
+
+    if (interaction.type == 2)
+      return interaction.editReply(message);
+    else return interaction.reply(message);
 
   }
 };

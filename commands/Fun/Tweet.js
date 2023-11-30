@@ -1,4 +1,4 @@
-var request = require("request");
+const fetch = require('node-fetch');
 
 module.exports = {
   interaction: {
@@ -30,44 +30,44 @@ module.exports = {
 
     if (interaction.type === 2) await interaction.deferReply();
 
-    request(`https://nekobot.xyz/api/imagegen?type=tweet&text=${encodeURI(text).replaceAll('#', '%23')}&username=${encodeURI((interaction.type === 2 ? interaction.user : interaction.author).username)}&raw=512`, function (error, response, body) {
+    const response = await fetch(`https://nekobot.xyz/api/imagegen?type=tweet&text=${encodeURI(text).replaceAll('#', '%23')}&username=${encodeURI((interaction.type === 2 ? interaction.user : interaction.author).username)}&raw=512`);
+    const responseData = await response.json();
 
-      if (error || !body || !JSON.parse(body).success) {
-        client.logger.error(error);
-
-        let messageContent = {
-          embeds: [
-            {
-              color: client.settings.embedColors.red,
-              title: '**»** Bir Hata Oluştu!',
-              description: `**•** Hatanın sebebini bilmiyorum.`
-            }
-          ]
-        };
-        if (interaction.type === 2)
-          return interaction.editReply(messageContent);
-        else return interaction.reply(messageContent);
-      }
+    if (!responseData.success) {
+      client.logger.error("TWEET komutunda bir sorun oluştu kardeeş.");
+      client.logger.log(responseData);
 
       let messageContent = {
         embeds: [
           {
-            color: client.settings.embedColors.default,
-            author: {
-              name: `${client.user.username} • Tweet (Twitter)`,
-              icon_url: client.settings.icon,
-            },
-            image: {
-              url: JSON.parse(body).message,
-            }
+            color: client.settings.embedColors.red,
+            title: '**»** Bir Hata Oluştu!',
+            description: `**•** Hatanın sebebini bilmiyorum.`
           }
         ]
       };
       if (interaction.type === 2)
         return interaction.editReply(messageContent);
       else return interaction.reply(messageContent);
+    }
 
-    });
+    let messageContent = {
+      embeds: [
+        {
+          color: client.settings.embedColors.default,
+          author: {
+            name: `${client.user.username} • Tweet (Twitter)`,
+            icon_url: client.settings.icon,
+          },
+          image: {
+            url: responseData.message,
+          }
+        }
+      ]
+    };
+    if (interaction.type === 2)
+      return interaction.editReply(messageContent);
+    else return interaction.reply(messageContent);
 
   }
 };

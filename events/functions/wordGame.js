@@ -41,7 +41,7 @@ module.exports = async (client, message, wordGame, guildData) => {
             },
           ]
         }]
-      }).catch(e => { });
+      }).catch(() => { });
 
     }
 
@@ -64,11 +64,11 @@ module.exports = async (client, message, wordGame, guildData) => {
               description: `**•** ${description}`
             }
           ]
-        }).then(msg => setTimeout(() => msg.delete().catch(e => { }), 4500));
+        }).then(msg => setTimeout(() => msg.delete().catch(() => { }), 4500));
       }
 
       //Mesaj Silme
-      if (deleteMessage) message.delete().catch(e => { });
+      if (deleteMessage) message.delete().catch(() => { });
 
     }
 
@@ -196,7 +196,7 @@ module.exports = async (client, message, wordGame, guildData) => {
           if (result.isAxiosError) return true;
           return false;
         })
-        .catch(error => true)
+        .catch(() => true)
       ))
     ) {
       return warner(
@@ -222,7 +222,7 @@ module.exports = async (client, message, wordGame, guildData) => {
       });
 
     //İstatistikler
-    ((wordGame ||= {}).stats ||= {})[message.author.id] ||= { wordCount: 0, wordLength: 0 };
+    (wordGame.stats ||= {})[message.author.id] ||= { wordCount: 0, wordLength: 0 };
     wordGame.stats[message.author.id].wordCount += 1;
     wordGame.stats[message.author.id].wordLength += küçükHarfliKelime.length;
 
@@ -276,7 +276,7 @@ module.exports = async (client, message, wordGame, guildData) => {
       //"Aynı harfi çok sık kullandınız" uyarısı
       if (wordGame.history?.length) {
         const counts = {};
-        const sampleArray = ((wordGame.history?.concat(wordGame?.history || []))?.splice(0, 200) || []).slice(-6).map(word => word.slice(-1));
+        const sampleArray = ((wordGame.history?.concat(wordGame.history || []))?.splice(0, 200) || []).slice(-6).map(word => word.slice(-1));
         sampleArray.forEach(async function (x) { counts[x] = (counts[x] || 0) + 1; });
 
         //Son 6 kelimenin 5'i aynı harfle bitiyosa
@@ -322,5 +322,5 @@ module.exports = async (client, message, wordGame, guildData) => {
       return result;
     }
 
-  } catch (err) { client.logger.error(err); };
+  } catch (err) { client.logger.error(err); }
 };

@@ -15,11 +15,7 @@ module.exports = {
   },
   aliases: ['sr', "search"],
   category: "Music_Player",
-  memberPermissions: [],
-  botPermissions: ["SendMessages", "EmbedLinks"],
-  nsfw: false,
   cooldown: 5000,
-  ownerOnly: false,
 
   async execute(client, interaction, data, args) {
 
@@ -39,8 +35,6 @@ module.exports = {
         }]
       });
 
-    const queue = client.distube.getQueue(interaction.guild);
-
     const music = interaction.type == 2 ? interaction.options.getString("şarkı") : args.join(' ');
 
     if (!music)
@@ -52,15 +46,6 @@ module.exports = {
       });
 
     if (music.includes('https://') || music.includes('http://'))
-      /*return interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.red,
-          title: '**»** Bir Bağlantı Belirtmişsin?!',
-          description:
-            `**•** Müzik arama komutu, hangi şarkıyı açacağını bulamayanlar içindir.\n` +
-            `**•** Ama sen ise şarkıyı açacağını bulmusşun, direkt \`/çal\` komutunu kullanabilirsin.\n`
-        }]
-      });*/
       return require('./Çal.js').execute(client, interaction, data, args);
 
     if (music.length > 200)
@@ -74,11 +59,7 @@ module.exports = {
 
     if (interaction.type == 2) await interaction.deferReply();
 
-    try {
-      var results = await client.distube.search(music);
-    } catch (error) {
-      return require('../../events/distube/functions/errorHandler.js')(client, error, interaction.channel, interaction);
-    }
+    const results = (await client.player.search(music, { fallbackSearchEngine: "soundcloud" })).tracks;
 
     const embed = {
       color: client.settings.embedColors.default,
@@ -88,8 +69,9 @@ module.exports = {
       },
       title: `**»** "${music}" için arama sonuçları;`,
       description:
-        `${results.map((track, i) => `**${i + 1}.** ${track.name}`).join('\n')}\n\n` +
-        `**•** Aşağıdaki butonlardan istediğin şarkıyı seçebilir ya da iptal edebilirsin.`,
+        `${results.map((track, i) => `**${i + 1}.** ${track.title}`).join('\n')}\n\n` +
+        `**•** Aşağıdaki butonlardan istediğin şarkıyı seçebilir ya da iptal edebilirsin.\n` +
+        `**•** Kaynak: [SoundCloud](https://soundcloud.com/) (YouTube geçici olarak devre dışıdır.)`,
     };
 
     const components = [];
@@ -111,133 +93,201 @@ module.exports = {
       }
     );
 
-    (interaction.type == 2 ?
-      interaction.editReply({
+    const reply = interaction.type == 2 ?
+      await interaction.editReply({
         embeds: [embed],
-        components: components
+        components: components,
+        fetchReply: true
       })
-      : interaction.reply({
+      : await interaction.reply({
         embeds: [embed],
         components: components
-      })).then(async msg => {
-
-        async function musicPlayer(queryContent) {
-
-          try {
-
-            await client.distube.play(interaction.member.voice.channel, results[queryContent], {
-              member: interaction.member,
-              textChannel: interaction.channel,
-              voiceChannel: interaction.member.voice.channel,
-              metadata: {
-                commandMessage: interaction
-              }
-            });
-
-          } catch (error) {
-
-            require('../../events/distube/functions/errorHandler.js')(client, error, interaction.channel, interaction);
-
-          }
-
-        }
-
-        if (interaction.type === 2) {
-
-          const reply = await interaction.fetchReply();
-          const filter = i => {
-            return i.message.id === reply.id && i.deferUpdate() && i.user.id === interaction.user.id;
-          };
-
-          interaction.channel.awaitMessageComponent({ filter, time: 120000, max: 1 })
-            .then(async btn => {
-
-              if (btn.customId === "cancel") {
-                interaction.editReply({
-                  embeds: [{
-                    color: client.settings.embedColors.red,
-                    description: `**»** Arama işlemi iptal edildi.`,
-                  }],
-                  components: []
-                });
-              } else {
-                interaction.editReply({
-                  embeds: [
-                    {
-                      color: client.settings.embedColors.default,
-                      title: `**»** Şarkı Seçiliyor... 🎵`,
-                      description: `**•** [${results[parseInt(btn.customId)].name}](${results[parseInt(btn.customId)].url})`,
-                      thumbnail: {
-                        url: results[parseInt(btn.customId)].thumbnail,
-                      },
-                    }
-                  ],
-                  components: []
-                });
-                musicPlayer(parseInt(btn.customId));
-              }
-
-            }).catch(err => {
-
-              return interaction.editReply({
-                embeds: [{
-                  color: client.settings.embedColors.red,
-                  description: `**»** Cevap vermediğin için arama bitirildi.`,
-                }],
-                components: []
-              });
-
-            });
-
-        } else {
-
-          const filter = i => {
-            return i.message.id === msg.id && i.deferUpdate() && i.user.id === interaction.author.id;
-          };
-
-          msg.awaitMessageComponent({ filter, time: 120000, max: 1 })
-            .then(async btn => {
-
-              if (btn.customId === "cancel") {
-                msg.edit({
-                  embeds: [{
-                    color: client.settings.embedColors.red,
-                    description: `**»** Arama işlemi iptal edildi.`,
-                  }],
-                  components: []
-                });
-              } else {
-                msg.edit({
-                  embeds: [
-                    {
-                      color: client.settings.embedColors.default,
-                      title: `**»** Şarkı Seçiliyor... 🎵`,
-                      description: `**•** [${results[parseInt(btn.customId)].name}](${results[parseInt(btn.customId)].url})`,
-                      thumbnail: {
-                        url: results[parseInt(btn.customId)].thumbnail,
-                      },
-                    }
-                  ],
-                  components: []
-                });
-                musicPlayer(parseInt(btn.customId));
-              }
-
-            }).catch(err => {
-
-              return msg.edit({
-                embeds: [{
-                  color: client.settings.embedColors.red,
-                  description: `**»** Cevap vermediğin için arama bitirildi.`,
-                }],
-                components: []
-              });
-
-            });
-
-        }
-
       });
 
-  },
+    async function musicPlayer(queryContent, reply) {
+
+      try {
+
+        const { track } = await client.player.play(interaction.member.voice.channel, queryContent, {
+          blockExtractors: ["YouTubeExtractor"],
+          nodeOptions: {
+            metadata: { channel: interaction.channel, interaction },
+            maxSize: data.guildIsBoosted ? Infinity : 200
+          },
+          requestedBy: interaction.type == 2 ? interaction.user : interaction.author,
+          fallbackSearchEngine: "soundcloud"
+        });
+
+        const embed = {
+          color: client.settings.embedColors.default,
+          title: `**»** ${track.title} Sıraya Eklendi!`,
+          description: `**•** [${track.title}](${track.url})`,
+          thumbnail: {
+            url: track.thumbnail,
+          },
+        };
+
+        if (interaction.type === 2)
+          await interaction.editReply({ embeds: [embed], components: [] });
+        else await reply.edit({ embeds: [embed], components: [] }).catch(() => { });
+
+      } catch (error) {
+
+        return require('../../events/discord-player/functions/errorHandler.js')(client, error, interaction.channel, interaction);
+
+      }
+
+    }
+
+    const filter = i => {
+      return i.message.id === reply.id && i.deferUpdate() && i.user.id === (interaction.type == 2 ? interaction.user : interaction.author).id;
+    };
+
+    await interaction.channel.awaitMessageComponent({ filter, time: 120000, max: 1 })
+      .then(async btn => {
+
+        if (btn.customId === "cancel") {
+          const messageContent = {
+            embeds: [
+              {
+                color: client.settings.embedColors.red,
+                description: `**»** Arama işlemi iptal edildi.`,
+              }
+            ],
+            components: []
+          };
+          if (interaction.type == 2)
+            return await interaction.editReply(messageContent);
+          else return await reply.edit(messageContent);
+        } else {
+          /* const messageContent = {
+            embeds: [
+              {
+                color: client.settings.embedColors.default,
+                title: `**»** Şarkı Seçiliyor... 🎵`,
+                description: `**•** [${results[parseInt(btn.customId)].title}](${results[parseInt(btn.customId)].url})`,
+                thumbnail: {
+                  url: results[parseInt(btn.customId)].thumbnail,
+                },
+              }
+            ],
+            components: []
+          };
+          if (interaction.type == 2)
+            await interaction.editReply(messageContent);
+          else await reply.edit(messageContent); */
+          musicPlayer(results[parseInt(btn.customId)], reply);
+        }
+
+      }).catch(async (error) => {
+        const messageContent = {
+          embeds: [
+            {
+              color: client.settings.embedColors.red,
+              description: `**»** Cevap vermediğin için arama bitirildi.`,
+            }
+          ],
+          components: []
+        };
+        if (interaction.type == 2)
+          return await interaction.editReply(messageContent);
+        else return await reply.edit(messageContent);
+      });
+
+    /* if (interaction.type === 2) {
+
+      const reply = await interaction.fetchReply();
+      const filter = i => {
+        return i.message.id === reply.id && i.deferUpdate() && i.user.id === interaction.user.id;
+      };
+
+      interaction.channel.awaitMessageComponent({ filter, time: 120000, max: 1 })
+        .then(async btn => {
+
+          if (btn.customId === "cancel") {
+            interaction.editReply({
+              embeds: [{
+                color: client.settings.embedColors.red,
+                description: `**»** Arama işlemi iptal edildi.`,
+              }],
+              components: []
+            });
+          } else {
+            interaction.editReply({
+              embeds: [
+                {
+                  color: client.settings.embedColors.default,
+                  title: `**»** Şarkı Seçiliyor... 🎵`,
+                  description: `**•** [${results[parseInt(btn.customId)].name}](${results[parseInt(btn.customId)].url})`,
+                  thumbnail: {
+                    url: results[parseInt(btn.customId)].thumbnail,
+                  },
+                }
+              ],
+              components: []
+            });
+            musicPlayer(parseInt(btn.customId));
+          }
+
+        }).catch(err => {
+
+          return interaction.editReply({
+            embeds: [{
+              color: client.settings.embedColors.red,
+              description: `**»** Cevap vermediğin için arama bitirildi.`,
+            }],
+            components: []
+          });
+
+        });
+
+    } else {
+
+      const filter = i => {
+        return i.message.id === msg.id && i.deferUpdate() && i.user.id === interaction.author.id;
+      };
+
+      msg.awaitMessageComponent({ filter, time: 120000, max: 1 })
+        .then(async btn => {
+
+          if (btn.customId === "cancel") {
+            msg.edit({
+              embeds: [{
+                color: client.settings.embedColors.red,
+                description: `**»** Arama işlemi iptal edildi.`,
+              }],
+              components: []
+            });
+          } else {
+            msg.edit({
+              embeds: [
+                {
+                  color: client.settings.embedColors.default,
+                  title: `**»** Şarkı Seçiliyor... 🎵`,
+                  description: `**•** [${results[parseInt(btn.customId)].name}](${results[parseInt(btn.customId)].url})`,
+                  thumbnail: {
+                    url: results[parseInt(btn.customId)].thumbnail,
+                  },
+                }
+              ],
+              components: []
+            });
+            musicPlayer(parseInt(btn.customId));
+          }
+
+        }).catch(err => {
+
+          return msg.edit({
+            embeds: [{
+              color: client.settings.embedColors.red,
+              description: `**»** Cevap vermediğin için arama bitirildi.`,
+            }],
+            components: []
+          });
+
+        });
+
+    } */
+
+  }
 };

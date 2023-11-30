@@ -60,8 +60,8 @@ module.exports = {
 
     setTimeout(() => {
       if (interaction.type === 2)
-        interaction.editReply(messageContent).catch(e => { });
-      else reply.edit(messageContent).catch(e => { });
+        interaction.editReply(messageContent).catch(() => { });
+      else reply.edit(messageContent).catch(() => { });
     }, 2400);
 
   }

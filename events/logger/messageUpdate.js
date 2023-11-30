@@ -7,13 +7,14 @@ module.exports = async (client, oldMessage, newMessage) => {
   let logger = guildData.logger;
   if (!logger?.webhook) return;
 
+  if (logger.smartFilters && newMessage.author.bot) return;
+
   try {
 
     if (!oldMessage.content || !newMessage.content || (oldMessage.content == newMessage.content)) return;
 
     //Embed
     let embedDescription = `**Önceki:** ${oldMessage.content}\n**Sonraki:** ${newMessage.content}`;
-    if (embedDescription.length > 4096) return;
     let embed = {
       color: client.settings.embedColors.red,
       author: {
@@ -22,7 +23,7 @@ module.exports = async (client, oldMessage, newMessage) => {
       },
       title: `**»** \`#${newMessage.guild.channels.cache.get(newMessage.channelId).name}\` kanalında bir mesaj düzenledi!`,
       url: newMessage.url,
-      description: embedDescription,
+      description: client.functions.truncate(embedDescription, 4000),
       /*timestamp: new Date(),
       footer: {
           text: `${messageExecutor.tag} tarafından silindi.`,
@@ -33,5 +34,5 @@ module.exports = async (client, oldMessage, newMessage) => {
     //Logging
     require('../functions/logManager')(client, guildData, { embeds: [embed] });
 
-  } catch (err) { require('../functions/logManager').errors(client, guildData, err); };
+  } catch (err) { require('../functions/logManager').errors(client, guildData, err); }
 };

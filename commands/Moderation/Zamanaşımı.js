@@ -164,7 +164,7 @@ module.exports = {
           components: []
         };
 
-        return interaction.reply(messageContent).catch(error => { });
+        return interaction.reply(messageContent).catch(() => { });
       });
 
     //Reply Message
@@ -198,7 +198,7 @@ module.exports = {
       components: []
     };
 
-    return await interaction.reply(messageContent).catch(error => { });
+    return await interaction.reply(messageContent).catch(() => { });
 
   }
 };

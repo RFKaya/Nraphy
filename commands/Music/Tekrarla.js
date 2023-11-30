@@ -19,11 +19,7 @@ module.exports = {
   interactionOnly: true,
   aliases: ['lp', 'repeat', "loop", "döngü"],
   category: "Music",
-  memberPermissions: [],
-  botPermissions: ["SendMessages", "EmbedLinks"],
-  nsfw: false,
-  cooldown: false,
-  ownerOnly: false,
+  cooldown: 5000,
 
   async execute(client, interaction, data) {
 
@@ -43,23 +39,16 @@ module.exports = {
         }]
       });
 
-    const queue = client.distube.getQueue(interaction.guild);
+    const queue = client.player.useQueue(interaction.guildId);
 
-    if (!queue || !queue.songs || queue.songs.length == 0)
-      return interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.red,
-          description: "**»** Şu anda bir şarkı çalmıyor."
-        }]
-      });
-
-    const guildDataCache = client.guildDataCache[interaction.guild.id] || (client.guildDataCache[interaction.guild.id] = {});
-    if (guildDataCache?.games?.musicQuiz || queue.songs[0].metadata.isMusicQuiz)
-      return interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.red,
-          description: "**»** Müzik tahmini oyunu sırasında bu komutu kullanamazsın."
-        }]
+    if (!queue?.isPlaying())
+      return await interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            description: "**»** Şu anda bir şarkı çalmıyor."
+          }
+        ]
       });
 
     const choice = interaction.options.getString("tekrar");
@@ -73,25 +62,28 @@ module.exports = {
           description: "**•** Mevcut şarkı durmadan tekrarlanacak."
         }]
       });
+
     } else if (choice == 'sira') {
-      if (queue.songs.length <= 1) {
+      if (queue.tracks.size <= 1) {
         return interaction.reply({
           embeds: [{
             color: client.settings.embedColors.red,
-            title: "**»** Sırada Bir Şarkı Bulunmuyor!",
+            title: "**»** Sırada En Az 2 Şarkı Bulunmalı!",
             description: '**•** Fakat istersen sadece çalan şarkıyı tekrarlatabilirsin.'
           }]
         });
+
       } else {
         queue.setRepeatMode(2);
         return interaction.reply({
           embeds: [{
             color: client.settings.embedColors.green,
             title: "**»** Tekrarlama Modu Etkinleştirildi!",
-            description: "**•** Mevcut sıradaki şarkılar durmadan tekrarlanacak."
+            description: "**•** Sıradaki şarkılar durmadan tekrarlanacak."
           }]
         });
       }
+
     } else if (choice == 'kapat') {
       if (queue.repeatMode == 0) {
         return interaction.reply({
@@ -100,6 +92,7 @@ module.exports = {
             description: "**»** Tekrarlama modu zaten kapalı."
           }]
         });
+
       } else {
         queue.setRepeatMode(0);
         return interaction.reply({
@@ -109,6 +102,7 @@ module.exports = {
           }]
         });
       }
+
     }
   },
 };

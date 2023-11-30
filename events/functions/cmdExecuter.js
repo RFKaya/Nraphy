@@ -114,53 +114,6 @@ module.exports = async (client, interaction, cmd, guildData, userData, args = nu
       });
     }
 
-    //---------------Vote---------------//
-    if (cmd.voteRequired && client.config.topggToken) {
-
-      let topgg = require(`@top-gg/sdk`);
-      let topggapi = new topgg.Api(client.config.topggToken);
-
-      //Topgg API bozuksa
-      let topggStatus = client.clientDataCache.topggStatus;
-      if (!topggStatus.status) {
-        client.logger.log(`${(interaction.user || interaction.author).id} kullanıcısına vote muaf verildi.`, "log", true, true);
-
-        if (Date.now() - topggStatus.lastCheck > 900000) {
-          topggapi.hasVoted(user.id)
-            .then(data => topggStatus = ({ status: true, lastCheck: Date.now() }))
-            .catch(error => topggStatus = ({ status: false, lastCheck: Date.now() }));
-        }
-      }
-
-      //Topgg API çalışıyorsa
-      else if (!data.premium && !(await topggapi.hasVoted(user.id)
-        .catch(error => {
-          client.logger.error(`Topgg Error: "${error}" - 15 dakikalığına topgg api muaf aktif edildi!`);
-          topggStatus = ({ status: false, lastCheck: Date.now() });
-        })
-      )) {
-        return interaction.reply({
-          embeds: [{
-            color: client.settings.embedColors.red,
-            title: '**»** Bu Komutu Kullanmak İçin **TOP.GG** Üzerinden Oy Vermelisin!',
-            url: 'https://top.gg/bot/700959962452459550/vote',
-            description:
-              `**•** Oy vermek için aşağıdaki butonu kullanabilir ya da mesaj başlığına tıklayabilirsin.\n` +
-              `**•** Ya da en iyisi Nraphy Premium abonesi olabilirsin. \`/premium Bilgi\``,
-          }],
-          components: [
-            {
-              type: 1, components: [
-                new Discord.ButtonBuilder().setLabel('Oy Bağlantısı (TOP.GG)').setURL("https://top.gg/bot/700959962452459550/vote").setStyle('Link')
-              ]
-            },
-          ],
-          ephemeral: true
-        });
-      }
-
-    }
-
     //---------------Cooldown---------------//
     const userDataCache_lastCmds = userDataCache.lastCmds || (userDataCache.lastCmds = {});
     const userDataCache_lastCmds_thisCmd = userDataCache_lastCmds[(cmd.interaction || cmd).name] || 0;
@@ -198,5 +151,5 @@ module.exports = async (client, interaction, cmd, guildData, userData, args = nu
       }
     }
 
-  } catch (err) { client.logger.error(err); };
+  } catch (err) { client.logger.error(err); }
 };

@@ -11,7 +11,6 @@ module.exports = {
   nsfw: true,
   cooldown: 1000,
   ownerOnly: false,
-  //voteRequired: true,
 
   async execute(client, interaction, args, data) {
 

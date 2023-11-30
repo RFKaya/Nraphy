@@ -89,19 +89,19 @@ module.exports = {
       let deletedMessages = 0;
       //2-100
       if (m <= 100) {
-        await interaction.channel.bulkDelete(m, true).then(bulkDelete => deletedMessages += bulkDelete.size).catch(error => { });
+        await interaction.channel.bulkDelete(m, true).then(bulkDelete => deletedMessages += bulkDelete.size).catch(() => { });
       }
 
       //101-199 arası
       if (m > 100 && !(m >= 200)) {
-        await interaction.channel.bulkDelete(100, true).then(bulkDelete => deletedMessages += bulkDelete.size).catch(error => { });
-        await interaction.channel.bulkDelete(m - 100, true).then(bulkDelete => deletedMessages += bulkDelete.size).catch(error => { });
+        await interaction.channel.bulkDelete(100, true).then(bulkDelete => deletedMessages += bulkDelete.size).catch(() => { });
+        await interaction.channel.bulkDelete(m - 100, true).then(bulkDelete => deletedMessages += bulkDelete.size).catch(() => { });
       }
 
       //200
       if (m === 200 || mesaj === 200) {
-        await interaction.channel.bulkDelete(100, true).then(bulkDelete => deletedMessages += bulkDelete.size).catch(error => { });
-        await interaction.channel.bulkDelete(100, true).then(bulkDelete => deletedMessages += bulkDelete.size).catch(error => { });
+        await interaction.channel.bulkDelete(100, true).then(bulkDelete => deletedMessages += bulkDelete.size).catch(() => { });
+        await interaction.channel.bulkDelete(100, true).then(bulkDelete => deletedMessages += bulkDelete.size).catch(() => { });
       }
 
       var embed = {

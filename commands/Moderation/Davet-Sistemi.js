@@ -51,7 +51,6 @@ module.exports = {
   nsfw: false,
   cooldown: false,
   ownerOnly: false,
-  voteRequired: true,
 
   async execute(client, interaction, data) {
 
@@ -193,7 +192,7 @@ module.exports = {
 
       }
 
-      data.guild.inviteManager = undefined;
+      data.guild.inviteManager.channel = undefined;
       await data.guild.save();
 
       return interaction.reply({

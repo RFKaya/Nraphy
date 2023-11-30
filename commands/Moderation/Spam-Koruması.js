@@ -84,9 +84,8 @@ module.exports = {
   memberPermissions: ["Administrator"],
   botPermissions: ["SendMessages", "EmbedLinks", "ManageMessages", "ModerateMembers"],
   nsfw: false,
-  cooldown: false,
+  cooldown: 3000,
   ownerOnly: false,
-  voteRequired: true,
 
   async execute(client, interaction, data) {
 
@@ -165,7 +164,7 @@ module.exports = {
           embeds: [
             {
               color: client.settings.embedColors.red,
-              title: '**»** Spam Koruması Sistemi Zaten Sunucu Genelinde Açık!',
+              title: '**»** Spam Koruması Sistemi Zaten Açık!',
               description: `**•** Kapatmak için \`/spam-koruması Kapat\` yazabilirsin.`
             }
           ]
@@ -200,12 +199,14 @@ module.exports = {
               embeds: [
                 {
                   color: client.settings.embedColors.red,
-                  title: `**»** Sadece Seçtiğin Kanallarda Koruma Mevcut Ki Zaten!`,
-                  description: `**•** Muaf eklemek yerine bu kanalı seçtiğin kanallardan kaldırabilirsin.`,
+                  title: `**»** Spam Koruması Zaten Kapalı!`,
+                  description: `**•** Neye muaf ekliyorsun? NEYE MUAF EKLİYORSUN? KAPALI SİSTEM KAPALI!`,
                 }
               ],
               ephemeral: true
             });
+
+          if (!await client.functions.channelChecker(interaction, getChannel, ["ViewChannel", "SendMessages", "EmbedLinks", "ManageMessages"])) return;
 
           if (spamProtection?.exempts?.channels && spamProtection.exempts.channels.includes(getChannel.id))
             return interaction.reply({
@@ -235,13 +236,13 @@ module.exports = {
 
         } else if (getOperation == "kaldir") {
 
-          if (!spamProtection?.exempts?.channels || spamProtection.exempts.channels.length == 0)
+          if (!spamProtection?.exempts?.channels?.length)
             return interaction.reply({
               embeds: [
                 {
                   color: client.settings.embedColors.red,
                   title: `**»** Muaf Listesinde Bir Kanal Bile Yok Ki!`,
-                  description: `**•** Olayı yanlış anladın bence sen \`/spam-koruması Bilgi\``,
+                  description: `**•** Bence sen olayı çok yanlış anladın. \`/spam-koruması Bilgi\``,
                 }
               ],
               ephemeral: true
@@ -311,13 +312,13 @@ module.exports = {
 
         } else if (getOperation == "kaldir") {
 
-          if (!spamProtection?.exempts?.roles || spamProtection.exempts.roles.length == 0)
+          if (!spamProtection?.exempts?.roles?.length)
             return interaction.reply({
               embeds: [
                 {
                   color: client.settings.embedColors.red,
                   title: `**»** Muaf Listesinde Bir Rol Bile Yok Ki!`,
-                  description: `**•** Olayı yanlış anladın bence sen \`/spam-koruması Bilgi\``,
+                  description: `**•** Bence sen olayı çok yanlış anladın. \`/spam-koruması Bilgi\``,
                 }
               ],
               ephemeral: true

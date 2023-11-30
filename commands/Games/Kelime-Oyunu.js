@@ -359,7 +359,7 @@ module.exports = {
             }
           ],
           components: []
-        }).catch(error => { });
+        }).catch(() => { });
 
         await interaction.editReply({
           embeds: [

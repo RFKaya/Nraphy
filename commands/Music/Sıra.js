@@ -6,11 +6,6 @@ module.exports = {
   },
   aliases: ["queue", "kuyruk"],
   category: "Music",
-  memberPermissions: [],
-  botPermissions: ["SendMessages", "EmbedLinks"],
-  nsfw: false,
-  cooldown: false,
-  ownerOnly: false,
 
   async execute(client, interaction, data) {
 
@@ -30,38 +25,48 @@ module.exports = {
         }]
       });
 
-    const queue = client.distube.getQueue(interaction.guild);
+    const queue = client.player.useQueue(interaction.guildId);
 
-    if (!queue || !queue.songs || queue.songs.length == 0)
-      return interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.red,
-          description: "**»** Şu anda bir şarkı çalmıyor."
-        }]
+    if (!queue?.isPlaying())
+      return await interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            description: "**»** Şu anda bir şarkı çalmıyor."
+          }
+        ]
       });
 
-    const guildDataCache = client.guildDataCache[interaction.guild.id] || (client.guildDataCache[interaction.guild.id] = {});
-    if (guildDataCache?.games?.musicQuiz || queue.songs[0].metadata.isMusicQuiz)
-      return interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.red,
-          description: "**»** Müzik tahmini oyunu sırasında bu komutu kullanamazsın."
-        }]
+    const queuedTracks = queue.tracks.toArray();
+    if (!queuedTracks?.[0])
+      return await interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            description: "**»** Sırada bir şarkı yok."
+          }
+        ]
       });
 
-    interaction.reply({
-      embeds: [{
-        color: client.settings.embedColors.default,
-        author: {
-          name: `${interaction.guild.name} • Şarkı Sırası ${queue.repeatMode ? '(Tekrarlama Aktif)' : ''}`,
-          icon_url: interaction.guild.iconURL()
-        },
-        description:
-          `**Şu Anda Çalan:** ${queue.songs[0].name}\n\n` + // | ${nowPlaying.author}\n\n` +
-          (queue.songs.slice(1, this.length).map((track, i) => {
+    const tracks = queuedTracks.map((track, index) => `**#${index + 1}** - [${track.title}](${track.url})`);
+
+    return await interaction.reply({
+      embeds: [
+        {
+          color: client.settings.embedColors.default,
+          author: {
+            name: `${interaction.guild.name} • Şarkı Sırası`,// ${queue.repeatMode ? '(Tekrarlama Aktif)' : ''}`,
+            icon_url: interaction.guild.iconURL()
+          },
+          description: tracks.length > 10
+            ? `${tracks.slice(0, 10).join('\n')}\nve **${tracks.length - 10}** şarkı daha...`
+            : tracks.join('\n')
+          //`**Şu Anda Çalan:** ${queue.songs[0].name}\n\n` + // | ${nowPlaying.author}\n\n` +
+          /* (queue.songs.slice(1, this.length).map((track, i) => {
             return `**#${i + 1}** - ${track.name}`; // | ${track.author} (**${track.requestedBy?.username}** tarafından eklendi.)`;
-          }).slice(0, 10).join('\n') + `\n\n${queue.songs.length > 10 ? `ve **${queue.songs.length - 10}** şarkı daha...` : `**•** Sırada toplam **${queue.songs.length}** şarkı bulunuyor.`}`)
-      }]
+          }).slice(0, 10).join('\n') + `\n\n${queue.songs.length > 10 ? `ve **${queue.songs.length - 10}** şarkı daha...` : `**•** Sırada toplam **${queue.songs.length}** şarkı bulunuyor.`}`) */
+        }
+      ]
     });
   },
 };

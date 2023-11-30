@@ -51,7 +51,7 @@ module.exports = {
     //User
     const toBanUser = interaction.type === 2
       ? interaction.options.getUser("kullanıcı")
-      : interaction.mentions.users.first() || client.users.cache.get(args[0]) || client.users.cache.find(u => u.tag === args[0]) || await client.users.fetch(args[0]).catch(e => { });
+      : interaction.mentions.users.first() || client.users.cache.get(args[0]) || client.users.cache.find(u => u.tag === args[0]) || await client.users.fetch(args[0]).catch(() => { });
 
     //Reason
     const reason = interaction.type === 2 ? interaction.options.getString("sebep") : args.slice(1).join(' ');
@@ -136,7 +136,7 @@ module.exports = {
     if (toBanMember) {
 
       //Üye, o kullanıcıyı yasaklayabilir mi?
-      if (toBanMember.roles.highest.rawPosition >= interaction.member.roles.highest.rawPosition)
+      if ((interaction.type === 2 ? interaction.user : interaction.author).id != interaction.guild.ownerId && toBanMember.roles.highest.rawPosition >= interaction.member.roles.highest.rawPosition)
         return interaction.reply({
           embeds: [
             {
@@ -190,8 +190,26 @@ module.exports = {
       };
 
       if (interaction.type === 2)
-        return interaction.editReply(messageContent).catch(error => { });
-      else return buttonConfirmationResult.reply?.edit(messageContent).catch(error => { });
+        return interaction.editReply(messageContent).catch(() => { });
+      else return buttonConfirmationResult.reply?.edit(messageContent).catch(() => { });
+
+    } else {
+      let messageContent = {
+        embeds: [
+          {
+            color: client.settings.embedColors.default,
+            author: {
+              name: `${toBanUser.username} kullanıcısı yasaklanıyor...`,
+              icon_url: toBanUser.displayAvatarURL(),
+            },
+          }
+        ],
+        components: []
+      };
+
+      if (interaction.type === 2)
+        await interaction.editReply(messageContent).catch(() => { });
+      else await buttonConfirmationResult.reply?.edit(messageContent).catch(() => { });
     }
 
     let dmMesaj_status = dmMesaj && await toBanUser.send({
@@ -214,7 +232,7 @@ module.exports = {
           icon_url: (interaction.type === 2 ? interaction.user : interaction.author).displayAvatarURL(),
         },
       }]
-    }).catch(error => { });
+    }).catch(() => { });
 
     //Ban
     await interaction.guild.members.ban(toBanUser, {
@@ -234,8 +252,8 @@ module.exports = {
       };
 
       if (interaction.type === 2)
-        return interaction.editReply(messageContent).catch(error => { });
-      else return buttonConfirmationResult.reply?.edit(messageContent).catch(error => { });
+        return interaction.editReply(messageContent).catch(() => { });
+      else return buttonConfirmationResult.reply?.edit(messageContent).catch(() => { });
     });
 
     //Reply Message
@@ -266,8 +284,8 @@ module.exports = {
     };
 
     if (interaction.type === 2)
-      await interaction.editReply(messageContent).catch(error => { });
-    else await buttonConfirmationResult.reply?.edit(messageContent).catch(error => { });
+      await interaction.editReply(messageContent).catch(() => { });
+    else await buttonConfirmationResult.reply?.edit(messageContent).catch(() => { });
 
     //User Statistic
     data.user.statistics.bannedUsers += 1;

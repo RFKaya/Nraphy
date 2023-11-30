@@ -1,5 +1,3 @@
-const { ButtonBuilder } = require('discord.js');
-
 module.exports = {
   interaction: {
     name: "atla",
@@ -8,11 +6,6 @@ module.exports = {
   },
   aliases: ['sk', "skip"],
   category: "Music",
-  memberPermissions: [],
-  botPermissions: ["SendMessages", "EmbedLinks"],
-  nsfw: false,
-  cooldown: 3000,
-  ownerOnly: false,
 
   async execute(client, interaction, data) {
 
@@ -32,116 +25,47 @@ module.exports = {
         }]
       });
 
-    const queue = client.distube.getQueue(interaction.guild);
+    const queue = client.player.useQueue(interaction.guildId);
 
-    if (!queue || !queue.songs || queue.songs.length == 0)
-      return interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.red,
-          description: "**»** Şu anda bir şarkı çalmıyor."
-        }]
-      });
-
-    const guildDataCache = client.guildDataCache[interaction.guild.id] || (client.guildDataCache[interaction.guild.id] = {});
-    if (guildDataCache?.games?.musicQuiz || queue.songs[0].metadata.isMusicQuiz)
-      return interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.red,
-          description:
-            "**»** Müzik tahmini oyunu sırasında bu komutu kullanamazsın.\n" +
-            "**•** 60 saniye içerisinde doğru tahmin yapılmazsa zaten otomatik atlanır."
-        }]
-      });
-
-    try {
-
-      await queue.skip();
-
-      return interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.green,
-          description: "**»** Şu anda çalan şarkı atlandı. Bir sonraki şarkıya geçiliyor..."
-        }]
-      });
-
-    } catch (error) {
-
-      if (error.errorCode === "NO_UP_NEXT") {
-
-        /* return interaction.reply({
-          embeds: [{
+    if (!queue?.isPlaying())
+      return await interaction.reply({
+        embeds: [
+          {
             color: client.settings.embedColors.red,
-            title: "**»** Sırada Bir Şarkı Yok Ki!",
-            description: "**•** Tabii `/bitir` yazarsan burayı terk edebilirim 🥺"
-          }]
-        }); */
+            description: "**»** Şu anda bir şarkı çalmıyor."
+          }
+        ]
+      });
 
-        const { buttonConfirmation } = require("../../modules/Functions");
-        const buttonConfirmationResult = await buttonConfirmation(
-          interaction,
-          [
-            {
-              color: client.settings.embedColors.default,
-              title: "**»** Sırada Bir Şarkı Yok Ki!",
-              description: "**•** Oynatma bitirilsin mi?"
-            }
-          ]
-        );
-
-        if (interaction.type === 2 ? !buttonConfirmationResult : !buttonConfirmationResult.status) {
-          let messageContent = {
-            embeds: [
-              {
-                color: client.settings.embedColors.red,
-                description: "**•** Hiçbir eylem yapmadım."
-              }
-            ],
-            components: []
-          };
-
-          if (interaction.type === 2)
-            return interaction.editReply(messageContent).catch(error => { });
-          else return buttonConfirmationResult.reply?.edit(messageContent).catch(error => { });
-        }
-
-        queue.stop();
-
-        let messageContent = {
-          embeds: [{
-            color: client.settings.embedColors.default,
-            title: "**»** Oynatma Sonlandırıldı!",
-            description: `**•** Şarkı sırası temizlendi ve oynatma bitirildi.`
-          }],
-          components: []
-        };
-
-        if (interaction.type === 2)
-          return interaction.editReply(messageContent).catch(error => { });
-        else return buttonConfirmationResult.reply?.edit(messageContent).catch(error => { });
-
-      } else {
-
-        client.logger.error(error);
-        return interaction.reply({
-          embeds: [{
+    if (!queue.node.isPlaying())
+      return await interaction.reply({
+        embeds: [
+          {
             color: client.settings.embedColors.red,
-            title: "**»** Bir Hata Oluştu!",
-            description:
-              `**•** Hatayla ilgili geliştirici bilgilendirildi.\n` +
-              `**•** En kısa sürede çözülecektir.`
-          }],
-          components: [
-            {
-              type: 1, components: [
-                new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link')
-              ]
-            },
-          ]
-        });
+            description: "**»** Oynatma durdurulmuş görünüyor. `/yürüt` ile yürüt ve tekrar dene."
+          }
+        ]
+      });
 
-      }
+    const queuedTracks = queue.tracks.toArray();
+    if (!queuedTracks?.[0])
+      return await interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            description: "**»** Sırada bir şarkı yok."
+          }
+        ]
+      });
 
-    }
+    await queue.node.skip();
+
+    return await interaction.reply({
+      embeds: [{
+        color: client.settings.embedColors.green,
+        description: "**»** Şu anda çalan şarkı atlandı. Bir sonraki şarkıya geçiliyor..."
+      }]
+    });
 
   },
 };
