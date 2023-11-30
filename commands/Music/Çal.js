@@ -97,7 +97,7 @@ module.exports = {
         else return "Diğer";
       },
         metadata = await track.__reqMetadataFn(),
-        mainSource = getSourceString(metadata.source?.uri || metadata?.uri || metadata.source),
+        mainSource = getSourceString(metadata.source?.uri || metadata.uri || metadata.source),
         bridgeSource = getSourceString(metadata.bridge?.uri);
 
       const embed = {
