@@ -405,7 +405,7 @@ module.exports = {
         `🤖 • Botla İlgili Komutlar (**${client.commands.filter(command => command.category?.startsWith('Bot')).size}**)\n\n` +
 
         `Bu bot [Nraphy Açık Kaynak Projesi](https://github.com/RFKaya/Nraphy/) ile oluşturulmuştur.\n` +
-        `Komutların çoğu hem \`/slash\` hem de \`${data.prefix}slash\` şeklini desteklemektedir.`
+        `Bu botun nihai sürümü yalnızca Resmî Nraphy botunda mevcuttur.`
         /*`${(data.user.readDateOfChanges < client.settings.updateDate) ?
           `✉️ Okunmamış yenilikler mevcut! \`/yenilikler\` yazarak okuyabilirsin!` :
           `Gelişmelerden haberdar olmak için destek sunucumuza katılabilirsiniz!`}`*/,

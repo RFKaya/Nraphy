@@ -1,15 +1,11 @@
 const mongoose = require('mongoose'),
   clientDataSchema = require("./Schema/clientData.js"),
   guildSchema = require("./Schema/guilds.js"),
-  userSchema = require("./Schema/users.js"),
-  giveawaySchema = require("./Schema/giveaways.js"),
-  betaGiveawaySchema = require("./Schema/betaGiveaways.js");
+  userSchema = require("./Schema/users.js");
 
 module.exports.clientData = clientDataSchema;
 module.exports.guilds = guildSchema;
 module.exports.users = userSchema;
-module.exports.giveaways = giveawaySchema;
-module.exports.betaGiveaways = betaGiveawaySchema;
 
 //------------------------------Fetch Fonksiyonları------------------------------//
 module.exports.fetchClientData = async function fetchClientData(date) {
