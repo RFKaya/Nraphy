@@ -107,7 +107,7 @@ module.exports = {
   memberPermissions: ["ManageChannels"],
   botPermissions: ["SendMessages", "EmbedLinks", "ManageMessages"],
   nsfw: false,
-  cooldown: false,
+  cooldown: 3000,
   ownerOnly: false,
 
   async execute(client, interaction, data) {
@@ -121,7 +121,7 @@ module.exports = {
 
       const destekSunucusuButon = new ButtonBuilder().setLabel('Destek Sunucusu').setURL("https://discord.gg/VppTU9h").setStyle('Link');
 
-      interaction.reply({
+      return await interaction.reply({
         embeds: [
           {
             color: client.settings.embedColors.default,
@@ -185,7 +185,7 @@ module.exports = {
           embeds: [
             {
               color: client.settings.embedColors.red,
-              title: '**»** Bağlantı Engelleme Sistemi Zaten Sunucu Genelinde Açık!',
+              title: '**»** Bağlantı Engelleme Sistemi Zaten Açık!',
               description: `**•** Kapatmak için \`/bağlantı-engel Kapat\` yazabilirsin.`
             }
           ]
@@ -215,19 +215,21 @@ module.exports = {
 
         if (getOperation == "ekle") {
 
-          if (linkBlock && !linkBlock.guild)
+          if (!linkBlock.guild)
             return interaction.reply({
               embeds: [
                 {
                   color: client.settings.embedColors.red,
-                  title: `**»** Sadece Seçtiğin Kanallarda Koruma Mevcut Ki Zaten!`,
-                  description: `**•** Muaf eklemek yerine bu kanalı seçtiğin kanallardan kaldırabilirsin.`,
+                  title: `**»** Bağlantı Engelleme Sistemi Zaten Kapalı!`,
+                  description: `**•** Neye muaf ekliyorsun? NEYE MUAF EKLİYORSUN? KAPALI SİSTEM KAPALI!`,
                 }
               ],
               ephemeral: true
             });
 
-          if (linkBlock?.exempts?.channels && linkBlock.exempts.channels.includes(getChannel.id))
+          if (!await client.functions.channelChecker(interaction, getChannel, ["ViewChannel", "SendMessages", "EmbedLinks", "ManageMessages"])) return;
+
+          if (linkBlock.exempts?.channels?.includes(getChannel.id))
             return interaction.reply({
               embeds: [
                 {
@@ -243,7 +245,7 @@ module.exports = {
           data.guild.markModified('linkBlock.exempts.channels');
           await data.guild.save();
 
-          interaction.reply({
+          return await interaction.reply({
             embeds: [
               {
                 color: client.settings.embedColors.green,
@@ -255,13 +257,13 @@ module.exports = {
 
         } else if (getOperation == "kaldir") {
 
-          if (!linkBlock?.exempts?.channels || linkBlock.exempts.channels.length == 0)
+          if (!linkBlock?.exempts?.channels?.length)
             return interaction.reply({
               embeds: [
                 {
                   color: client.settings.embedColors.red,
                   title: `**»** Muaf Listesinde Bir Kanal Bile Yok Ki!`,
-                  description: `**•** Olayı yanlış anladın bence sen \`/bağlantı-engel Bilgi\``,
+                  description: `**•** Bence sen olayı çok yanlış anladın. \`/bağlantı-engel Bilgi\``,
                 }
               ],
               ephemeral: true
@@ -337,7 +339,7 @@ module.exports = {
                 {
                   color: client.settings.embedColors.red,
                   title: `**»** Muaf Listesinde Bir Rol Bile Yok Ki!`,
-                  description: `**•** Olayı yanlış anladın bence sen \`/bağlantı-engel Bilgi\``,
+                  description: `**•** Bence sen olayı çok yanlış anladın. \`/bağlantı-engel Bilgi\``,
                 }
               ],
               ephemeral: true

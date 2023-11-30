@@ -41,7 +41,7 @@ module.exports = async (client, message, wordGame, guildData) => {
             },
           ]
         }]
-      }).catch(e => { });
+      }).catch(() => { });
 
     }
 
@@ -68,7 +68,7 @@ module.exports = async (client, message, wordGame, guildData) => {
       }
 
       //Mesaj Silme
-      if (deleteMessage) message.delete().catch(e => { });
+      if (deleteMessage) message.delete().catch(() => { });
 
     }
 
@@ -222,7 +222,7 @@ module.exports = async (client, message, wordGame, guildData) => {
       });
 
     //İstatistikler
-    ((wordGame ||= {}).stats ||= {})[message.author.id] ||= { wordCount: 0, wordLength: 0 };
+    (wordGame.stats ||= {})[message.author.id] ||= { wordCount: 0, wordLength: 0 };
     wordGame.stats[message.author.id].wordCount += 1;
     wordGame.stats[message.author.id].wordLength += küçükHarfliKelime.length;
 

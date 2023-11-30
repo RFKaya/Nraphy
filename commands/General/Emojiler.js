@@ -185,7 +185,7 @@ module.exports = {
           ]
         };
         if (interaction.type === 2)
-          await interaction.editReply(messageContent).catch(e => { });
+          await interaction.editReply(messageContent).catch(() => { });
         else await reply.edit(messageContent);
 
       }
@@ -204,10 +204,10 @@ module.exports = {
       if (interaction.type === 2)
         return await interaction.editReply({
           components: components
-        }).catch(e => { });
+        }).catch(() => { });
       else return await reply.edit({
         components: components
-      }).catch(e => { });
+      }).catch(() => { });
 
     });
 

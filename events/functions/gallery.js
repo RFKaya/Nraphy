@@ -18,7 +18,7 @@ module.exports = async (client, message, gallery) => {
     ) {
 
       message.delete({ reason: `Nraphy • Galeri Sistemi` })
-        .catch(e => { });
+        .catch(() => { });
 
       //Uyarı Metni
       const userCache = client.userDataCache[message.author.id] || (client.userDataCache[message.author.id] = {});

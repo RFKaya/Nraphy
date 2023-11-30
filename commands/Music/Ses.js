@@ -16,11 +16,7 @@ module.exports = {
   interactionOnly: true,
   aliases: ["volume"],
   category: "Music",
-  memberPermissions: [],
-  botPermissions: ["SendMessages", "EmbedLinks"],
-  nsfw: false,
   cooldown: 5000,
-  ownerOnly: false,
 
   async execute(client, interaction, data) {
 
@@ -40,14 +36,16 @@ module.exports = {
         }]
       });
 
-    const queue = client.distube.getQueue(interaction.guild);
+    const queue = client.player.useQueue(interaction.guildId);
 
-    if (!queue || !queue.songs || queue.songs.length == 0)
-      return interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.red,
-          description: "**»** Şu anda bir şarkı çalmıyor."
-        }]
+    if (!queue?.isPlaying())
+      return await interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            description: "**»** Şu anda bir şarkı çalmıyor."
+          }
+        ]
       });
 
     const ses = interaction.options.getInteger("ses");
@@ -70,9 +68,9 @@ module.exports = {
         }]
       });
 
-    await queue.setVolume(parseInt(ses));
+    await queue.node.setVolume(parseInt(ses));
 
-    interaction.reply({
+    return await interaction.reply({
       embeds: [{
         color: client.settings.embedColors.green,
         description: `**»** Ses seviyesi başarıyla **${parseInt(ses)}%** olarak ayarlandı!`

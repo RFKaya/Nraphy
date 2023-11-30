@@ -26,7 +26,7 @@ const client = new Client({
       GatewayIntentBits.Guilds,
       GatewayIntentBits.MessageContent
     ],
-  //failIfNotExists: false,
+  failIfNotExists: false,
   //restRequestTimeout: 60000
   /*sweepers: {
     ...Options.DefaultSweeperSettings,
@@ -107,7 +107,6 @@ client.guildsWaitingForSync = [];
 //Gereksiz hafıza (Oturum bitiminde kaybolacaklar)
 client.userDataCache = {};
 client.guildDataCache = {};
-client.clientDataCache = { topggStatus: { status: true, lastCheck: null } };
 
 //kaldırılacak bunlar
 client.guildInvites = new Map();
@@ -143,7 +142,8 @@ commandCategories.forEach(commandCategory => {
     commandCategoryFiles.forEach(commandFile => {
       let command = require(`./commands/${commandCategory}/${commandFile}`);
       //console.log(`Loaded command: ${command.name}`);
-      client.commands.set(command.interaction ? command.interaction.name : command.name, command);
+      if (!command.disabled)
+        client.commands.set(command.interaction ? command.interaction.name : command.name, command);
       /*if (command.interaction)
         interactionCommands.push(command.interaction);*/
     });
@@ -186,38 +186,29 @@ process.on('uncaughtException', (err) => { /*console.error(err);*/ client.logger
 
 client.login(client.config.isTest ? client.config.testConfig.token : client.config.token);
 
-//------------------------------Müzik------------------------------//
-const { DisTube } = require('distube');
-//const { SpotifyPlugin } = require('@distube/spotify');
-const { SoundCloudPlugin } = require('@distube/soundcloud');
-//const { YtDlpPlugin } = require('@distube/yt-dlp');
+//------------------------------Discord-Player------------------------------//
+const { Player } = require('discord-player');
+const { useQueue } = require("discord-player");
 
-client.distube = new DisTube(client, {
-  leaveOnStop: true,
-  leaveOnEmpty: true,
-  emptyCooldown: 10,
-  leaveOnFinish: true,
-  emitNewSongOnly: true,
-  emitAddSongWhenCreatingQueue: false,
-  emitAddListWhenCreatingQueue: false,
-  plugins: [
-    /* new SpotifyPlugin({
-      emitEventsAfterFetching: true,
-    }), */
-    new SoundCloudPlugin(),
-    //new YtDlpPlugin()
-  ]
+const { BridgeProvider, BridgeSource } = require('@discord-player/extractor');
+
+const bridgeProvider = new BridgeProvider(BridgeSource.SoundCloud);
+
+client.player = new Player(client, {
+  bridgeProvider
 });
+client.player.useQueue = useQueue;
 
-client.distube.scPlugin = new SoundCloudPlugin();
+//client.player.extractors.loadDefault((ext) => ext !== 'YouTubeExtractor').then(() => { });
+client.player.extractors.loadDefault().then(() => { });
 
-const distubeEventFiles = fs.readdirSync('./events/distube/').filter(file => file.endsWith('.js'));
+const discordPlayerEventFiles = fs.readdirSync('./events/discord-player/').filter(file => file.endsWith('.js'));
 //client.logger.load(`Loading Events...`)
-for (let file of distubeEventFiles) {
-  let event = require(`./events/distube/${file}`);
+for (let file of discordPlayerEventFiles) {
+  let event = require(`./events/discord-player/${file}`);
   let eventName = file.split(".")[0];
   //client.logger.event(`Loading Event: ${eventName}`);
-  client.distube.on(eventName, event.bind(null, client));
+  client.player.events.on(eventName, event.bind(null, client));
 }
 
 //------------------------------Log Sistemi------------------------------//

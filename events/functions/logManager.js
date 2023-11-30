@@ -45,7 +45,7 @@ module.exports.errors = async (client, guildData, error) => {
                 '**•** Yetkilerimi düzenledikten sonra tekrar ayarlayabilirsin.'
             }
           ]
-        }).catch(e => { });
+        }).catch(() => { });
 
         guildData.logger.webhook = null;
         guildData.markModified('logger.webhook');

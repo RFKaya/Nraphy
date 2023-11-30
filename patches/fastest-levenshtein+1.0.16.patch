@@ -1,8 +1,8 @@
 diff --git a/node_modules/fastest-levenshtein/mod.js b/node_modules/fastest-levenshtein/mod.js
-index 6bc2745..2f8c5a2 100644
+index 6bc2745..f522f15 100644
 --- a/node_modules/fastest-levenshtein/mod.js
 +++ b/node_modules/fastest-levenshtein/mod.js
-@@ -3,140 +3,140 @@ exports.__esModule = true;
+@@ -3,140 +3,157 @@ exports.__esModule = true;
  exports.distance = exports.closest = void 0;
  var peq = new Uint32Array(0x10000);
  var myers_32 = function (a, b) {
@@ -249,17 +249,33 @@ index 6bc2745..2f8c5a2 100644
 -        if (dist < min_distance) {
 -            min_distance = dist;
 -            min_index = i;
--        }
 +  var min_distance = Infinity;
 +  var min_index = -1;
++  var bestMatchs = [];
 +  for (var i = 0; i < arr.length; i++) {
 +    var dist = distance(str, arr[i]);
 +    if (dist < min_distance) {
 +      min_distance = dist;
 +      min_index = i;
++    }
++    if (dist === 0) {
++      bestMatchs = [
++        {
++          word: arr[i],
++          distance: dist
+         }
++      ];
++      break;
++    } else if (dist <= 1) {
++      bestMatchs.push({
++        word: arr[i],
++        distance: dist
++      });
      }
 -    return arr[min_index];
 +  }
-+  return ({ bestMatch: arr[min_index], distance: min_distance });
++  if (!bestMatchs.length) bestMatchs.push({ word: arr[min_index], distance: min_distance });
++  return { min_distance, bestMatchs };
++  //return ({ bestMatch: arr[min_index], distance: min_distance, bestMatchs });
  };
  exports.closest = closest;

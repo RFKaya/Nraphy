@@ -1,4 +1,5 @@
 module.exports = {
+  //"eslint.enable": true,
   "env": {
     "node": true,
     "commonjs": true,
@@ -23,8 +24,10 @@ module.exports = {
   },
   "rules": {
     //"no-empty": "off",
+    "no-inner-declarations": "off",
     "no-unused-vars": "warn",
     "no-unreachable": "off",
+    //"no-case-declarations": "off",
     //"no-use-before-define": "error"
   },
 };

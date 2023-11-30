@@ -58,7 +58,7 @@ module.exports = {
     data.user.AFK = { time: Date.now(), reason: sebep };
     await data.user.save();
 
-    message.reply({
+    var messageContent = {
       embeds: [
         {
           color: client.settings.embedColors.green,
@@ -74,9 +74,28 @@ module.exports = {
           ]
         }
       ]
-    });
+    };
 
-    if (message.member.moderatable) message.guild.members.cache.get(message.author.id).setNickname(`[AFK] ${message.member.displayName}`);
+    if (message.member.moderatable) {
+      let newNickname = `[AFK] ${message.member.displayName}`;
+      if (newNickname.length > 32) {
+        newNickname = newNickname.slice(0, 32);
+        messageContent.embeds[0].fields.push({
+          name: '**»** Bilgi',
+          value: `**•** Kullanıcı adı 32 karakteri geçtiği için ufak bir kırpma uygulandı.`,
+        });
+      }
+      message.guild.members.cache.get(message.author.id).setNickname(newNickname.slice(0, 32));
+    } else {
+      messageContent.embeds[0].fields.push({
+        name: '**»** Bilgi',
+        value: `**•** Kullanıcı adını düzenleme yetkim olmadığı için düzenleyemedim.`,
+      });
+    }
+
+    await message.reply(messageContent);
+
+
 
   }
 };

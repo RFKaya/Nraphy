@@ -1,6 +1,10 @@
 const { ShardingManager } = require('discord.js');
 const fs = require("fs");
 const config = require("./config.json");
+const logger = require("./modules/Logger.js");
+
+if (!config.mongooseToken)
+  return logger.error('config.json\'da \'mongooseToken\' değeri bulunamadı. Hatalarla karşılaşmamak için lütfen doğru biçimde mongooseToken değerini doldurun.');
 
 const manager = new ShardingManager('./client.js', {
 
@@ -10,13 +14,12 @@ const manager = new ShardingManager('./client.js', {
 
   token: config.token,
 
-  execArgv: [/*"--inspect", "--max-old-space-size=2048", "--trace-warnings",*/ "client.js"/*, clientDataId*/],
+  execArgv: [/*"--inspect",*/ "--max-old-space-size=2048", "--trace-warnings", "client.js"/*, clientDataId*/],
 
 });
 
 //------------------------------Routine control------------------------------//
-const logger = require("./modules/Logger.js"),
-  logsFolder = './logs';
+const logsFolder = './logs';
 if (!fs.existsSync(logsFolder)) {
   fs.mkdirSync(logsFolder);
   logger.warn("Logs folder could not be found! The folder was created automatically.");

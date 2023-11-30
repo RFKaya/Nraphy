@@ -64,7 +64,7 @@ module.exports = {
   cooldown: 3000,
   ownerOnly: false,
 
-  async execute(client, interaction, data, args) {
+  async execute(client, interaction, data) {
 
     await interaction.deferReply();
 
@@ -151,7 +151,7 @@ module.exports = {
     } catch (err) {
       client.logger.error(err);
       return interaction.editReply(`Hata oluştu!`);
-    };
+    }
 
   }
 };

@@ -1,4 +1,4 @@
-var request = require("request");
+const fetch = require('node-fetch');
 
 module.exports = {
   interaction: {
@@ -30,44 +30,44 @@ module.exports = {
 
     if (interaction.type === 2) await interaction.deferReply();
 
-    request(`https://nekobot.xyz/api/imagegen?type=captcha&url=${(interaction.type === 2 ? interaction.user : interaction.author).displayAvatarURL({ size: 256 })}&username=${encodeURI(text).replaceAll('#', '%23')}`, function (error, response, body) {
+    const response = await fetch(`https://nekobot.xyz/api/imagegen?type=captcha&url=${(interaction.type === 2 ? interaction.user : interaction.author).displayAvatarURL({ extension: "png", size: 256 })}&username=${encodeURI(text).replaceAll('#', '%23')}`);
+    const responseData = await response.json();
 
-      if (error || !body || !JSON.parse(body).success) {
-        client.logger.error(error);
-
-        let messageContent = {
-          embeds: [
-            {
-              color: client.settings.embedColors.red,
-              title: '**»** Bir Hata Oluştu!',
-              description: `**•** Hatanın sebebini bilmiyorum.`
-            }
-          ]
-        };
-        if (interaction.type === 2)
-          return interaction.editReply(messageContent);
-        else return interaction.reply(messageContent);
-      }
+    if (!responseData.success) {
+      client.logger.error("CAPTCHA komutunda bir sorun oluştu kardeeş.", responseData);
+      client.logger.log(responseData);
 
       let messageContent = {
         embeds: [
           {
-            color: client.settings.embedColors.default,
-            author: {
-              name: `${client.user.username} • Captcha`,
-              icon_url: client.settings.icon,
-            },
-            image: {
-              url: JSON.parse(body).message,
-            }
+            color: client.settings.embedColors.red,
+            title: '**»** Bir Hata Oluştu!',
+            description: `**•** Hatanın sebebini bilmiyorum.`
           }
         ]
       };
       if (interaction.type === 2)
         return interaction.editReply(messageContent);
       else return interaction.reply(messageContent);
+    }
 
-    });
+    let messageContent = {
+      embeds: [
+        {
+          color: client.settings.embedColors.default,
+          author: {
+            name: `${client.user.username} • Captcha`,
+            icon_url: client.settings.icon,
+          },
+          image: {
+            url: responseData.message,
+          }
+        }
+      ]
+    };
+    if (interaction.type === 2)
+      return interaction.editReply(messageContent);
+    else return interaction.reply(messageContent);
 
   }
 };

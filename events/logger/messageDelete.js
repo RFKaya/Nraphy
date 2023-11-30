@@ -1,12 +1,13 @@
 module.exports = async (client, message) => {
 
   if (!message.guild) return;
-  if (message.author.bot) return;
 
   const guildData = await client.database.fetchGuild(message.guild.id);
 
   let logger = guildData.logger;
   if (!logger?.webhook) return;
+
+  if (logger.smartFilters && message.author.bot) return;
 
   try {
 
@@ -36,7 +37,7 @@ module.exports = async (client, message) => {
         icon_url: message.author.displayAvatarURL()
       },
       title: `**»** \`#${message.guild.channels.cache.get(message.channelId).name}\` kanalında bir mesaj silindi!`,
-      description: message.content,
+      description: client.functions.truncate(message.content, 4000),
       timestamp: new Date(),
       footer: {
         text: `${messageExecutor.tag} tarafından silindi.`,
@@ -53,5 +54,5 @@ module.exports = async (client, message) => {
     //Logging
     require('../functions/logManager')(client, guildData, { embeds: [embed] });
 
-  } catch (err) { require('../functions/logManager').errors(client, guildData, err); };
+  } catch (err) { require('../functions/logManager').errors(client, guildData, err); }
 };

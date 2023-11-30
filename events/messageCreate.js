@@ -2,6 +2,7 @@ module.exports = async (client, message) => {
 
   if (!message.guild) return;
   if (!message.channel) return;
+  if (!message.member) return;
   if (message.author.bot) return;
   if (message.system) return;
 
@@ -47,7 +48,7 @@ module.exports = async (client, message) => {
     //Kelime Oyunu
     var wordGame = guildData.wordGame;
     if (wordGame?.channel === message.channel.id) {
-      client.logger.log(`KELİME-OYUNU TETİKLENDİ! • ${message.guild.name} (${message.guild.id})`, "log", false);
+      //client.logger.log(`KELİME-OYUNU TETİKLENDİ! • ${message.guild.name} (${message.guild.id})`, "log", false);
       require("./functions/wordGame.js")(client, message, wordGame, guildData);
     }
 

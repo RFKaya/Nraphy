@@ -32,7 +32,7 @@ module.exports = async (client, message, linkBlock, isEditEvent = false) => {
 
 
       if (reklam.some(word => messageContent.includes(word))) {
-        message.delete().catch(e => { });
+        message.delete().catch(() => { });
 
         //---------------Warner---------------//
 

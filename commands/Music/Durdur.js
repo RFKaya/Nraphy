@@ -6,11 +6,7 @@ module.exports = {
   },
   aliases: ["pause", "dur"],
   category: "Music",
-  memberPermissions: [],
-  botPermissions: ["SendMessages", "EmbedLinks"],
-  nsfw: false,
   cooldown: 5000,
-  ownerOnly: false,
 
   async execute(client, interaction, data) {
 
@@ -30,26 +26,19 @@ module.exports = {
         }]
       });
 
-    const queue = client.distube.getQueue(interaction.guild);
+    const queue = client.player.useQueue(interaction.guildId);
 
-    if (!queue || !queue.songs || queue.songs.length == 0)
-      return interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.red,
-          description: "**»** Şu anda bir şarkı çalmıyor."
-        }]
+    if (!queue?.isPlaying())
+      return await interaction.reply({
+        embeds: [
+          {
+            color: client.settings.embedColors.red,
+            description: "**»** Şu anda bir şarkı çalmıyor."
+          }
+        ]
       });
 
-    const guildDataCache = client.guildDataCache[interaction.guild.id] || (client.guildDataCache[interaction.guild.id] = {});
-    if (guildDataCache?.games?.musicQuiz || queue.songs[0].metadata.isMusicQuiz)
-      return interaction.reply({
-        embeds: [{
-          color: client.settings.embedColors.red,
-          description: "**»** Müzik tahmini oyunu sırasında bu komutu kullanamazsın."
-        }]
-      });
-
-    if (queue.paused)
+    if (queue.node.isPaused())
       return interaction.reply({
         embeds: [{
           color: client.settings.embedColors.red,
@@ -57,9 +46,9 @@ module.exports = {
         }]
       });
 
-    queue.pause();
+    queue.node.setPaused(true);
 
-    return interaction.reply({
+    return await interaction.reply({
       embeds: [{
         color: client.settings.embedColors.green,
         title: "**»** Şarkı Duraklatıldı!",

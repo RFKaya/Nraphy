@@ -1,9 +1,5 @@
-const { ButtonBuilder, WebhookClient } = require('discord.js'),
-  tcpPortUsed = require('tcp-port-used'),
-  topgg = require(`@top-gg/sdk`),
-  random = require("random"),
-  axios = require('axios'),
-  fs = require("fs");
+const { WebhookClient } = require('discord.js'),
+  axios = require('axios');
 
 module.exports = async (client) => {
 
@@ -17,7 +13,6 @@ module.exports = async (client) => {
     //------------------------------Command Loader------------------------------//
 
     if (client.shard.ids[0] == 0) {
-
       const { REST } = require('@discordjs/rest');
       const { Routes } = require('discord-api-types/v9');
       const rest = new REST({ version: '9' })
@@ -59,7 +54,7 @@ module.exports = async (client) => {
         })();
       }
 
-    }, 1000);
+    }, 3000);
     //------------------------------Logging------------------------------//
 
     //------------------------------Mongoose------------------------------//
@@ -83,7 +78,7 @@ module.exports = async (client) => {
         }],
       });//.catch(console.error);
 
-    };
+    }
 
     setPresence();
     setInterval(async function () { setPresence(); }, 600000);
@@ -107,12 +102,12 @@ module.exports = async (client) => {
       //Otomatik Yeniden Başlatma (RAM kullanımına göre)
       let dateHours = new Date().getHours();
       if (dateHours >= 4 && dateHours <= 6
-        && process.memoryUsage().rss > (2048 * (1024 ** 2))
+        && process.memoryUsage().rss > (1500 * (1024 ** 2))
         && (client.voice.adapters.size < 2 || client.distube.queues.size < 2)
       ) {
         await client.logger.warn(`SHARD BAŞINA RAM KULLANIMI 2 GB'ı AŞTIĞI İÇİN SHARD YENİDEN BAŞLATILIYOR!\n\n` +
-          `client.voice.adapters.size: ${client.voice.adapters.size}\n` +
-          `client.distube.queues.size: ${client.distube.queues.size}`
+          `client.voice.adapters.size: ${client.voice.adapters.size}`
+          //`client.distube.queues.size: ${client.distube.queues.size}`
         );
         process.exit(0);
       }
@@ -133,7 +128,7 @@ module.exports = async (client) => {
       if (!client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)) {
         client.logger.warn("SHARD SORUNLU OLARAK BAŞLATILDIĞI İÇİN YENİDEN BAŞLATILIYOR!");
         process.exit(0);
-      };
+      }
     }, 300000);
 
     //------------------------------Otomatik Yeniden Başlatmalar------------------------------//
@@ -173,5 +168,5 @@ module.exports = async (client) => {
 
     //------------------------------Davet Sistemi------------------------------//
 
-  } catch (err) { client.logger.error(err); };
+  } catch (err) { client.logger.error(err); }
 };

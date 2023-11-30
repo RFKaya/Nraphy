@@ -104,7 +104,7 @@ module.exports = {
   memberPermissions: ["ManageChannels"],
   botPermissions: ["SendMessages", "EmbedLinks", "ManageMessages"],
   nsfw: false,
-  cooldown: false,
+  cooldown: 3000,
   ownerOnly: false,
 
   async execute(client, interaction, data) {
@@ -179,7 +179,7 @@ module.exports = {
           embeds: [
             {
               color: client.settings.embedColors.red,
-              title: '**»** Büyük Harf Engelleme Sistemi Zaten Sunucu Genelinde Açık!',
+              title: '**»** Büyük Harf Engelleme Sistemi Zaten Açık!',
               description: `**•** Kapatmak için \`/büyük-harf-engel Kapat\` yazabilirsin.`
             }
           ]
@@ -251,17 +251,19 @@ module.exports = {
 
         if (getOperation == "ekle") {
 
-          if (upperCaseBlock && !upperCaseBlock.guild)
+          if (!upperCaseBlock.guild)
             return interaction.reply({
               embeds: [
                 {
                   color: client.settings.embedColors.red,
-                  title: `**»** Sadece Seçtiğin Kanallarda Koruma Mevcut Ki Zaten!`,
-                  description: `**•** Muaf eklemek yerine bu kanalı seçtiğin kanallardan kaldırabilirsin.`,
+                  title: `**»** Büyük Harf Engel Sistemi Zaten Kapalı!`,
+                  description: `**•** Neye muaf ekliyorsun? NEYE MUAF EKLİYORSUN? KAPALI SİSTEM KAPALI!`,
                 }
               ],
               ephemeral: true
             });
+
+          if (!await client.functions.channelChecker(interaction, getChannel, ["ViewChannel", "SendMessages", "EmbedLinks", "ManageMessages"])) return;
 
           if (upperCaseBlock?.exempts?.channels?.includes(getChannel.id))
             return interaction.reply({
@@ -291,13 +293,13 @@ module.exports = {
 
         } else if (getOperation == "kaldir") {
 
-          if (!upperCaseBlock?.exempts?.channels || upperCaseBlock.exempts.channels.length == 0)
+          if (!upperCaseBlock?.exempts?.channels?.length)
             return interaction.reply({
               embeds: [
                 {
                   color: client.settings.embedColors.red,
                   title: `**»** Muaf Listesinde Bir Kanal Bile Yok Ki!`,
-                  description: `**•** Olayı yanlış anladın bence sen \`/büyük-harf-engel Bilgi\``,
+                  description: `**•** Bence sen olayı çok yanlış anladın. \`/büyük-harf-engel Bilgi\``,
                 }
               ],
               ephemeral: true
@@ -367,13 +369,13 @@ module.exports = {
 
         } else if (getOperation == "kaldir") {
 
-          if (!upperCaseBlock?.exempts?.roles || upperCaseBlock.exempts.roles.length == 0)
+          if (!upperCaseBlock?.exempts?.roles?.length)
             return interaction.reply({
               embeds: [
                 {
                   color: client.settings.embedColors.red,
                   title: `**»** Muaf Listesinde Bir Rol Bile Yok Ki!`,
-                  description: `**•** Olayı yanlış anladın bence sen \`/büyük-harf-engel Bilgi\``,
+                  description: `**•** Bence sen olayı çok yanlış anladın. \`/büyük-harf-engel Bilgi\``,
                 }
               ],
               ephemeral: true

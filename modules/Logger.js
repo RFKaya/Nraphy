@@ -125,21 +125,6 @@ exports.log = (content, type = "log", writeFileLog = true) => {
     case 'debug': {
       return console.log(`${timestamp} ${chalk.gray(type.toUpperCase())}`, content);
     }
-    /*case 'cmd': {
-      console.log(`${timestamp} ${chalk.white(type.toUpperCase())} ${content}`);
-      fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) Command Usage Log\n • ${content}\n\n`,
-        function (err) {
-          if (err) return console.log(err);
-        });
-      const clientDataSchema = require(".././Mongoose/Schema/clientData.js");
-      clientDataSchema.findOne({ dataId: clientDataId })
-        .then(clientData => {
-          clientData.cmd += 1;
-          clientData.markModified('cmd');
-          clientData.save()
-        })
-      return;
-    }*/
     case 'interaction': {
       console.log(`${timestamp} ${chalk.white(type.toUpperCase())} ${content}`);
       /*fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) Interaction Log\n • ${content}\n\n`,
@@ -148,21 +133,6 @@ exports.log = (content, type = "log", writeFileLog = true) => {
         });*/
       return;
     }
-    /*case 'interactionCmd': {
-      console.log(`${timestamp} ${chalk.white(type.toUpperCase())} ${content}`);
-      fs.appendFile(logFile, `${timestamp} (${type.toUpperCase()}) Interaction Command Usage Log\n • ${content}\n\n`,
-        function (err) {
-          if (err) return console.log(err);
-        });
-      const clientDataSchema = require(".././Mongoose/Schema/clientData.js");
-      clientDataSchema.findOne({ dataId: clientDataId })
-        .then(clientData => {
-          clientData.interactionCmd += 1;
-          clientData.markModified('interactionCmd');
-          clientData.save();
-        });
-      return;
-    }*/
     case 'ready': {
       return console.log(`${timestamp} ${chalk.green(type.toUpperCase())} ${content}`);
     }
