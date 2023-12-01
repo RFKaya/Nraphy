@@ -238,14 +238,17 @@ client.on('inviteCreate', async invite => {
 });
 
 //------------------------------toEN------------------------------//
+const engChars = {
+  // UPPER -- LOWER
+  "Ğ": "G", "ğ": "g",
+  "Ü": "U", "ü": "u",
+  "Ş": "S", "ş": "s",
+  "İ": "I", "ı": "i",
+  "Ö": "O", "ö": "o",
+  "Ç": "C", "ç": "c"
+};
 String.prototype.toEN = function () {
-  return this//UPPERS:     // LOWERS:
-    .replaceAll("Ğ", "G").replaceAll("ğ", "g")
-    .replaceAll("Ü", "U").replaceAll("ü", "u")
-    .replaceAll("Ş", "S").replaceAll("ş", "s")
-    .replaceAll("İ", "I").replaceAll("ı", "i")
-    .replaceAll("Ö", "O").replaceAll("ö", "o")
-    .replaceAll("Ç", "C").replaceAll("ç", "c");
+  return [...this].map(c => engChars[c] || c).join("");
 };
 
 //------------------------------GitHub------------------------------//
@@ -253,4 +256,4 @@ setInterval(() => {
   client.logger.warn("Nraphy GitHub projesinde onbinlerce satırlık emek bulunmaktadır.");
   client.logger.warn("GitHub üzerinden projemizi yıldızlayarak projeye destek olabilirsiniz.");
   client.logger.warn("https://github.com/RFKaya/Nraphy/");
-}, 3600000);
+}, 3600 * 1000);
